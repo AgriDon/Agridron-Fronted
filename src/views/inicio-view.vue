@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 // View for 'Inicio' dashboard
 </script>
 

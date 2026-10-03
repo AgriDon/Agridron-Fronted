@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 // View for Not Found 404
 </script>
 

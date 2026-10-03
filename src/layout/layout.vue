@@ -1,21 +1,11 @@
-<script setup lang="ts">
+<script setup>
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-
-/**
- * Navigation item interface for sidebar options
- */
-interface NavItem {
-  id: string
-  label: string
-  icon: string
-  to: string
-}
 
 const route = useRoute()
 
 // Navigation items matching the reference image with respective routes
-const menuItems = ref<NavItem[]>([
+const menuItems = ref([
   { id: 'inicio', label: 'inicio', icon: 'pi pi-home', to: '/inicio' },
   { id: 'fincas', label: 'Fincas', icon: 'pi pi-map', to: '/fincas' },
   { id: 'parcelas', label: 'Parcelas', icon: 'pi pi-th-large', to: '/parcelas' },
@@ -26,12 +16,12 @@ const menuItems = ref<NavItem[]>([
 ])
 
 // Search input query
-const searchQuery = ref<string>('')
+const searchQuery = ref('')
 
 /**
  * Helper to determine whether the route is currently active
  */
-const isRouteActive = (targetPath: string): boolean => {
+const isRouteActive = (targetPath) => {
   if (targetPath === '/inicio') {
     return route.path === '/inicio' || route.path === '/'
   }

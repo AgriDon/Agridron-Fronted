@@ -1,7 +1,7 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import InicioView from './views/inicio-view.vue'
 
-const routes: RouteRecordRaw[] = [
+const routes = [
   {
     path: '/inicio',
     name: 'inicio',
