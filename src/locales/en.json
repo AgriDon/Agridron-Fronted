@@ -108,6 +108,7 @@
     "variety": "Variety",
     "noVariety": "No variety",
     "information": "Crop information",
+    "back": "Back",
     "notFound": "Crop not found",
     "delete-confirm": "Are you sure you want to delete this crop?",
     "empty": "No crops registered",
