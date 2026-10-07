@@ -1,0 +1,331 @@
+{
+  "page-not-found": {
+    "title": "Página no encontrada",
+    "content": "La ruta <strong>{invalidPath}</strong> es inválida.",
+    "go-home": "Ir a Inicio"
+  },
+  "footer": {
+    "rights": "Derechos de autor © 2026 AgriDron, Todos los derechos reservados",
+    "intro": "Desarrollado ",
+    "author": "por el Equipo AgriDron Solutions"
+  },
+  "option": {
+    "farm": "Fincas",
+    "parcel": "Parcelas",
+    "crop": "Cultivos",
+    "fumigationArea": "Zonas de fumigación",
+    "analytics": "Reportes",
+    "drone": "Drones",
+    "profile": "Perfil",
+    "home": "Inicio"
+  },
+  "farm": {
+    "title": "Fincas",
+    "subtitle": "Gestión y registro de fincas agrícolas",
+    "newFarm": "Nueva finca",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar esta finca?",
+    "cancel": "Cancelar",
+    "empty": "No hay fincas registradas",
+    "parcelCount": "{count} parcelas",
+    "noImage": "Sin imagen",
+    "loading": "Cargando fincas...",
+    "button": {
+      "seeMore": "Ver más",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nueva finca",
+      "edit-title": "Editar finca",
+      "name": "Nombre",
+      "location": "Ubicación",
+      "ownerId": "ID del propietario",
+      "image": "URL de imagen",
+      "imageHint": "Opcional",
+      "create": "Crear",
+      "selectOwner": "Seleccionar propietario",
+      "unknownOwner": "Propietario desconocido (ID {id})",
+      "update": "Actualizar",
+      "error": {
+        "name-required": "El nombre es obligatorio",
+        "location-required": "La ubicación es obligatoria",
+        "ownerId-required": "El ID del propietario es obligatorio",
+        "ownerId-min": "El ID debe ser mayor que 0"
+      }
+    }
+  },
+  "parcel": {
+    "title": "Parcelas",
+    "subtitle": "Supervisión y delimitación de parcelas de cultivo",
+    "area": "Área",
+    "farm": "Finca",
+    "noCrop": "Sin cultivo",
+    "noImage": "Sin imagen",
+    "newParcel": "Nueva parcela",
+    "selectFarm": "Seleccionar finca",
+    "selectFarmPrompt": "Seleccione una finca para ver sus parcelas",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar esta parcela?",
+    "empty": "No hay parcelas registradas",
+    "loading": "Cargando parcelas...",
+    "button": {
+      "seeMore": "Ver más",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nueva parcela",
+      "edit-title": "Editar parcela",
+      "name": "Nombre",
+      "area": "Área (ha)",
+      "geometry": "Geometría (GeoJSON)",
+      "farm": "Finca",
+      "crop": "Cultivo",
+      "image": "URL de imagen",
+      "imageHint": "Opcional",
+      "create": "Crear",
+      "update": "Actualizar",
+      "error": {
+        "name-required": "El nombre es obligatorio",
+        "area-required": "El área es obligatoria",
+        "area-min": "El área debe ser mayor que 0",
+        "geometry-required": "La geometría es obligatoria",
+        "farm-required": "Debe seleccionar una finca",
+        "crop-required": "Debe seleccionar un cultivo"
+      }
+    },
+    "detail": {
+      "title": "Detalle de parcela",
+      "name": "Nombre",
+      "geometry": "Geometría",
+      "notFound": "Parcela no encontrada",
+      "back": "Volver"
+    }
+  },
+  "crop": {
+    "title": "Cultivos",
+    "subtitle": "Gestión y registro de variedades de cultivos",
+    "newCrop": "Nuevo cultivo",
+    "variety": "Variedad",
+    "noVariety": "Sin variedad",
+    "information": "Información del cultivo",
+    "notFound": "Cultivo no encontrado",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar este cultivo?",
+    "empty": "No hay cultivos registrados",
+    "loading": "Cargando cultivos...",
+    "button": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nuevo cultivo",
+      "edit-title": "Editar cultivo",
+      "name": "Nombre",
+      "variety": "Variedad",
+      "create": "Crear",
+      "update": "Actualizar",
+      "error": {
+        "name-required": "El nombre es obligatorio"
+      }
+    }
+  },
+  "fumigationArea": {
+    "title": "Zonas de fumigación",
+    "parcel": "Parcela",
+    "selectParcel": "Seleccionar parcela",
+    "newFumigationArea": "Nueva zona de fumigación",
+    "selectParcelPrompt": "Seleccione una parcela para ver sus zonas de fumigación",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar esta zona de fumigación?",
+    "empty": "No hay zonas de fumigación registradas",
+    "loading": "Cargando zonas de fumigación...",
+    "button": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nueva zona de fumigación",
+      "edit-title": "Editar zona de fumigación",
+      "parcel": "Parcela",
+      "geometry": "Geometría (GeoJSON)",
+      "area": "Área (m²)",
+      "create": "Crear",
+      "update": "Actualizar",
+      "error": {
+        "parcel-required": "Debe seleccionar una parcela",
+        "geometry-required": "La geometría es obligatoria",
+        "area-required": "El área es obligatoria",
+        "area-min": "El área debe ser mayor que 0"
+      }
+    }
+  },
+  "weather": {
+    "title": "Estado del clima",
+    "subtitle": "Condiciones actuales por ubicación",
+    "temperature": "Temperatura",
+    "humidity": "Humedad",
+    "wind": "Velocidad del viento",
+    "precipitation": "Precipitación",
+    "observed": "Observado el",
+    "location": "Ubicación",
+    "noAlerts": "Sin alertas",
+    "alerts": "Alertas",
+    "empty": "Sin datos meteorológicos disponibles.",
+    "severity": {
+      "HIGH": "Alto",
+      "MEDIUM": "Medio",
+      "LOW": "Bajo"
+    }
+  },
+  "analytics": {
+    "title": "Reportes e Historial",
+    "tabs": {
+      "missions": "Misiones",
+      "supplyUsage": "Uso de insumos",
+      "indicators": "Indicadores"
+    },
+    "filter": {
+      "from": "Desde",
+      "to": "Hasta",
+      "apply": "Filtrar",
+      "clear": "Limpiar"
+    },
+    "columns": {
+      "id": "ID",
+      "mission": "Misión",
+      "date": "Fecha",
+      "status": "Estado",
+      "area": "Área (ha)",
+      "actions": "Acciones",
+      "type": "Tipo",
+      "volume": "Volumen (L)",
+      "density": "L/ha",
+      "generatedAt": "Generado"
+    },
+    "status": {
+      "PLANNED": "Programada",
+      "AUTHORIZED": "Autorizada",
+      "IN_PROGRESS": "En curso",
+      "PAUSED": "En pausa",
+      "COMPLETED": "Completada",
+      "CANCELLED": "Cancelada"
+    },
+    "reportType": {
+      "MISSION_SUMMARY": "Resumen de misión",
+      "PHYTOSANITARY": "Fitosanitario"
+    },
+    "actions": {
+      "download": "Descargar reporte",
+      "detail": "Ver detalle",
+      "back": "Volver a reportes",
+      "exportJson": "Exportar JSON",
+      "exportCsv": "Exportar CSV"
+    },
+    "indicators": {
+      "period": "Periodo",
+      "empty": "No hay indicadores disponibles."
+    },
+    "detail": {
+      "title": "Reporte",
+      "observations": "Observaciones",
+      "metrics": "Métricas operativas",
+      "noMetrics": "Sin métricas registradas.",
+      "notFound": "Reporte no encontrado."
+    },
+    "empty": "No se encontraron registros.",
+    "loading": "Cargando..."
+  },
+  "drone": {
+    "title": "Gestión de flota de drones",
+    "status": {
+      "AVAILABLE": "Disponible",
+      "IN_FLIGHT": "En vuelo",
+      "MAINTENANCE": "Mantenimiento",
+      "MAINTENANCE_SOON": "Mantenimiento próx."
+    },
+    "serial": "SN",
+    "model": "Modelo",
+    "battery": "Batería",
+    "nozzle": "Boquilla",
+    "noNozzle": "Sin boquilla",
+    "compatible": "Compatible",
+    "lastService": "Último mantenimiento",
+    "nextService": "Próximo mantenimiento",
+    "image": "URL de imagen",
+    "noPhoto": "Sin foto",
+    "loading": "Cargando drones...",
+    "empty": "No hay drones para mostrar",
+    "actions": {
+      "details": "Ver detalles",
+      "maintenance": "Ver mantenimientos"
+    }
+  },
+  "iam": {
+    "signIn": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Ingresa tus credenciales para acceder a AgriDron",
+      "username": "Nombre de usuario",
+      "usernamePlaceholder": "ej. jdoe",
+      "usernameRequired": "El nombre de usuario es obligatorio",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMinLength": "Mínimo 4 caracteres",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "signingIn": "Iniciando sesión...",
+      "submit": "Ingresar",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Regístrate aquí",
+      "invalidCredentials": "Credenciales inválidas"
+    },
+    "signUp": {
+      "title": "Crear Cuenta",
+      "subtitle": "Regístrate en la plataforma AgriDron",
+      "username": "Nombre de usuario",
+      "usernamePlaceholder": "ej. jdoe",
+      "usernameRequired": "El nombre de usuario es obligatorio",
+      "usernameMinLength": "Mínimo 3 caracteres",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "ej. usuario@ejemplo.com",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "emailInvalid": "Formato de correo no válido",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMinLength": "Mínimo 6 caracteres",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "role": "Rol en el sistema",
+      "roleRequired": "Debes seleccionar un rol",
+      "signingUp": "Registrando cuenta...",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signInLink": "Inicia sesión",
+      "signUpError": "Error al registrar usuario"
+    },
+    "profile": {
+      "title": "Perfil de Usuario",
+      "subtitle": "Información de la cuenta activa",
+      "username": "Usuario",
+      "email": "Correo electrónico",
+      "role": "Rol asignado",
+      "noSession": "No hay una sesión iniciada actualmente.",
+      "signIn": "Iniciar Sesión",
+      "goToFarms": "Ir a Fincas",
+      "signOut": "Cerrar Sesión"
+    }
+  },
+  "home": {
+    "greeting": "Hola {username}, bienvenido",
+    "subtitle": "Resumen de tu operación agrícola",
+    "metricsTitle": "Indicadores",
+    "shortcutsTitle": "Accesos rápidos",
+    "metrics": {
+      "farms": "Fincas",
+      "parcels": "Parcelas",
+      "crops": "Cultivos",
+      "fumigationAreas": "Zonas de fumigación"
+    },
+    "actions": {
+      "farms": "Ver fincas",
+      "analytics": "Ver reportes"
+    }
+  }
+}

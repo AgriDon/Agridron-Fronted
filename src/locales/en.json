@@ -1,0 +1,331 @@
+{
+  "page-not-found": {
+    "title": "Page not found",
+    "content": "The path <strong>{invalidPath}</strong> is not valid.",
+    "go-home": "Go Home"
+  },
+  "footer": {
+    "rights": "Copyright © 2026 AgriDron, All rights reserved",
+    "intro": "Developed ",
+    "author": "by AgriDron Solutions Team"
+  },
+  "option": {
+    "farm": "Farms",
+    "parcel": "Parcels",
+    "crop": "Crops",
+    "fumigationArea": "Fumigation areas",
+    "analytics": "Reports",
+    "drone": "Drones",
+    "profile": "Profile",
+    "home": "Home"
+  },
+  "farm": {
+    "title": "Farms",
+    "subtitle": "Management and registration of agricultural farms",
+    "newFarm": "New farm",
+    "delete-confirm": "Are you sure you want to delete this farm?",
+    "cancel": "Cancel",
+    "empty": "No farms registered",
+    "parcelCount": "{count} parcels",
+    "noImage": "No image",
+    "loading": "Loading farms...",
+    "button": {
+      "seeMore": "See more",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "new-title": "New farm",
+      "edit-title": "Edit farm",
+      "name": "Name",
+      "location": "Location",
+      "ownerId": "Owner ID",
+      "image": "Image URL",
+      "imageHint": "Optional",
+      "create": "Create",
+      "selectOwner": "Select owner",
+      "unknownOwner": "Unknown owner (ID {id})",
+      "update": "Update",
+      "error": {
+        "name-required": "Name is required",
+        "location-required": "Location is required",
+        "ownerId-required": "Owner ID is required",
+        "ownerId-min": "ID must be greater than 0"
+      }
+    }
+  },
+  "parcel": {
+    "title": "Parcels",
+    "subtitle": "Survey and delimitation of crop parcels",
+    "area": "Area",
+    "farm": "Farm",
+    "noCrop": "No crop",
+    "noImage": "No image",
+    "newParcel": "New parcel",
+    "selectFarm": "Select farm",
+    "selectFarmPrompt": "Select a farm to see its parcels",
+    "delete-confirm": "Are you sure you want to delete this parcel?",
+    "form": {
+      "new-title": "New parcel",
+      "edit-title": "Edit parcel",
+      "name": "Name",
+      "area": "Area (ha)",
+      "geometry": "Geometry (GeoJSON)",
+      "farm": "Farm",
+      "crop": "Crop",
+      "image": "Image URL",
+      "imageHint": "Optional",
+      "create": "Create",
+      "update": "Update",
+      "error": {
+        "name-required": "Name is required",
+        "area-required": "Area is required",
+        "area-min": "Area must be greater than 0",
+        "geometry-required": "Geometry is required",
+        "farm-required": "You must select a farm",
+        "crop-required": "You must select a crop"
+      }
+    },
+    "empty": "No parcels registered",
+    "loading": "Loading parcels...",
+    "detail": {
+      "title": "Parcel detail",
+      "name": "Name",
+      "geometry": "Geometry",
+      "notFound": "Parcel not found",
+      "back": "Back"
+    },
+    "button": {
+      "seeMore": "See more",
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+  "crop": {
+    "title": "Crops",
+    "subtitle": "Management and registration of crop varieties",
+    "newCrop": "New crop",
+    "variety": "Variety",
+    "noVariety": "No variety",
+    "information": "Crop information",
+    "notFound": "Crop not found",
+    "delete-confirm": "Are you sure you want to delete this crop?",
+    "empty": "No crops registered",
+    "loading": "Loading crops...",
+    "button": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "new-title": "New crop",
+      "edit-title": "Edit crop",
+      "name": "Name",
+      "variety": "Variety",
+      "create": "Create",
+      "update": "Update",
+      "error": {
+        "name-required": "Name is required"
+      }
+    }
+  },
+  "fumigationArea": {
+    "title": "Fumigation areas",
+    "parcel": "Parcel",
+    "selectParcel": "Select parcel",
+    "newFumigationArea": "New fumigation area",
+    "selectParcelPrompt": "Select a parcel to see its fumigation areas",
+    "delete-confirm": "Are you sure you want to delete this fumigation area?",
+    "empty": "No fumigation areas registered",
+    "loading": "Loading fumigation areas...",
+    "button": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "new-title": "New fumigation area",
+      "edit-title": "Edit fumigation area",
+      "parcel": "Parcel",
+      "geometry": "Geometry (GeoJSON)",
+      "area": "Area (m²)",
+      "create": "Create",
+      "update": "Update",
+      "error": {
+        "parcel-required": "You must select a parcel",
+        "geometry-required": "Geometry is required",
+        "area-required": "Area is required",
+        "area-min": "Area must be greater than 0"
+      }
+    }
+  },
+  "weather": {
+    "title": "Weather status",
+    "subtitle": "Current conditions by location",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "wind": "Wind speed",
+    "precipitation": "Precipitation",
+    "observed": "Observed at",
+    "location": "Location",
+    "noAlerts": "No alerts",
+    "alerts": "Alerts",
+    "empty": "No weather data available.",
+    "severity": {
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low"
+    }
+  },
+  "analytics": {
+    "title": "Reports and history",
+    "tabs": {
+      "missions": "Missions",
+      "supplyUsage": "Supply usage",
+      "indicators": "Indicators"
+    },
+    "filter": {
+      "from": "From",
+      "to": "To",
+      "apply": "Filter",
+      "clear": "Clear"
+    },
+    "columns": {
+      "id": "ID",
+      "mission": "Mission",
+      "date": "Date",
+      "status": "Status",
+      "area": "Area (ha)",
+      "actions": "Actions",
+      "type": "Type",
+      "volume": "Volume (L)",
+      "density": "L/ha",
+      "generatedAt": "Generated"
+    },
+    "status": {
+      "PLANNED": "Planned",
+      "AUTHORIZED": "Authorized",
+      "IN_PROGRESS": "In progress",
+      "PAUSED": "Paused",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled"
+    },
+    "reportType": {
+      "MISSION_SUMMARY": "Mission summary",
+      "PHYTOSANITARY": "Phytosanitary"
+    },
+    "actions": {
+      "download": "Download report",
+      "detail": "View detail",
+      "back": "Back to reports",
+      "exportJson": "Export JSON",
+      "exportCsv": "Export CSV"
+    },
+    "indicators": {
+      "period": "Period",
+      "empty": "No indicators available."
+    },
+    "detail": {
+      "title": "Report",
+      "observations": "Observations",
+      "metrics": "Operational metrics",
+      "noMetrics": "No metrics recorded.",
+      "notFound": "Report not found."
+    },
+    "empty": "No records found.",
+    "loading": "Loading..."
+  },
+  "drone": {
+    "title": "Drone fleet management",
+    "status": {
+      "AVAILABLE": "Available",
+      "IN_FLIGHT": "In flight",
+      "MAINTENANCE": "Maintenance",
+      "MAINTENANCE_SOON": "Maintenance due"
+    },
+    "serial": "SN",
+    "model": "Model",
+    "battery": "Battery",
+    "nozzle": "Nozzle",
+    "noNozzle": "No nozzle",
+    "compatible": "Compatible",
+    "lastService": "Last service",
+    "nextService": "Next service",
+    "image": "Image URL",
+    "noPhoto": "No photo",
+    "loading": "Loading drones...",
+    "empty": "No drones to show",
+    "actions": {
+      "details": "View details",
+      "maintenance": "View maintenance"
+    }
+  },
+  "iam": {
+    "signIn": {
+      "title": "Sign in",
+      "subtitle": "Enter your credentials to access AgriDron",
+      "username": "Username",
+      "usernamePlaceholder": "e.g. jdoe",
+      "usernameRequired": "Username is required",
+      "password": "Password",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Minimum 4 characters",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "signingIn": "Signing in...",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up here",
+      "invalidCredentials": "Invalid credentials"
+    },
+    "signUp": {
+      "title": "Create account",
+      "subtitle": "Sign up for the AgriDron platform",
+      "username": "Username",
+      "usernamePlaceholder": "e.g. jdoe",
+      "usernameRequired": "Username is required",
+      "usernameMinLength": "Minimum 3 characters",
+      "email": "Email",
+      "emailPlaceholder": "e.g. user@example.com",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "password": "Password",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Minimum 6 characters",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
+      "role": "Role",
+      "roleRequired": "You must select a role",
+      "signingUp": "Signing up...",
+      "submit": "Sign up",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in",
+      "signUpError": "Error signing up"
+    },
+    "profile": {
+      "title": "User profile",
+      "subtitle": "Active account information",
+      "username": "Username",
+      "email": "Email",
+      "role": "Assigned role",
+      "noSession": "No session is currently active.",
+      "signIn": "Sign in",
+      "goToFarms": "Go to farms",
+      "signOut": "Sign out"
+    }
+  },
+  "home": {
+    "greeting": "Hello {username}, welcome",
+    "subtitle": "Overview of your agricultural operation",
+    "metricsTitle": "Metrics",
+    "shortcutsTitle": "Quick access",
+    "metrics": {
+      "farms": "Farms",
+      "parcels": "Parcels",
+      "crops": "Crops",
+      "fumigationAreas": "Fumigation areas"
+    },
+    "actions": {
+      "farms": "View farms",
+      "analytics": "View reports"
+    }
+  }
+}

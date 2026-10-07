@@ -9,6 +9,7 @@ const menuItems = ref([
   { id: 'inicio', label: 'inicio', icon: 'pi pi-home', to: '/inicio' },
   { id: 'fincas', label: 'Fincas', icon: 'pi pi-map', to: '/fincas' },
   { id: 'parcelas', label: 'Parcelas', icon: 'pi pi-th-large', to: '/parcelas' },
+  { id: 'cultivos', label: 'Cultivos', icon: 'pi pi-apple', to: '/cultivos' },
   { id: 'misiones', label: 'Misiones', icon: 'pi pi-bullseye', to: '/misiones' },
   { id: 'drones', label: 'Drones', icon: 'pi pi-send', to: '/drones' },
   { id: 'reportes', label: 'Reportes', icon: 'pi pi-clipboard', to: '/reportes' },
@@ -104,6 +105,10 @@ const isRouteActive = (targetPath) => {
 
     <!-- Main Content Area with Router View -->
     <main class="main-content">
+      <!-- The slot lets wrappers project extra content alongside the outlet.
+           Both must stay siblings: any child inside <router-view> turns into
+           a fallback and the routed component is dropped. -->
+      <slot />
       <router-view />
     </main>
   </div>
@@ -115,7 +120,7 @@ const isRouteActive = (targetPath) => {
   display: flex;
   min-height: 100vh;
   width: 100%;
-  background-color: #f8fafc;
+  background-color: var(--p-content-background, #f8fafc);
 }
 
 /* Header & Logo Container */
@@ -134,12 +139,12 @@ const isRouteActive = (targetPath) => {
   width: 240px;
   min-width: 240px;
   height: 100%;
-  background-color: #ffffff;
+  background-color: var(--p-content-background, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 1rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--p-content-border-color, #e2e8f0);
 }
 
 .logo-link {
@@ -159,18 +164,18 @@ const isRouteActive = (targetPath) => {
 /* Toolbar Styling */
 .header-toolbar {
   flex: 1;
-  background-color: #0e876a !important;
+  background-color: var(--agridron-brand) !important;
   border: none !important;
   border-radius: 0 !important;
   padding: 0 2.5rem !important;
   height: 100%;
 }
 
-/* Search Bar (Rounded pill with black search icon button) */
+/* Search Bar (Rounded pill with a contrasting search icon button) */
 .search-container {
   display: flex;
   align-items: center;
-  background-color: #ffffff;
+  background-color: var(--p-form-field-background, #ffffff);
   border-radius: 9999px;
   padding: 3px 6px 3px 4px;
   width: 360px;
@@ -179,8 +184,9 @@ const isRouteActive = (targetPath) => {
 }
 
 .search-btn {
-  background-color: #000000;
-  color: #ffffff;
+  /* Inverts with the theme: dark pill on light, light pill on dark. */
+  background-color: var(--p-text-color, #000000);
+  color: var(--p-content-background, #ffffff);
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -209,12 +215,13 @@ const isRouteActive = (targetPath) => {
   flex: 1;
   padding: 0 12px !important;
   font-size: 0.95rem !important;
-  color: #374151 !important;
+  color: var(--p-text-color, #374151) !important;
   text-align: center;
 }
 
 .search-input::placeholder {
-  color: #9ca3af;
+  color: var(--p-text-color, #9ca3af);
+  opacity: 0.5;
   font-weight: 400;
 }
 
@@ -227,7 +234,7 @@ const isRouteActive = (targetPath) => {
 }
 
 :deep(.user-avatar) {
-  background-color: #3e8fa2 !important;
+  background-color: var(--agridron-avatar) !important;
   color: #ffffff !important;
   width: 46px !important;
   height: 46px !important;
@@ -259,7 +266,7 @@ const isRouteActive = (targetPath) => {
   left: 0;
   bottom: 0;
   width: 240px;
-  background-color: #163e33;
+  background-color: var(--agridron-brand-dark);
   padding: 1.5rem 0.85rem;
   overflow-y: auto;
   z-index: 900;
@@ -296,7 +303,7 @@ const isRouteActive = (targetPath) => {
 }
 
 .nav-item.active {
-  background-color: #0f8569;
+  background-color: var(--agridron-brand-active);
 }
 
 .nav-icon {
@@ -317,7 +324,7 @@ const isRouteActive = (targetPath) => {
   margin-top: 76px;
   flex: 1;
   padding: 2.5rem 3rem;
-  background-color: #ffffff;
+  background-color: var(--p-content-background, #ffffff);
   min-height: calc(100vh - 76px);
 }
 </style>

@@ -37,3 +37,7 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Mock server: the real db.json lives in server/ and IS tracked.
+# A db.json at the root means json-server auto-generated demo data.
+/db.json
