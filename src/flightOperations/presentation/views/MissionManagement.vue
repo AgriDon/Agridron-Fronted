@@ -201,7 +201,8 @@ onMounted(load)
 <template>
   <div class="mission-management-view">
     <div class="mission-shell">
-      <h1 class="mission-title">New fumigation mission</h1>
+      <h1 class="mission-title">
+        Nueva misión de fumigación</h1>
 
       <div class="stepper" aria-label="Mission wizard">
         <div v-for="(step, index) in steps" :key="step.label" class="step-item">

@@ -15,9 +15,11 @@ export class MissionUseCases {
 
   listCrops = () => new ParcelaUseCases().listCrops()
 
+  // Request the current mission list from the infrastructure layer.
   listMissions = () => this.#service.getMissions()
 
   createMission = async (payload) => {
+    // Normalize missing values before sending the payload to the API.
     const clean = {
       ...payload,
       farmArea: payload.farmArea ?? payload.parcelName ?? 'Sin parcela',
@@ -28,6 +30,7 @@ export class MissionUseCases {
       operator: payload.operator ?? 'Juan Perez'
     }
 
+    // Persist the sanitized mission object through the service.
     return this.#service.createMission(clean)
   }
 }

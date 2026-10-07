@@ -220,6 +220,21 @@
       "progress": 10,
       "date": "2026-10-07T13:00:00.000Z",
       "id": 8
+    },
+    {
+      "farmId": 1,
+      "parcelId": 1,
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "operator": "Juan Perez",
+      "treatmentType": "Fungicida",
+      "product": "Fungicida 48%",
+      "productDose": "2.0",
+      "notes": "",
+      "status": "Programada",
+      "progress": 10,
+      "date": "2026-10-07T13:00:00.000Z",
+      "id": 9
     }
   ],
   "weather": [

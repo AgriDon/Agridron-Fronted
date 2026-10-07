@@ -5,11 +5,13 @@ import { Mission } from '../domain/mission.entity.js';
 const API_URL = buildUrl(ENDPOINTS.missions);
 
 export class MissionService {
+    // Fetch missions from the backend and convert raw objects into domain entities.
     async getMissions() {
         try {
             const response = await axios.get(API_URL);
             const missions = Array.isArray(response.data) ? response.data : [];
 
+            // Map the API payload into the Mission model used by the application.
             return missions.map(item => new Mission(
                 item.id,
                 item.farmArea ?? '',
@@ -24,6 +26,7 @@ export class MissionService {
         }
     }
 
+    // Send a new mission payload to the API and keep default values consistent.
     async createMission(missionData) {
         try {
             const payload = {
