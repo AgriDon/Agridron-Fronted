@@ -60,9 +60,10 @@ const routes = [
   {
     path: '/misiones',
     name: 'misiones',
-    component: () => import('./shared/presentation/views/misiones-view.vue'),
+    component: () => import('./flightOperations/presentation/views/MissionManagement.vue'),
     meta: { title: 'Misiones' }
   },
+    
   {
     path: '/drones',
     name: 'drones',

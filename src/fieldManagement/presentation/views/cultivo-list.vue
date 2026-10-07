@@ -72,7 +72,7 @@ load()
         <template #content>
           <p class="cultivo-card-detail">
             <i class="pi pi-info-circle"></i>
-            {{ t('crop.information') }}: {{ crop.name }}
+            {{ t('crop.variety') }}: {{ crop.variety || t('crop.noVariety') }}
           </p>
         </template>
 

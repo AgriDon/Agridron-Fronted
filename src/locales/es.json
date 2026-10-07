@@ -108,6 +108,7 @@
     "variety": "Variedad",
     "noVariety": "Sin variedad",
     "information": "Información del cultivo",
+    "back": "Volver",
     "notFound": "Cultivo no encontrado",
     "delete-confirm": "¿Estás seguro de que deseas eliminar este cultivo?",
     "empty": "No hay cultivos registrados",

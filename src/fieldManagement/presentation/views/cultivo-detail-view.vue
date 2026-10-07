@@ -155,7 +155,7 @@ onMounted(load)
     </pv-dialog>
 
     <pv-button
-      :label="t('parcel.detail.back')"
+      :label="t('crop.back')"
       icon="pi pi-arrow-left"
       text
       class="back-button"

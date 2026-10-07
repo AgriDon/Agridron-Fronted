@@ -120,6 +120,106 @@
       "id": 3,
       "name": "Yuca",
       "variety": "tuberculo"
+    },
+    {
+      "id": 4,
+      "name": "camote",
+      "variety": "dasd"
+    }
+  ],
+  "missions": [
+    {
+      "id": 1,
+      "farmArea": "Parcela Norte",
+      "cropType": "Maíz",
+      "status": "En curso",
+      "operator": "Carlos Mendoza",
+      "date": "2026-10-07T08:00:00",
+      "progress": 35
+    },
+    {
+      "id": 2,
+      "farmArea": "Parcela Este",
+      "cropType": "Papa",
+      "status": "Programada",
+      "operator": "Ana López",
+      "date": "2026-10-07T09:30:00",
+      "progress": 10
+    },
+    {
+      "farmArea": "Finca La Esperanza",
+      "cropType": "papa",
+      "operator": "Alondra",
+      "status": "En curso",
+      "progress": 20,
+      "date": "2026-10-07T21:32:31.847Z",
+      "id": 3
+    },
+    {
+      "farmId": 1,
+      "parcelId": 1,
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "operator": "Juan Perez",
+      "treatmentType": "Insecticida",
+      "status": "Programada",
+      "progress": 10,
+      "date": "2026-10-07T21:42:53.146Z",
+      "id": 4
+    },
+    {
+      "farmId": 2,
+      "parcelId": 3,
+      "farmArea": "Parcela Este",
+      "cropType": "Maiz",
+      "operator": "Juan Perez",
+      "treatmentType": "Fungicida",
+      "status": "Programada",
+      "progress": 10,
+      "date": "2026-10-07T21:43:34.753Z",
+      "id": 5
+    },
+    {
+      "farmId": 1,
+      "parcelId": 1,
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "operator": "Juan Perez",
+      "treatmentType": "Fungicida",
+      "status": "Programada",
+      "progress": 10,
+      "date": "2026-10-07T22:00:36.160Z",
+      "id": 6
+    },
+    {
+      "farmId": 2,
+      "parcelId": 3,
+      "farmArea": "Parcela Este",
+      "cropType": "Maiz",
+      "operator": "Juan Perez",
+      "treatmentType": "Fungicida",
+      "product": "Insecticida 25%",
+      "productDose": 2.1,
+      "notes": "Hola",
+      "status": "Programada",
+      "progress": 10,
+      "date": "2026-10-07T13:00:00.000Z",
+      "id": 7
+    },
+    {
+      "farmId": 1,
+      "parcelId": 1,
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "operator": "Juan Perez",
+      "treatmentType": "Fungicida",
+      "product": "Fungicida 48%",
+      "productDose": "2.0",
+      "notes": "",
+      "status": "Programada",
+      "progress": 10,
+      "date": "2026-10-07T13:00:00.000Z",
+      "id": 8
     }
   ],
   "weather": [
