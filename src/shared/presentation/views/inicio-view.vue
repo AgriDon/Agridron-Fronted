@@ -1,5 +1,6 @@
 <script setup>
 // View for 'Inicio' dashboard
+import WeatherWidget from '@/weatherIntegration/presentation/views/weather-widget.vue'
 </script>
 
 <template>
@@ -8,6 +9,8 @@
       <h1 class="welcome-title">!Bienvenido, Juan¡</h1>
       <p class="welcome-subtitle">Aqui tienes un resumen de tus operaciones</p>
     </div>
+
+    <WeatherWidget />
   </div>
 </template>
 
