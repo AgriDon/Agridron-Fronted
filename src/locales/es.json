@@ -333,6 +333,8 @@
   "missions": {
     "title": "Misiones",
     "subtitle": "Gestión de misiones de fumigación",
+    "newTitle": "Nueva misión de fumigación",
+    "cropLabel": "Cultivo",
     "newMission": "Nueva misión",
     "wizard": {
       "step1": "Parcela",
@@ -353,8 +355,10 @@
         "Fungicida": "Fungicida",
         "Herbicida": "Herbicida",
         "Insecticida": "Insecticida",
+        "Fertilizante": "Fertilizante",
         "Mezcla nutricional": "Mezcla nutricional"
       },
+      "imageHint": "(Opcional)",
       "products": {
         "Fungicida 48%": "Fungicida 48%",
         "Herbicida 70%": "Herbicida 70%",
@@ -371,6 +375,7 @@
       "farm": "Finca",
       "parcel": "Parcela",
       "area": "Área",
+      "areaSelected": "Área seleccionada",
       "crop": "Cultivo",
       "dateTime": "Fecha y hora",
       "treatmentType": "Tipo de tratamiento",
@@ -391,7 +396,18 @@
       "productDose": "Dosis del producto",
       "date": "Fecha"
     },
-    "status": "Estado",
+    "statusLabel": "Estado",
+    "status": {
+      "PLANNED": "Programada",
+      "IN_PROGRESS": "En curso",
+      "COMPLETED": "Completada",
+      "CANCELLED": "Cancelada",
+      "Pending": "Pendiente",
+      "Programada": "Programada",
+      "En curso": "En curso",
+      "Completada": "Completada",
+      "Cancelada": "Cancelada"
+    },
     "statusProgrammed": "Programada",
     "statusActive": "En curso",
     "statusCompleted": "Completada",
@@ -432,5 +448,21 @@
     "operator": "Operador",
     "treatmentType": "Tipo de tratamiento",
     "productDose": "Dosis del producto"
+  },
+  "home": {
+    "welcome": "!Bienvenido, Juan¡",
+    "subtitle": "Aqui tienes un resumen de tus operaciones"
+  },
+  "drones": {
+    "title": "Drones",
+    "subtitle": "Flota de drones, telemetría y estado operativo"
+  },
+  "reports": {
+    "title": "Reportes",
+    "subtitle": "Análisis de rendimiento, cosechas y reportes operativos"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Ajustes del sistema, usuarios y preferencias"
   }
 }

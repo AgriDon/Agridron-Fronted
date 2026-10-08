@@ -333,6 +333,8 @@
   "missions": {
     "title": "Missions",
     "subtitle": "Management of fumigation missions",
+    "newTitle": "New fumigation mission",
+    "cropLabel": "Crop",
     "newMission": "New mission",
     "wizard": {
       "step1": "Parcel",
@@ -353,8 +355,10 @@
         "Fungicida": "Fungicide",
         "Herbicida": "Herbicide",
         "Insecticida": "Insecticide",
+        "Fertilizante": "Fertilizer",
         "Mezcla nutricional": "Nutrient mix"
       },
+      "imageHint": "(Optional)",
       "products": {
         "Fungicida 48%": "Fungicide 48%",
         "Herbicida 70%": "Herbicide 70%",
@@ -371,6 +375,7 @@
       "farm": "Farm",
       "parcel": "Parcel",
       "area": "Area",
+      "areaSelected": "Selected area",
       "crop": "Crop",
       "dateTime": "Date and time",
       "treatmentType": "Treatment type",
@@ -391,7 +396,18 @@
       "productDose": "Product dose",
       "date": "Date"
     },
-    "status": "Status",
+    "statusLabel": "Status",
+    "status": {
+      "PLANNED": "Scheduled",
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "Pending": "Pending",
+      "Programada": "Scheduled",
+      "En curso": "In progress",
+      "Completada": "Completed",
+      "Cancelada": "Cancelled"
+    },
     "statusProgrammed": "Scheduled",
     "statusActive": "In progress",
     "statusCompleted": "Completed",
@@ -432,5 +448,21 @@
     "operator": "Operator",
     "treatmentType": "Treatment type",
     "productDose": "Product dose"
+  },
+  "home": {
+    "welcome": "Welcome, Juan!",
+    "subtitle": "Here is a summary of your operations"
+  },
+  "drones": {
+    "title": "Drones",
+    "subtitle": "Drone fleet, telemetry and operational status"
+  },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "Performance analysis, harvests and operational reports"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "System settings, users and preferences"
   }
 }
