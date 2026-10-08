@@ -103,6 +103,30 @@ const summaryDate = computed(() => {
   return `${missionDate.value} ${missionTime.value}`
 })
 
+const getMissionStatusLabel = (status) => {
+  const normalizedStatus = String(status ?? '').trim()
+
+  if (normalizedStatus === 'Programada' || normalizedStatus === 'PLANNED') return t('missions.statusProgrammed')
+  if (normalizedStatus === 'Iniciada' || normalizedStatus === 'STARTED') return t('missions.statusActive')
+  if (normalizedStatus === 'En curso' || normalizedStatus === 'IN_PROGRESS') return t('missions.statusActive')
+  if (normalizedStatus === 'Completada' || normalizedStatus === 'COMPLETED') return t('missions.statusCompleted')
+  if (normalizedStatus === 'Pausada' || normalizedStatus === 'PAUSED') return t('missions.card.active')
+  if (normalizedStatus === 'Cancelada' || normalizedStatus === 'CANCELLED') return t('missions.statusCancelled')
+  if (normalizedStatus === 'Autorizada' || normalizedStatus === 'AUTHORIZED') return t('missions.statusProgrammed')
+
+  return t('missions.statusProgrammed')
+}
+
+const getMissionStatusClass = (status) => {
+  const normalizedStatus = String(status ?? '').trim()
+
+  if (['Programada', 'PLANNED', 'Autorizada', 'AUTHORIZED'].includes(normalizedStatus)) {
+    return 'scheduled'
+  }
+
+  return 'active'
+}
+
 const load = async () => {
   loading.value = true
   errorMessage.value = ''
@@ -182,7 +206,7 @@ const submitMission = async () => {
     })
 
     missions.value = await missionUseCases.listMissions()
-    submitMessage.value = 'Misión creada correctamente.'
+    submitMessage.value = t('missions.success')
     activeStep.value = 1
     treatmentType.value = 'Fungicida'
     productName.value = 'Fungicida 48%'
@@ -301,7 +325,7 @@ onMounted(load)
               <label>{{ t('missions.form.notes') }}
                 <span class="field-hint">{{ t('missions.form.imageHint') }}</span>
               </label>
-              <textarea v-model="missionNotes" rows="5" placeholder="{{ t('missions.form.imageHint') }}"></textarea>
+              <textarea v-model="missionNotes" rows="5" :placeholder="t('missions.form.imageHint')"></textarea>
             </div>
           </div>
 
@@ -406,14 +430,14 @@ onMounted(load)
         <div v-else class="mission-card-grid">
           <article v-for="mission in missions" :key="mission.id" class="mission-card">
             <div class="mission-card-top">
-              <span class="mission-badge" :class="mission.status === 'PLANNED' ? 'scheduled' : 'active'">
-                {{ t('missions.status.' + (mission.status || 'PLANNED')) }}
+              <span class="mission-badge" :class="getMissionStatusClass(mission.status)">
+                {{ getMissionStatusLabel(mission.status) }}
               </span>
               <span class="mission-id">{{ t('missions.mission') }} #{{ mission.id }}</span>
             </div>
 
             <h3>{{ mission.farmArea || t('missions.card.farmArea') }}</h3>
-            <p><strong>Cultivo:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
+            <p><strong>{{ t('missions.summary.crop') }}:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
             <p><strong>{{ t('missions.card.operator') }}:</strong> {{ mission.operator || t('missions.card.operator') }}</p>
             <p><strong>{{ t('missions.card.date') }}:</strong> {{ new Date(mission.date || Date.now()).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) }}</p>
 

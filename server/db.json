@@ -250,6 +250,22 @@
       "progress": 10,
       "date": "2026-10-08T13:00:00.000Z",
       "id": 10
+    },
+    {
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "status": "Programada",
+      "operator": "Juan Perez",
+      "date": "2026-10-08T13:00:00.000Z",
+      "id": 11
+    },
+    {
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "status": "Programada",
+      "operator": "Juan Perez",
+      "date": "2026-10-15T13:01:00.000Z",
+      "id": 12
     }
   ],
   "weather": [

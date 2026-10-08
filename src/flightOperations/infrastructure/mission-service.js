@@ -5,18 +5,18 @@ import { Mission } from '../domain/mission.entity.js';
 const API_URL = buildUrl(ENDPOINTS.missions);
 
 export class MissionService {
-    // Fetch missions from the backend and convert raw objects into domain entities.
+    // Fetch missions from the backend and map them into domain entities.
     async getMissions() {
         try {
             const response = await axios.get(API_URL);
             const missions = Array.isArray(response.data) ? response.data : [];
 
-            // Map the API payload into the Mission model used by the application.
+            // Convert raw API response items into Mission domain models.
             return missions.map(item => new Mission(
                 item.id,
                 item.farmArea ?? '',
                 item.cropType ?? '',
-                item.status ?? 'In progress',
+                item.status ?? 'Programada',
                 item.operator ?? '',
                 item.date ?? new Date().toISOString()
             ));
@@ -26,18 +26,30 @@ export class MissionService {
         }
     }
 
-    // Send a new mission payload to the API and keep default values consistent.
-    async createMission(missionData) {
+    // Send a mission domain entity to the API and return the created entity.
+    async createMission(missionEntity) {
         try {
+            // Prepare the plain object payload for the backend request.
             const payload = {
-                ...missionData,
-                status: missionData.status ?? 'In progress',
-                progress: missionData.progress ?? 20,
-                date: missionData.date ?? new Date().toISOString(),
+                farmArea: missionEntity.farmArea,
+                cropType: missionEntity.cropType,
+                status: missionEntity.status,
+                operator: missionEntity.operator,
+                date: missionEntity.date
             };
 
             const response = await axios.post(API_URL, payload);
-            return response.data;
+            const data = response.data;
+
+            // Map the response back to a Mission domain entity.
+            return new Mission(
+                data.id,
+                data.farmArea,
+                data.cropType,
+                data.status,
+                data.operator,
+                data.date
+            );
         } catch (error) {
             console.error('Error creating mission:', error);
             throw error;
