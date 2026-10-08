@@ -17,6 +17,8 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+        '@primeui/license-manager': fileURLToPath(new URL('./src/shared/license-mock.js', import.meta.url)),
+        '@primevue/core/license/licenseBanner': fileURLToPath(new URL('./src/shared/license-mock.js', import.meta.url))
       },
     },
     server: {
