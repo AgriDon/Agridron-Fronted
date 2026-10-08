@@ -228,8 +228,7 @@ onMounted(load)
 <template>
   <div class="mission-management-view">
     <div class="mission-shell">
-      <h1 class="mission-title">
-        Nueva misión de fumigación</h1>
+      <h1 class="mission-title">{{ t('missions.newTitle') }}</h1>
 
       <div class="stepper" aria-label="Mission wizard">
         <div v-for="(step, index) in steps" :key="step.label" class="step-item">
@@ -430,14 +429,14 @@ onMounted(load)
         <div v-else class="mission-card-grid">
           <article v-for="mission in missions" :key="mission.id" class="mission-card">
             <div class="mission-card-top">
-              <span class="mission-badge" :class="getMissionStatusClass(mission.status)">
-                {{ getMissionStatusLabel(mission.status) }}
+              <span class="mission-badge" :class="(mission.status === 'PLANNED' || mission.status === 'Programada') ? 'scheduled' : 'active'">
+                {{ t('missions.status.' + (mission.status || 'PLANNED')) }}
               </span>
               <span class="mission-id">{{ t('missions.mission') }} #{{ mission.id }}</span>
             </div>
 
             <h3>{{ mission.farmArea || t('missions.card.farmArea') }}</h3>
-            <p><strong>{{ t('missions.summary.crop') }}:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
+            <p><strong>{{ t('missions.cropLabel') }}:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
             <p><strong>{{ t('missions.card.operator') }}:</strong> {{ mission.operator || t('missions.card.operator') }}</p>
             <p><strong>{{ t('missions.card.date') }}:</strong> {{ new Date(mission.date || Date.now()).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) }}</p>
 

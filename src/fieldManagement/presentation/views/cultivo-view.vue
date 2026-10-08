@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import CultivoList from '@/fieldManagement/presentation/views/cultivo-list.vue'
+import CultivoList from './cultivo-list.vue'
 import { CultivoUseCases } from '@/fieldManagement/application/cultivo-use-cases.js'
 
 const { t } = useI18n()
@@ -52,6 +52,10 @@ const onCreate = () => {
 const onEdit = (id) => {
   router.push({ name: 'cultivos-edit', params: { id } })
 }
+
+const onSeeMore = (id) => {
+  router.push({ name: 'cultivo-detail', params: { id } })
+}
 </script>
 
 <template>
@@ -71,6 +75,7 @@ const onEdit = (id) => {
 
     <CultivoList
       :key="listKey"
+      @see-more="onSeeMore"
       @edit="onEdit"
       @delete="onDelete"
     />
@@ -96,7 +101,7 @@ const onEdit = (id) => {
 
       <template #footer>
         <pv-button
-          :label="t('farm.cancel')"
+          :label="t('crop.cancel')"
           severity="secondary"
           text
           @click="cancelDelete"

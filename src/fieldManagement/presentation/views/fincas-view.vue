@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import FincasList from '@/fieldManagement/presentation/views/fincas-list.vue'
+import FincasList from './fincas-list.vue'
 import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
 
 const { t } = useI18n()
@@ -125,7 +125,6 @@ const onEdit = (id) => {
   flex-wrap: wrap;
 }
 
-/* PrimeVue tokens keep these readable in light and dark mode. */
 .view-title {
   font-size: 1.85rem;
   font-weight: 800;

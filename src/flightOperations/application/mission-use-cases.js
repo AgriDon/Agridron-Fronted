@@ -1,39 +1,36 @@
-import { MissionService } from '../infrastructure/mission-service.js';
-import { Mission } from '../domain/mission.entity.js';
+import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
+import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
+import { FlightOperationsApi } from '../infrastructure/flight-operations-api.js'
 
+/**
+ * Application layer use cases for flight operations and missions.
+ */
 export class MissionUseCases {
-  #service
+  /** @type {FlightOperationsApi} */
+  #api
 
-  constructor(service = new MissionService()) {
-    this.#service = service;
+  constructor(api = new FlightOperationsApi()) {
+    this.#api = api
   }
 
-  // Request the current mission list from the infrastructure layer.
-  listMissions = () => this.#service.getMissions();
+  listFarms = () => new FincaUseCases().listFarms()
+  listParcels = () => new ParcelaUseCases().listParcels()
+  listCrops = () => new ParcelaUseCases().listCrops()
 
-  // Keep the application contract stable for stores and views.
-  getAllMissions = () => this.listMissions();
+  listMissions = () => this.#api.getAllMissions()
 
   createMission = async (payload) => {
-    // Normalize missing values before instantiating the domain entity.
-    const farmArea = payload.farmArea ?? payload.parcelName ?? 'Sin parcela';
-    const cropType = payload.cropType ?? 'Sin cultivo';
-    const status = payload.status ?? 'Programada';
-    const operator = payload.operator ?? 'Juan Pérez';
-    const date = payload.date ?? new Date().toISOString();
+    const clean = {
+      ...payload,
+      farmArea: payload.farmArea ?? payload.parcelName ?? '',
+      cropType: payload.cropType ?? '',
+      status: payload.status ?? 'PLANNED',
+      progress: payload.progress ?? 0,
+      date: payload.date ?? new Date().toISOString(),
+      operator: payload.operator ?? ''
+    }
 
-    // Create and validate the mission entity using domain rules.
-    const missionEntity = new Mission(
-        payload.id ?? null,
-        farmArea,
-        cropType,
-        status,
-        operator,
-        date
-    );
-
-    // Persist the validated mission entity through the infrastructure service.
-    return this.#service.createMission(missionEntity);
+    return this.#api.createMission(clean)
   }
 
   saveMission = (payload) => this.createMission(payload);

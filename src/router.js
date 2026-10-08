@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/fincas',
     name: 'fincas',
-    component: () => import('./shared/presentation/views/fincas-view.vue'),
+    component: () => import('./fieldManagement/presentation/views/fincas-view.vue'),
     meta: { title: 'Fincas' }
   },
   {
@@ -24,7 +24,7 @@ const routes = [
   {
     path: '/parcelas',
     name: 'parcelas',
-    component: () => import('./shared/presentation/views/parcelas-view.vue'),
+    component: () => import('./fieldManagement/presentation/views/parcelas-view.vue'),
     meta: { title: 'Parcelas' }
   },
   {
@@ -48,7 +48,7 @@ const routes = [
   {
     path: '/cultivos',
     name: 'cultivos',
-    component: () => import('./shared/presentation/views/cultivo-view.vue'),
+    component: () => import('./fieldManagement/presentation/views/cultivo-view.vue'),
     meta: { title: 'Cultivos' }
   },
   {
@@ -73,7 +73,7 @@ const routes = [
   {
     path: '/reportes',
     name: 'reportes',
-    component: () => import('./shared/presentation/views/reportes-view.vue'),
+    component: () => import('./reporting/presentation/views/reports-view.vue'),
     meta: { title: 'Reportes' }
   },
   {

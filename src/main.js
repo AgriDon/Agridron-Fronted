@@ -12,6 +12,9 @@ import {
   Avatar,
   Button,
   Card,
+  Column,
+  DataTable,
+  DatePicker,
   Dialog,
   Drawer,
   IconField,
@@ -19,8 +22,11 @@ import {
   InputText,
   Menu,
   Message,
+  Paginator,
+  ProgressBar,
   Select,
   Skeleton,
+  Tag,
   Toolbar,
   Tooltip
 } from 'primevue'
@@ -41,6 +47,9 @@ app.use(PrimeVue, {
 app.component('pv-avatar', Avatar)
 app.component('pv-button', Button)
 app.component('pv-card', Card)
+app.component('pv-column', Column)
+app.component('pv-datatable', DataTable)
+app.component('pv-datepicker', DatePicker)
 app.component('pv-dialog', Dialog)
 app.component('pv-drawer', Drawer)
 app.component('pv-icon-field', IconField)
@@ -48,14 +57,20 @@ app.component('pv-input-icon', InputIcon)
 app.component('pv-input-text', InputText)
 app.component('pv-menu', Menu)
 app.component('pv-message', Message)
+app.component('pv-paginator', Paginator)
+app.component('pv-progressbar', ProgressBar)
 app.component('pv-select', Select)
 app.component('pv-skeleton', Skeleton)
+app.component('pv-tag', Tag)
 app.component('pv-toolbar', Toolbar)
 
 // Also register standard PrimeVue component names for flexibility
 app.component('Avatar', Avatar)
 app.component('Button', Button)
 app.component('Card', Card)
+app.component('Column', Column)
+app.component('DataTable', DataTable)
+app.component('DatePicker', DatePicker)
 app.component('Dialog', Dialog)
 app.component('Drawer', Drawer)
 app.component('IconField', IconField)
@@ -63,8 +78,11 @@ app.component('InputIcon', InputIcon)
 app.component('InputText', InputText)
 app.component('Menu', Menu)
 app.component('Message', Message)
+app.component('Paginator', Paginator)
+app.component('ProgressBar', ProgressBar)
 app.component('Select', Select)
 app.component('Skeleton', Skeleton)
+app.component('Tag', Tag)
 app.component('Toolbar', Toolbar)
 
 app.directive('tooltip', Tooltip)
