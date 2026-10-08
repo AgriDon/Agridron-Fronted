@@ -204,8 +204,7 @@ onMounted(load)
 <template>
   <div class="mission-management-view">
     <div class="mission-shell">
-      <h1 class="mission-title">
-        Nueva misión de fumigación</h1>
+      <h1 class="mission-title">{{ t('missions.newTitle') }}</h1>
 
       <div class="stepper" aria-label="Mission wizard">
         <div v-for="(step, index) in steps" :key="step.label" class="step-item">
@@ -301,7 +300,7 @@ onMounted(load)
               <label>{{ t('missions.form.notes') }}
                 <span class="field-hint">{{ t('missions.form.imageHint') }}</span>
               </label>
-              <textarea v-model="missionNotes" rows="5" placeholder="{{ t('missions.form.imageHint') }}"></textarea>
+              <textarea v-model="missionNotes" rows="5" :placeholder="t('missions.form.imageHint')"></textarea>
             </div>
           </div>
 
@@ -406,14 +405,14 @@ onMounted(load)
         <div v-else class="mission-card-grid">
           <article v-for="mission in missions" :key="mission.id" class="mission-card">
             <div class="mission-card-top">
-              <span class="mission-badge" :class="mission.status === 'PLANNED' ? 'scheduled' : 'active'">
+              <span class="mission-badge" :class="(mission.status === 'PLANNED' || mission.status === 'Programada') ? 'scheduled' : 'active'">
                 {{ t('missions.status.' + (mission.status || 'PLANNED')) }}
               </span>
               <span class="mission-id">{{ t('missions.mission') }} #{{ mission.id }}</span>
             </div>
 
             <h3>{{ mission.farmArea || t('missions.card.farmArea') }}</h3>
-            <p><strong>Cultivo:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
+            <p><strong>{{ t('missions.cropLabel') }}:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
             <p><strong>{{ t('missions.card.operator') }}:</strong> {{ mission.operator || t('missions.card.operator') }}</p>
             <p><strong>{{ t('missions.card.date') }}:</strong> {{ new Date(mission.date || Date.now()).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) }}</p>
 

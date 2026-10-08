@@ -55,7 +55,7 @@ load()
     </pv-message>
 
     <div v-else-if="crops.length === 0" class="cultivo-empty">
-      <i class="pi pi-seed"></i>
+      <i class="pi pi-inbox"></i>
       <p>{{ t('crop.empty') }}</p>
     </div>
 

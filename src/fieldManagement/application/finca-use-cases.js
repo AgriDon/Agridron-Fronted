@@ -87,6 +87,11 @@ export class FincaUseCases {
     listFarms = () => this.#api.getAllFarms();
 
     /**
+     * @returns {Promise<import('../domain/model/parcel.entity.js').Parcel[]>}
+     */
+    listParcels = () => this.#api.getAllParcels();
+
+    /**
      * @param {number|string} id
      * @returns {Promise<import('../domain/model/farm.entity.js').Farm>}
      */

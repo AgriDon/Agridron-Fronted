@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import ParcelaList from '@/fieldManagement/presentation/views/parcela-list.vue'
+import ParcelaList from './parcela-list.vue'
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
 
 const { t } = useI18n()
@@ -75,7 +75,7 @@ const onSeeMore = (id) => {
 
     <ParcelaList
       :key="listKey"
-      @seeMore="onSeeMore"
+      @see-more="onSeeMore"
       @edit="onEdit"
       @delete="onDelete"
     />
@@ -101,7 +101,7 @@ const onSeeMore = (id) => {
 
       <template #footer>
         <pv-button
-          :label="t('farm.cancel')"
+          :label="t('parcel.cancel')"
           severity="secondary"
           text
           @click="cancelDelete"

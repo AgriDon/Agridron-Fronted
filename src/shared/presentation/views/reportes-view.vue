@@ -1,12 +1,14 @@
 <script setup>
-// View for 'Reportes'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="view-container">
     <div class="header-section">
-      <h1 class="view-title">Reportes</h1>
-      <p class="view-subtitle">Análisis de rendimiento, cosechas y reportes operativos</p>
+      <h1 class="view-title">{{ t('reports.title') }}</h1>
+      <p class="view-subtitle">{{ t('reports.subtitle') }}</p>
     </div>
   </div>
 </template>

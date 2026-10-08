@@ -2,9 +2,7 @@
 import { ref, computed, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { FieldManagementApi } from '@/fieldManagement/infrastructure/field-management-api.js'
-import { ParcelApiEndpoint } from '@/fieldManagement/infrastructure/parcel-api-endpoint.js'
-import { BaseApi } from '@/shared/infrastructure/base-api.js'
+import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
 
 const { t } = useI18n()
 
@@ -15,11 +13,7 @@ const parcels = ref([])
 const loading = ref(true)
 const errorMessage = ref('')
 
-const api = new FieldManagementApi()
-
-// Farms and parcels are fetched separately: the farm endpoint does not embed
-// its parcels, so the card counts them by farmId.
-const parcelEndpoint = new ParcelApiEndpoint(new BaseApi().http)
+const useCases = new FincaUseCases()
 
 const onImageError = (event) => {
   event.target.style.visibility = 'hidden'
@@ -52,8 +46,8 @@ const load = async () => {
 
   try {
     const [farmList, parcelList] = await Promise.all([
-      api.getAllFarms(),
-      parcelEndpoint.getAll()
+      useCases.listFarms(),
+      useCases.listParcels()
     ])
 
     if (disposed) return

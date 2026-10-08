@@ -1,13 +1,15 @@
 <script setup>
-// View for 'Inicio' dashboard
-import WeatherWidget from '@/weatherIntegration/presentation/views/weather-widget.vue'
+import { useI18n } from 'vue-i18n'
+import WeatherWidget from '@/weatherIntegration/presentation/components/weather-widget.vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="view-container">
     <div class="welcome-section">
-      <h1 class="welcome-title">!Bienvenido, Juan¡</h1>
-      <p class="welcome-subtitle">Aqui tienes un resumen de tus operaciones</p>
+      <h1 class="welcome-title">{{ t('home.welcome') }}</h1>
+      <p class="welcome-subtitle">{{ t('home.subtitle') }}</p>
     </div>
 
     <WeatherWidget />
@@ -23,6 +25,7 @@ import WeatherWidget from '@/weatherIntegration/presentation/views/weather-widge
   margin-bottom: 2rem;
 }
 
+.view-title,
 .welcome-title {
   font-size: 1.85rem;
   font-weight: 800;
@@ -30,6 +33,7 @@ import WeatherWidget from '@/weatherIntegration/presentation/views/weather-widge
   margin: 0 0 0.5rem 0;
 }
 
+.view-subtitle,
 .welcome-subtitle {
   font-size: 1.1rem;
   font-weight: 600;
