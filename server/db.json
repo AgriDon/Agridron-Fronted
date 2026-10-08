@@ -265,6 +265,36 @@
       "progress": 10,
       "date": "2026-10-08T13:00:00.000Z",
       "id": 11
+    },
+    {
+      "farmArea": "Parcela Norte",
+      "cropType": "Maiz",
+      "status": "Programada",
+      "operator": "Juan Perez",
+      "date": "2026-10-08T13:00:00.000Z",
+      "farmId": 1,
+      "parcelId": 1,
+      "treatmentType": "Fungicida",
+      "product": "Fungicida 48%",
+      "productDose": "2.0",
+      "notes": "dasdasd",
+      "progress": 10,
+      "id": 12
+    },
+    {
+      "farmArea": "Parcela Nube",
+      "cropType": "Yuca",
+      "status": "Programada",
+      "operator": "Juan Perez",
+      "date": "2026-10-08T13:00:00.000Z",
+      "farmId": 3,
+      "parcelId": 5,
+      "treatmentType": "Fungicida",
+      "product": "Fungicida 48%",
+      "productDose": "2.0",
+      "notes": "Prueba 1 ",
+      "progress": 10,
+      "id": 13
     }
   ],
   "weather": [
