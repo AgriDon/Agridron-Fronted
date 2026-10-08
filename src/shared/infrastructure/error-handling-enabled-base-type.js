@@ -17,12 +17,22 @@ export class ErrorHandlingEnabledBaseType {
         return (error) => {
             let errorMessage = operation;
 
-            if (error.status === 404) {
+            const responseStatus = error?.response?.status ?? error?.status;
+            const statusText = error?.response?.statusText ?? error?.statusText;
+            const message = error?.message || error?.error?.message;
+
+            if (responseStatus === 404) {
                 errorMessage = `${operation}: Resource not found`;
-            } else if (error.error instanceof ErrorEvent) {
-                errorMessage = `${operation}: ${error.error.message}`;
+            } else if (error instanceof ErrorEvent || error?.error instanceof ErrorEvent) {
+                errorMessage = `${operation}: ${message || 'Network error'}`;
+            } else if (error?.code === 'ERR_NETWORK' || (!responseStatus && message)) {
+                errorMessage = `${operation}: ${message}`;
+            } else if (statusText) {
+                errorMessage = `${operation}: ${statusText}`;
+            } else if (message) {
+                errorMessage = `${operation}: ${message}`;
             } else {
-                errorMessage = `${operation}: ${error.statusText || 'Unexpected error'}`;
+                errorMessage = `${operation}: Unexpected error`;
             }
 
             return Promise.reject(new Error(errorMessage));
