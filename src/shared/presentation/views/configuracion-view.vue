@@ -1,12 +1,14 @@
 <script setup>
-// View for 'Configuración'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="view-container">
     <div class="header-section">
-      <h1 class="view-title">Configuración</h1>
-      <p class="view-subtitle">Ajustes del sistema, usuarios y preferencias</p>
+      <h1 class="view-title">{{ t('settings.title') }}</h1>
+      <p class="view-subtitle">{{ t('settings.subtitle') }}</p>
     </div>
   </div>
 </template>
