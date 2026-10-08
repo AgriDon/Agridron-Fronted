@@ -1,9 +1,12 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
 import { MissionUseCases } from '@/flightOperations/application/mission-use-cases.js'
+
+const { t } = useI18n()
 
 // Shared data layer for farms, parcels and mission persistence.
 const farmUseCases = new FincaUseCases()
@@ -71,16 +74,16 @@ const selectedParcel = computed(() =>
 )
 
 const selectedCrop = computed(() => {
-  if (!selectedParcel.value) return 'Sin cultivo'
-  return cropNameById.value[selectedParcel.value.cropId] ?? 'Sin cultivo'
+  if (!selectedParcel.value) return t('crop.noCrop')
+  return cropNameById.value[selectedParcel.value.cropId] ?? t('crop.noCrop')
 })
 
-const steps = [
-  { label: 'Parcela' },
-  { label: 'Fecha y hora' },
-  { label: 'Insumos' },
-  { label: 'Resumen' }
-]
+const steps = computed(() => [
+  { label: t('missions.wizard.step1') },
+  { label: t('missions.wizard.step2') },
+  { label: t('missions.wizard.step3') },
+  { label: t('missions.wizard.step4') }
+])
 
 const canMoveForward = computed(() => {
   if (activeStep.value === 1) return Boolean(selectedFarmId.value && selectedParcelId.value)
@@ -230,15 +233,15 @@ onMounted(load)
 
       <div v-else class="mission-panel">
         <div class="mission-form-panel">
-          <h2 v-if="activeStep === 1" class="panel-title">Selecciona la parcela</h2>
-          <h2 v-else-if="activeStep === 2" class="panel-title">Configura fecha y hora</h2>
-          <h2 v-else-if="activeStep === 3" class="panel-title">Prepara los insumos</h2>
-          <h2 v-else class="panel-title">Resumen de la misión</h2>
+          <h2 v-if="activeStep === 1" class="panel-title">{{ t('missions.wizard.step1') }}</h2>
+          <h2 v-else-if="activeStep === 2" class="panel-title">{{ t('missions.wizard.step2') }}</h2>
+          <h2 v-else-if="activeStep === 3" class="panel-title">{{ t('missions.wizard.step3') }}</h2>
+          <h2 v-else class="panel-title">{{ t('missions.wizard.step4') }}</h2>
 
           <div v-if="activeStep === 1" class="step-content">
             <div class="selector-row">
               <div class="select-group">
-                <label>Finca</label>
+                <label>{{ t('missions.form.farm') }}</label>
                 <select v-model="selectedFarmId" @change="onFarmChange">
                   <option v-for="farm in farmOptions" :key="farm.value" :value="farm.value">
                     {{ farm.label }}
@@ -247,7 +250,7 @@ onMounted(load)
               </div>
 
               <div class="select-group">
-                <label>Lote</label>
+                <label>{{ t('missions.form.parcel') }}</label>
                 <select v-model="selectedParcelId">
                   <option v-for="parcel in parcelOptions" :key="parcel.value" :value="parcel.value">
                     {{ parcel.label }}
@@ -257,7 +260,7 @@ onMounted(load)
             </div>
 
             <div class="mission-image-frame">
-              <img :src="currentImage" :alt="selectedFarm?.name || 'Parcela seleccionada'" />
+              <img :src="currentImage" :alt="selectedFarm?.name || t('parcel.selectParcel')" />
               <div class="map-toolbar">
                 <button type="button" class="map-tool">+</button>
                 <button type="button" class="map-tool">−</button>
@@ -268,101 +271,107 @@ onMounted(load)
 
           <div v-else-if="activeStep === 2" class="step-content compact-grid">
             <div class="field-group">
-              <label>Fecha</label>
+              <label>{{ t('missions.form.date') }}</label>
               <input v-model="missionDate" type="date" />
             </div>
 
             <div class="field-group">
-              <label>Hora</label>
+              <label>{{ t('missions.form.time') }}</label>
               <input v-model="missionTime" type="time" />
             </div>
           </div>
 
           <div v-else-if="activeStep === 3" class="step-content compact-grid">
             <div class="field-group">
-              <label>Producto</label>
+              <label>{{ t('missions.form.product') }}</label>
               <select v-model="productName">
-                <option value="Fungicida 48%">Fungicida 48%</option>
-                <option value="Insecticida 25%">Insecticida 25%</option>
-                <option value="Herbicida 70%">Herbicida 70%</option>
-                <option value="Mezcla nutricional">Mezcla nutricional</option>
+                <option value="Fungicida 48%">{{ t('missions.form.products.Fungicida 48%') }}</option>
+                <option value="Insecticida 25%">{{ t('missions.form.products.Insecticida 25%') }}</option>
+                <option value="Herbicida 70%">{{ t('missions.form.products.Herbicida 70%') }}</option>
+                <option value="Mezcla nutricional">{{ t('missions.form.products.Mezcla nutricional') }}</option>
               </select>
             </div>
 
             <div class="field-group">
-              <label>Dosis (L/ha)</label>
+              <label>{{ t('missions.form.dose') }}</label>
               <input v-model="productDose" type="number" min="0" step="0.1" />
             </div>
 
             <div class="field-group full-width">
-              <label>Notas</label>
-              <textarea v-model="missionNotes" rows="5" placeholder="Agrega notas o restricciones operativas..."></textarea>
+              <label>{{ t('missions.form.notes') }}
+                <span class="field-hint">{{ t('missions.form.imageHint') }}</span>
+              </label>
+              <textarea v-model="missionNotes" rows="5" placeholder="{{ t('missions.form.imageHint') }}"></textarea>
             </div>
           </div>
 
           <div v-else class="step-content summary-content">
             <div class="list-row">
-              <span>Finca</span>
+              <span>{{ t('missions.summary.farm') }}</span>
               <strong>{{ selectedFarm?.name ?? '—' }}</strong>
             </div>
             <div class="list-row">
-              <span>Parcela</span>
+              <span>{{ t('missions.summary.parcel') }}</span>
               <strong>{{ selectedParcel?.name ?? '—' }}</strong>
             </div>
             <div class="list-row">
-              <span>Cultivo</span>
+              <span>{{ t('missions.summary.crop') }}</span>
               <strong>{{ selectedCrop }}</strong>
             </div>
             <div class="list-row">
-              <span>Área</span>
+              <span>{{ t('missions.summary.area') }}</span>
               <strong>{{ selectedParcel?.area ?? '0' }} ha</strong>
             </div>
             <div class="list-row">
-              <span>Programado</span>
+              <span>{{ t('missions.summary.dateTime') }}</span>
               <strong>{{ summaryDate }}</strong>
             </div>
             <div class="list-row">
-              <span>Producto</span>
-              <strong>{{ productName }} / {{ productDose }} L/ha</strong>
+              <span>{{ t('missions.summary.treatmentType') }}</span>
+              <strong>{{ t('missions.form.treatmentTypes.' + treatmentType) }}</strong>
+            </div>
+            <div class="list-row">
+              <span>{{ t('missions.summary.product') }}</span>
+              <strong>{{ t('missions.form.products.' + productName) }} / {{ productDose }} L/ha</strong>
             </div>
           </div>
         </div>
 
         <aside class="summary-panel">
           <div class="summary-header">
-            <h3>Área seleccionada</h3>
+            <h3>{{ t('missions.summary.areaSelected') }}</h3>
             <div class="summary-area">{{ selectedParcel?.area ?? '0' }} ha</div>
           </div>
 
           <div class="summary-field">
-            <span class="summary-label">Cultivo</span>
+            <span class="summary-label">{{ t('missions.summary.crop') }}</span>
             <strong>{{ selectedCrop }}</strong>
           </div>
 
           <div class="summary-field">
-            <span class="summary-label">Tratamiento</span>
+            <span class="summary-label">{{ t('missions.summary.treatmentType') }}</span>
             <select v-model="treatmentType">
-              <option value="Fungicida">Fungicida</option>
-              <option value="Herbicida">Herbicida</option>
-              <option value="Insecticida">Insecticida</option>
-              <option value="Fertilizante">Fertilizante</option>
+              <option value="Fungicida">{{ t('missions.form.treatmentTypes.Fungicida') }}</option>
+              <option value="Herbicida">{{ t('missions.form.treatmentTypes.Herbicida') }}</option>
+              <option value="Insecticida">{{ t('missions.form.treatmentTypes.Insecticida') }}</option>
+              <option value="Fertilizante">{{ t('missions.form.treatmentTypes.Fertilizante') }}</option>
             </select>
           </div>
 
           <div class="summary-field">
-            <span class="summary-label">Fecha y hora</span>
+            <span class="summary-label">{{ t('missions.summary.dateTime') }}</span>
             <strong>{{ summaryDate }}</strong>
           </div>
 
           <div class="summary-field">
-            <span class="summary-label">Producto</span>
-            <strong>{{ productName }}</strong>
+            <span class="summary-label">{{ t('missions.summary.product') }}</span>
+            <strong>{{ t('missions.form.products.' + productName) }}</strong>
           </div>
 
           <div class="action-stack">
             <pv-button
               class="continue-button"
-              :label="activeStep === 4 ? 'Guardar misión' : 'Siguiente'"
+              :label="activeStep === 4 ? t('missions.save') : t('missions.next')"
               icon="pi pi-arrow-right"
               @click="activeStep === 4 ? submitMission() : nextStep()"
               :loading="saving"
@@ -373,13 +382,13 @@ onMounted(load)
               class="back-button"
               severity="secondary"
               text
-              :label="'Atrás'"
+              :label="t('missions.back')"
               icon="pi pi-arrow-left"
               @click="prevStep"
             />
           </div>
 
-          <pv-message v-if="submitMessage" :severity="submitMessage.includes('correctamente') ? 'success' : 'error'" :closable="false">
+          <pv-message v-if="submitMessage" :severity="submitMessage.includes(t('missions.success')) ? 'success' : 'error'" :closable="false">
             {{ submitMessage }}
           </pv-message>
         </aside>
@@ -387,30 +396,30 @@ onMounted(load)
 
       <section class="mission-list-panel">
         <div class="mission-list-header">
-          <h2>Misiones en curso y pendientes</h2>
+          <h2>{{ t('missions.noMissionsPrompt') }}</h2>
         </div>
 
         <div v-if="missions.length === 0" class="mission-empty">
-          No hay misiones registradas aún.
+          {{ t('missions.noMissions') }}
         </div>
 
         <div v-else class="mission-card-grid">
           <article v-for="mission in missions" :key="mission.id" class="mission-card">
             <div class="mission-card-top">
-              <span class="mission-badge" :class="mission.status === 'Programada' ? 'scheduled' : 'active'">
-                {{ mission.status || 'Programada' }}
+              <span class="mission-badge" :class="mission.status === 'PLANNED' ? 'scheduled' : 'active'">
+                {{ t('missions.status.' + (mission.status || 'PLANNED')) }}
               </span>
-              <span class="mission-id">Misión #{{ mission.id }}</span>
+              <span class="mission-id">{{ t('missions.mission') }} #{{ mission.id }}</span>
             </div>
 
-            <h3>{{ mission.farmArea || 'Sin parcela' }}</h3>
-            <p><strong>Cultivo:</strong> {{ mission.cropType || 'Sin cultivo' }}</p>
-            <p><strong>Operador:</strong> {{ mission.operator || 'Sin asignar' }}</p>
-            <p><strong>Fecha:</strong> {{ new Date(mission.date || Date.now()).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) }}</p>
+            <h3>{{ mission.farmArea || t('missions.card.farmArea') }}</h3>
+            <p><strong>Cultivo:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
+            <p><strong>{{ t('missions.card.operator') }}:</strong> {{ mission.operator || t('missions.card.operator') }}</p>
+            <p><strong>{{ t('missions.card.date') }}:</strong> {{ new Date(mission.date || Date.now()).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) }}</p>
 
             <div class="progress-block">
               <div class="progress-meta">
-                <span>Progreso</span>
+                <span>{{ t('missions.card.progress') }}</span>
                 <strong>{{ mission.progress || 10 }}%</strong>
               </div>
               <div class="progress-bar">

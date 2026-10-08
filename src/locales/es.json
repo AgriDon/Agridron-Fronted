@@ -17,7 +17,8 @@
     "analytics": "Reportes",
     "drone": "Drones",
     "profile": "Perfil",
-    "home": "Inicio"
+    "home": "Inicio",
+    "misiones": "Misiones"
   },
   "farm": {
     "title": "Fincas",
@@ -328,5 +329,108 @@
       "farms": "Ver fincas",
       "analytics": "Ver reportes"
     }
+  },
+  "missions": {
+    "title": "Misiones",
+    "subtitle": "Gestión de misiones de fumigación",
+    "newMission": "Nueva misión",
+    "wizard": {
+      "step1": "Parcela",
+      "step2": "Fecha y hora",
+      "step3": "Insumos",
+      "step4": "Resumen"
+    },
+    "form": {
+      "farm": "Finca",
+      "parcel": "Parcela",
+      "date": "Fecha",
+      "time": "Hora",
+      "treatmentType": "Tipo de tratamiento",
+      "product": "Producto",
+      "dose": "Dosis (L/ha)",
+      "notes": "Notas",
+      "treatmentTypes": {
+        "Fungicida": "Fungicida",
+        "Herbicida": "Herbicida",
+        "Insecticida": "Insecticida",
+        "Mezcla nutricional": "Mezcla nutricional"
+      },
+      "products": {
+        "Fungicida 48%": "Fungicida 48%",
+        "Herbicida 70%": "Herbicida 70%",
+        "Insecticida 25%": "Insecticida 25%",
+        "Fertilizante": "Fertilizante",
+        "Mezcla nutricional": "Mezcla nutricional"
+      },
+      "area": "Área",
+      "crop": "Cultivo",
+      "operator": "Operador",
+      "productDose": "Dosis del producto"
+    },
+    "summary": {
+      "farm": "Finca",
+      "parcel": "Parcela",
+      "area": "Área",
+      "crop": "Cultivo",
+      "dateTime": "Fecha y hora",
+      "treatmentType": "Tipo de tratamiento",
+      "product": "Producto",
+      "productDose": "Dosis del producto",
+      "notes": "Notas",
+      "status": "Estado",
+      "progress": "Progreso"
+    },
+    "card": {
+      "scheduled": "Programada",
+      "active": "En curso",
+      "progress": "Progreso",
+      "farmArea": "Área de finca",
+      "operator": "Operador",
+      "treatmentType": "Tipo de tratamiento",
+      "product": "Producto",
+      "productDose": "Dosis del producto",
+      "date": "Fecha"
+    },
+    "status": "Estado",
+    "statusProgrammed": "Programada",
+    "statusActive": "En curso",
+    "statusCompleted": "Completada",
+    "statusCancelled": "Cancelada",
+    "progress": "Progreso",
+    "mission": "Misión",
+    "noMissions": "No hay misiones registradas.",
+    "noMissionsPrompt": "Crea tu primera misión de fumigación",
+    "editMission": "Editar misión",
+    "deleteMission": "Eliminar misión",
+    "seeMore": "Ver más",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta misión?",
+    "loading": "Cargando misiones...",
+    "empty": "No hay misiones registradas.",
+    "step1": "Parcela",
+    "step2": "Fecha y hora",
+    "step3": "Insumos",
+    "step4": "Resumen",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "save": "Guardar misión",
+    "creating": "Creando misión...",
+    "success": "Misión creada correctamente.",
+    "error": "Error al crear la misión",
+    "selectFarm": "Seleccionar finca",
+    "selectParcel": "Seleccionar parcela",
+    "selectProduct": "Seleccionar producto",
+    "selectTreatmentType": "Seleccionar tipo de tratamiento",
+    "area": "Área",
+    "areaSelected": "Área seleccionada",
+    "configureDateTime": "Configurar fecha y hora",
+    "prepareSupplies": "Preparar insumos",
+    "missionSummary": "Resumen de la misión",
+    "dateTime": "Fecha y hora",
+    "product": "Producto",
+    "dose": "Dosis (L/ha)",
+    "notes": "Notas",
+    "operator": "Operador",
+    "treatmentType": "Tipo de tratamiento",
+    "productDose": "Dosis del producto"
   }
 }
