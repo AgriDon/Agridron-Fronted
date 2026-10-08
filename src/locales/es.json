@@ -458,8 +458,74 @@
     "subtitle": "Flota de drones, telemetría y estado operativo"
   },
   "reports": {
-    "title": "Reportes",
-    "subtitle": "Análisis de rendimiento, cosechas y reportes operativos"
+    "title": "Reportes e Historial",
+    "subtitle": "Análisis de rendimiento, cosechas y reportes operativos",
+    "empty": "No hay misiones registradas para el periodo seleccionado.",
+    "tabs": {
+      "missions": "Misiones",
+      "supplies": "Uso de insumos",
+      "savings": "Ahorros"
+    },
+    "filter": {
+      "button": "Filtrar",
+      "datePlaceholder": "01/04/2025 - 30/04/2025"
+    },
+    "table": {
+      "id": "ID",
+      "parcel": "Parcela",
+      "date": "Fecha",
+      "status": "Estado",
+      "area": "Área",
+      "actions": "Acciones",
+      "viewReport": "Ver informe fitosanitario"
+    },
+    "pagination": {
+      "next": "Next"
+    },
+    "dialog": {
+      "title": "Informe Técnico de Servicio Fitosanitario",
+      "subtitle": "Certificado digital de operación con dron",
+      "operator": "Operador responsable",
+      "treatmentType": "Tratamiento",
+      "product": "Insumo / Producto",
+      "dose": "Dosis aplicada",
+      "appliedVolume": "Volumen total",
+      "coverageTitle": "Telemetría y cobertura",
+      "defaultObservation": "Operación de fumigación completada con éxito. Cobertura uniforme y cumplimiento de estándares fitosanitarios.",
+      "progress": "Avance",
+      "precision": "Precisión",
+      "drift": "Deriva",
+      "close": "Cerrar",
+      "exportPdf": "Exportar PDF"
+    },
+    "supplies": {
+      "totalApplied": "Total Aplicado",
+      "activeProducts": "Insumos Activos",
+      "lowStockAlerts": "Alertas Stock Bajo",
+      "colProduct": "Producto",
+      "colType": "Tipo",
+      "colApplied": "Aplicado Acumulado",
+      "colStock": "Stock Disponible",
+      "colStatus": "Estado",
+      "statusLow": "Stock Bajo",
+      "statusOk": "Óptimo"
+    },
+    "savings": {
+      "waterSaved": "Agua Ahorrada",
+      "vsTraditional": "vs pulverización tradicional",
+      "chemicalOptimized": "Químico Optimizado",
+      "lessDrift": "menor deriva con dron",
+      "economicSaved": "Ahorro Estimado",
+      "laborCostSaved": "reducción en costo de mano de obra",
+      "efficiencyTime": "Tiempo Promedio",
+      "vsManualTime": "frente a 3 h/ha manual",
+      "comparisonTitle": "Comparativa de Eficiencia Operativa",
+      "comparisonSubtitle": "Rendimiento y consumo por hectárea tratada con AgriDron vs maquinaria tradicional",
+      "waterPerHa": "Consumo hídrico por hectárea",
+      "traditionalTractor": "Tractor tradicional",
+      "timePerHa": "Tiempo operativo por hectárea",
+      "traditionalManual": "Mochila manual"
+    }
   },
   "settings": {
     "title": "Configuración",

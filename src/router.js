@@ -73,7 +73,7 @@ const routes = [
   {
     path: '/reportes',
     name: 'reportes',
-    component: () => import('./shared/presentation/views/reportes-view.vue'),
+    component: () => import('./reporting/presentation/views/reports-view.vue'),
     meta: { title: 'Reportes' }
   },
   {

@@ -458,8 +458,74 @@
     "subtitle": "Drone fleet, telemetry and operational status"
   },
   "reports": {
-    "title": "Reports",
-    "subtitle": "Performance analysis, harvests and operational reports"
+    "title": "Reports and History",
+    "subtitle": "Performance analysis, harvests and operational reports",
+    "empty": "No missions recorded for the selected period.",
+    "tabs": {
+      "missions": "Missions",
+      "supplies": "Supply usage",
+      "savings": "Savings"
+    },
+    "filter": {
+      "button": "Filter",
+      "datePlaceholder": "01/04/2025 - 30/04/2025"
+    },
+    "table": {
+      "id": "ID",
+      "parcel": "Parcel",
+      "date": "Date",
+      "status": "Status",
+      "area": "Area",
+      "actions": "Actions",
+      "viewReport": "View phytosanitary report"
+    },
+    "pagination": {
+      "next": "Next"
+    },
+    "dialog": {
+      "title": "Phytosanitary Service Technical Report",
+      "subtitle": "Digital drone operation certificate",
+      "operator": "Responsible operator",
+      "treatmentType": "Treatment",
+      "product": "Supply / Product",
+      "dose": "Applied dose",
+      "appliedVolume": "Total volume",
+      "coverageTitle": "Telemetry & Coverage",
+      "defaultObservation": "Fumigation operation completed successfully. Uniform coverage and compliance with phytosanitary standards.",
+      "progress": "Progress",
+      "precision": "Precision",
+      "drift": "Drift",
+      "close": "Close",
+      "exportPdf": "Export PDF"
+    },
+    "supplies": {
+      "totalApplied": "Total Applied",
+      "activeProducts": "Active Supplies",
+      "lowStockAlerts": "Low Stock Alerts",
+      "colProduct": "Product",
+      "colType": "Type",
+      "colApplied": "Applied Total",
+      "colStock": "Available Stock",
+      "colStatus": "Status",
+      "statusLow": "Low Stock",
+      "statusOk": "Optimal"
+    },
+    "savings": {
+      "waterSaved": "Water Saved",
+      "vsTraditional": "vs traditional spraying",
+      "chemicalOptimized": "Optimized Chemical",
+      "lessDrift": "less drift with drone",
+      "economicSaved": "Estimated Savings",
+      "laborCostSaved": "reduction in manual labor cost",
+      "efficiencyTime": "Average Time",
+      "vsManualTime": "vs 3 hrs/ha manual",
+      "comparisonTitle": "Operational Efficiency Comparison",
+      "comparisonSubtitle": "Yield and consumption per treated hectare with AgriDron vs traditional methods",
+      "waterPerHa": "Water consumption per hectare",
+      "traditionalTractor": "Traditional tractor",
+      "timePerHa": "Operational time per hectare",
+      "traditionalManual": "Manual backpack"
+    }
   },
   "settings": {
     "title": "Settings",
