@@ -1,8 +1,35 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { UserProfileService } from '@/shared/application/user-profile-service.js'
 
 const route = useRoute()
+const userService = new UserProfileService()
+const currentUser = ref({
+  name: 'Juan Pérez',
+  role: 'Agricultor',
+  avatar: ''
+})
+
+const loadProfile = async () => {
+  try {
+    const data = await userService.getCurrentUser(1)
+    if (data) {
+      currentUser.value = data
+    }
+  } catch (e) {
+    // fallback defaults
+  }
+}
+
+onMounted(() => {
+  loadProfile()
+  window.addEventListener('user-profile-updated', (e) => {
+    if (e.detail) {
+      currentUser.value = { ...currentUser.value, ...e.detail }
+    }
+  })
+})
 
 // Navigation items matching the reference image with respective routes
 const menuItems = ref([
@@ -69,13 +96,14 @@ const isRouteActive = (targetPath) => {
           <!-- User Profile Section with PrimeVue Avatar -->
           <div class="user-profile">
             <pv-avatar
-              icon="pi pi-user"
+              :image="currentUser.avatar || undefined"
+              :icon="!currentUser.avatar ? 'pi pi-user' : undefined"
               shape="circle"
               class="user-avatar"
             />
             <div class="user-info">
-              <span class="user-name">Juan Perez</span>
-              <span class="user-role">Agricultor</span>
+              <span class="user-name">{{ currentUser.name }}</span>
+              <span class="user-role">{{ currentUser.role }}</span>
             </div>
           </div>
         </template>

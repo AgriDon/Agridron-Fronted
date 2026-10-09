@@ -83,6 +83,13 @@ const handleSaveProfile = async () => {
     user.value.name = editForm.value.name
     user.value.email = editForm.value.email
     user.value.avatar = editForm.value.avatar
+    window.dispatchEvent(new CustomEvent('user-profile-updated', {
+      detail: {
+        name: editForm.value.name,
+        email: editForm.value.email,
+        avatar: editForm.value.avatar
+      }
+    }))
     showEditDialog.value = false
   } catch (err) {
     feedbackMessage.value = 'No se pudo actualizar el perfil.'
@@ -134,6 +141,7 @@ onMounted(loadUser)
                   :src="user.avatar || 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=400'"
                   :alt="user.name"
                   class="user-avatar-img"
+                  @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=400'"
                 />
               </div>
 

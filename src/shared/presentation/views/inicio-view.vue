@@ -148,9 +148,10 @@ onMounted(loadData)
       <div class="kpi-card" @click="router.push('/fincas')">
         <div class="kpi-image-wrapper">
           <img
-            src="https://images.unsplash.com/photo-1524813686514-a57563d77d66?w=300"
+            :src="farms[0]?.image || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600'"
             alt="Fincas"
             class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600'"
           />
         </div>
         <span class="kpi-label">Fincas Registradas</span>
@@ -161,9 +162,10 @@ onMounted(loadData)
       <div class="kpi-card" @click="router.push('/parcelas')">
         <div class="kpi-image-wrapper">
           <img
-            src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=300"
+            :src="parcels[0]?.image || 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600'"
             alt="Parcelas"
             class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600'"
           />
         </div>
         <span class="kpi-label">Parcelas</span>
@@ -174,9 +176,10 @@ onMounted(loadData)
       <div class="kpi-card" @click="router.push('/misiones')">
         <div class="kpi-image-wrapper">
           <img
-            src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=300"
+            src="https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
             alt="Misiones"
             class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600'"
           />
         </div>
         <span class="kpi-label">Misiones</span>
@@ -187,9 +190,10 @@ onMounted(loadData)
       <div class="kpi-card" @click="router.push('/parcelas')">
         <div class="kpi-image-wrapper">
           <img
-            src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=300"
+            :src="parcels[1]?.image || 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600'"
             alt="Área Total"
             class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600'"
           />
         </div>
         <span class="kpi-label">Área Total(ha)</span>
