@@ -1,0 +1,8 @@
+export const MissionStatus = Object.freeze({
+  PLANNED: 'PLANNED',
+  AUTHORIZED: 'AUTHORIZED',
+  IN_PROGRESS: 'IN_PROGRESS',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+})

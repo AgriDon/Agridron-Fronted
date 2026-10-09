@@ -471,10 +471,12 @@
   "drones": [
     {
       "id": 1,
-      "serialNumber": "DRN-2026-0101",
-      "model": "RTX-6030",
-      "batteryLevel": 80,
+      "serialNumber": "AGRI-DRN-001-A",
+      "model": "DJI Agras T40",
+      "capacity": 40,
       "status": "AVAILABLE",
+      "urlimg": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600",
+      "batteryLevel": 80,
       "nozzleId": 1,
       "lastMaintenanceDate": "2026-08-10",
       "nextMaintenanceDate": "2026-11-10",
@@ -482,21 +484,25 @@
     },
     {
       "id": 2,
-      "serialNumber": "DRN-2026-0102",
-      "model": "RTX-6030",
+      "serialNumber": "AGRI-DRN-002-B",
+      "model": "DJI Agras T30",
+      "capacity": 30,
+      "status": "ASSIGNED",
+      "urlimg": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600",
       "batteryLevel": 35,
-      "status": "IN_FLIGHT",
       "nozzleId": 2,
       "lastMaintenanceDate": "2026-07-22",
       "nextMaintenanceDate": "2026-10-22",
-      "image": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+      "image": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600"
     },
     {
       "id": 3,
-      "serialNumber": "DRN-2026-0103",
-      "model": "AGX-8000",
+      "serialNumber": "AGRI-DRN-003-C",
+      "model": "DJI Agras T30",
+      "capacity": 30,
+      "status": "IN_FLIGHT",
+      "urlimg": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600",
       "batteryLevel": 10,
-      "status": "MAINTENANCE",
       "nozzleId": 3,
       "lastMaintenanceDate": "2026-06-15",
       "nextMaintenanceDate": "2026-09-15",
@@ -504,10 +510,12 @@
     },
     {
       "id": 4,
-      "serialNumber": "DRN-2026-0104",
-      "model": "AGX-8000",
+      "serialNumber": "AGRI-DRN-004-D",
+      "model": "DJI Agras T10",
+      "capacity": 10,
+      "status": "PAUSED",
+      "urlimg": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600",
       "batteryLevel": 95,
-      "status": "AVAILABLE",
       "nozzleId": 4,
       "lastMaintenanceDate": "2026-09-01",
       "nextMaintenanceDate": "2026-12-01",
@@ -515,25 +523,16 @@
     },
     {
       "id": 5,
-      "serialNumber": "DRN-2026-0105",
-      "model": "TRX-4500",
+      "serialNumber": "AGRI-DRN-005-E",
+      "model": "DJI Agras T10",
+      "capacity": 10,
+      "status": "MAINTENANCE",
+      "urlimg": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600",
       "batteryLevel": 55,
-      "status": "AVAILABLE",
       "nozzleId": 5,
       "lastMaintenanceDate": "2026-08-25",
       "nextMaintenanceDate": "2026-11-25",
-      "image": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600"
-    },
-    {
-      "id": 6,
-      "serialNumber": "DRN-2026-0106",
-      "model": "TRX-4500",
-      "batteryLevel": 0,
-      "status": "MAINTENANCE_SOON",
-      "nozzleId": 6,
-      "lastMaintenanceDate": "2026-03-10",
-      "nextMaintenanceDate": "2026-06-10",
-      "image": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
+      "image": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
     }
   ],
   "chemicals": [
@@ -683,10 +682,17 @@
   "users": [
     {
       "id": 1,
-      "username": "admin",
-      "email": "admin@agridron.com",
+      "username": "juanperez",
+      "name": "Juan Pérez",
+      "email": "juan.perez@gmail.com",
       "password": "admin123",
-      "role": "FARMER"
+      "role": "Agricultor",
+      "avatar": "https://img.magnific.com/foto-gratis/agricultor-que-usa-pala-cavar-suelo-sus-campos-arroz_1150-17239.jpg?semt=ais_hybrid&w=740&q=80",
+      "preferences": {
+        "emailNotifications": true,
+        "appNotifications": true,
+        "weatherAlerts": true
+      }
     },
     {
       "id": 2,
@@ -694,6 +700,54 @@
       "email": "user@agridron.com",
       "password": "pedro123",
       "role": "FARMER"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 101,
+      "type": "ALERTA_CLIMA",
+      "description": "Ráfaga de viento sostenida superior a 15 km/h en el sector norte de la parcela.",
+      "occurredAt": "2026-10-07T10:15:00.000Z"
+    },
+    {
+      "id": 102,
+      "type": "FALLA_TECNICA",
+      "description": "Nivel crítico de batería detectado; retorno automático al punto de despegue.",
+      "occurredAt": "2026-10-07T11:40:00.000Z"
+    },
+    {
+      "id": 103,
+      "type": "OBSTACULO_DETECTADO",
+      "description": "Cables de media tensión no identificados en la ruta de vuelo planificada.",
+      "occurredAt": "2026-10-07T14:20:00.000Z"
+    },
+    {
+      "id": 104,
+      "type": "OBSTACULO_DETECTADO",
+      "description": "Árbol de gran altura interfiriendo en el viraje del lote 3.",
+      "occurredAt": "2026-10-07T15:05:00.000Z"
+    },
+    {
+      "id": 105,
+      "type": "ALERTA_CLIMA",
+      "description": "Precipitación ligera imprevista que supera el umbral operativo del sensor.",
+      "occurredAt": "2026-10-07T16:30:00.000Z"
+    }
+  ],
+  "operations": [
+    {
+      "id": 1,
+      "latitude": -11.8654,
+      "longitude": -77.0381,
+      "status": "FLYING",
+      "timestamp": "2026-10-15T08:35:00Z"
+    },
+    {
+      "id": 2,
+      "latitude": -11.8661,
+      "longitude": -77.0392,
+      "status": "SPRAYING",
+      "timestamp": "2026-10-15T08:45:00Z"
     }
   ]
 }
