@@ -63,12 +63,24 @@ const routes = [
     component: () => import('./shared/presentation/views/misiones-view.vue'),
     meta: { title: 'Misiones' }
   },
+
+
+
   {
     path: '/drones',
     name: 'drones',
-    component: () => import('./shared/presentation/views/drones-view.vue'),
+    component: () => import('./flightOperations/presentation/components/drones-view.vue'),
     meta: { title: 'Drones' }
   },
+  {
+    path: '/drones/:id(\\d+)',
+    name: 'drone-detail',
+    component: () => import('./FlightOperations/presentation/components/dron-detail.vue'),
+    meta: { title: 'Drones' }
+  },
+
+
+
   {
     path: '/reportes',
     name: 'reportes',

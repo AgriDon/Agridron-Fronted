@@ -9,7 +9,6 @@ import { ParcelAssembler } from './parcel-assembler.js';
  * @extends {BaseApiEndpoint<Parcel, import('./field-management-response.js').ParcelResource, import('./field-management-response.js').ParcelResponse, ParcelAssembler>}
  */
 export class ParcelApiEndpoint extends BaseApiEndpoint {
-
     /**
      * @param {import('axios').AxiosInstance} http - The Axios client used for API requests.
      */

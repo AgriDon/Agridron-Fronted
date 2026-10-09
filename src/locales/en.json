@@ -234,12 +234,28 @@
     "loading": "Loading..."
   },
   "drone": {
+    "information": "Drone information",
+    "capacity": "Capacity",
+    "statusLabel": "Status",
+    "notFound": "Drone not found",
+    "delete-confirm": "Are you sure you want to delete this drone?",
+    "button": { "edit": "Edit", "delete": "Delete" },
+
     "title": "Drone fleet management",
+    "subtitle": "Drone fleet and operational status",
+    "newDrone": "Add Drone",
     "status": {
       "AVAILABLE": "Available",
+      "ASSIGNED": "Assigned",
       "IN_FLIGHT": "In flight",
-      "MAINTENANCE": "Maintenance",
-      "MAINTENANCE_SOON": "Maintenance due"
+      "PAUSED": "Paused",
+      "MAINTENANCE": "Maintenance"
+    },
+    "capacityRange": {
+      "all": "All capacities",
+      "upTo20": "Up to 20 L",
+      "upTo30": "Up to 30 L",
+      "over30": "More than 30 L"
     },
     "serial": "SN",
     "model": "Model",

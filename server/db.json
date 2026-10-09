@@ -324,231 +324,116 @@
     }
   ],
   "drones": [
+      {
+        "id": 1,
+        "serialNumber": "AGRI-DRN-001-A",
+        "model": "DJI Agras T40",
+        "capacity": 40.0,
+        "status": "AVAILABLE",
+        "urlimg":"https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
+      },
+      {
+        "id": 2,
+        "serialNumber": "AGRI-DRN-002-B",
+        "model": "DJI Agras T30",
+        "capacity": 30.0,
+        "status": "ASSIGNED",
+        "urlimg": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600"
+
+      },
+      {
+        "id": 3,
+        "serialNumber": "AGRI-DRN-003-C",
+        "model": "DJI Agras T30",
+        "capacity": 30.0,
+        "status": "IN_FLIGHT",
+        "urlimg": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+      },
+      {
+        "id": 4,
+        "serialNumber": "AGRI-DRN-004-D",
+        "model": "DJI Agras T10",
+        "capacity": 10.0,
+        "status": "PAUSED",
+        "urlimg": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600"
+      },
+      {
+        "id": 5,
+        "serialNumber": "AGRI-DRN-005-E",
+        "model": "DJI Agras T10",
+        "capacity": 10.0,
+        "status": "MAINTENANCE",
+        "urlimg": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+      }
+
+    ],
+  "missions": [
+      {
+        "id": 1,
+        "code": "MSN-2026-001",
+        "scheduledDate": "2026-10-15T08:30:00Z",
+        "plannedArea": 45.5,
+        "treatedArea": 12.0,
+        "missionStatus": "IN_PROGRESS",
+        "droneAssigned": {
+          "id": "DRN-09",
+          "model": "Agras T40"
+        },
+        "incidents": [
+          {
+            "id": 101,
+            "missionId": 1,
+            "description": "Fuerte ráfaga de viento detectada",
+            "severity": "LOW",
+            "date": "2026-10-15T09:15:00Z"
+          }
+        ],
+        "operationStatus": [
+          {
+            "latitude": -11.8654,
+            "longitude": -77.0381,
+            "status": "FLYING",
+            "timestamp": "2026-10-15T08:35:00Z"
+          },
+          {
+            "latitude": -11.8661,
+            "longitude": -77.0392,
+            "status": "SPRAYING",
+            "timestamp": "2026-10-15T08:45:00Z"
+          }
+        ]
+      }
+    ],
+  "incidents": [
     {
-      "id": 1,
-      "serialNumber": "DRN-2026-0101",
-      "model": "RTX-6030",
-      "batteryLevel": 80,
-      "status": "AVAILABLE",
-      "nozzleId": 1,
-      "lastMaintenanceDate": "2026-08-10",
-      "nextMaintenanceDate": "2026-11-10",
-      "image": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
+      "id": 101,
+      "type": "ALERTA_CLIMA",
+      "description": "Ráfaga de viento sostenida superior a 15 km/h en el sector norte de la parcela.",
+      "occurredAt": "2026-10-07T10:15:00.000Z"
     },
     {
-      "id": 2,
-      "serialNumber": "DRN-2026-0102",
-      "model": "RTX-6030",
-      "batteryLevel": 35,
-      "status": "IN_FLIGHT",
-      "nozzleId": 2,
-      "lastMaintenanceDate": "2026-07-22",
-      "nextMaintenanceDate": "2026-10-22",
-      "image": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+      "id": 102,
+      "type": "FALLA_TECNICA",
+      "description": "Nivel crítico de batería detectado; retorno automático al punto de despegue.",
+      "occurredAt": "2026-10-07T11:40:00.000Z"
     },
     {
-      "id": 3,
-      "serialNumber": "DRN-2026-0103",
-      "model": "AGX-8000",
-      "batteryLevel": 10,
-      "status": "MAINTENANCE",
-      "nozzleId": 3,
-      "lastMaintenanceDate": "2026-06-15",
-      "nextMaintenanceDate": "2026-09-15",
-      "image": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+      "id": 103,
+      "type": "OBSTACULO_DETECTADO",
+      "description": "Cables de media tensión no identificados en la ruta de vuelo planificada.",
+      "occurredAt": "2026-10-07T14:20:00.000Z"
     },
     {
-      "id": 4,
-      "serialNumber": "DRN-2026-0104",
-      "model": "AGX-8000",
-      "batteryLevel": 95,
-      "status": "AVAILABLE",
-      "nozzleId": 4,
-      "lastMaintenanceDate": "2026-09-01",
-      "nextMaintenanceDate": "2026-12-01",
-      "image": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600"
+      "id": 104,
+      "type": "OBSTACULO_DETECTADO",
+      "description": "Árbol de gran altura interfiriendo en el viraje del lote 3.",
+      "occurredAt": "2026-10-07T15:05:00.000Z"
     },
     {
-      "id": 5,
-      "serialNumber": "DRN-2026-0105",
-      "model": "TRX-4500",
-      "batteryLevel": 55,
-      "status": "AVAILABLE",
-      "nozzleId": 5,
-      "lastMaintenanceDate": "2026-08-25",
-      "nextMaintenanceDate": "2026-11-25",
-      "image": "https://images.unsplash.com/photo-1713952160156-bb59cac789a9?w=600"
-    },
-    {
-      "id": 6,
-      "serialNumber": "DRN-2026-0106",
-      "model": "TRX-4500",
-      "batteryLevel": 0,
-      "status": "MAINTENANCE_SOON",
-      "nozzleId": 6,
-      "lastMaintenanceDate": "2026-03-10",
-      "nextMaintenanceDate": "2026-06-10",
-      "image": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
-    }
-  ],
-  "chemicals": [
-    {
-      "id": 1,
-      "name": "Glifosato 48%",
-      "type": "herbicide",
-      "stockLiters": 120,
-      "minimumStockLiters": 40,
-      "expirationDate": "2027-08-30"
-    },
-    {
-      "id": 2,
-      "name": "Cipermetrina 25%",
-      "type": "insecticide",
-      "stockLiters": 25,
-      "minimumStockLiters": 30,
-      "expirationDate": "2026-12-10"
-    },
-    {
-      "id": 3,
-      "name": "Mancozeb 80%",
-      "type": "fungicide",
-      "stockLiters": 60,
-      "minimumStockLiters": 20,
-      "expirationDate": "2027-01-15"
-    },
-    {
-      "id": 4,
-      "name": "Imidacloprid 35%",
-      "type": "insecticide",
-      "stockLiters": 80,
-      "minimumStockLiters": 25,
-      "expirationDate": "2027-03-20"
-    },
-    {
-      "id": 5,
-      "name": "2,4-D Amina 72%",
-      "type": "herbicide",
-      "stockLiters": 15,
-      "minimumStockLiters": 20,
-      "expirationDate": "2026-09-30"
-    },
-    {
-      "id": 6,
-      "name": "Azoxistrobina 25%",
-      "type": "fungicide",
-      "stockLiters": 45,
-      "minimumStockLiters": 15,
-      "expirationDate": "2027-06-05"
-    }
-  ],
-  "nozzles": [
-    {
-      "id": 1,
-      "type": "flat-fan",
-      "diameterMm": 5,
-      "stockUnits": 12,
-      "status": "good"
-    },
-    {
-      "id": 2,
-      "type": "hollow-cone",
-      "diameterMm": 3,
-      "stockUnits": 4,
-      "status": "worn"
-    },
-    {
-      "id": 3,
-      "type": "flat-fan",
-      "diameterMm": 7,
-      "stockUnits": 8,
-      "status": "good"
-    },
-    {
-      "id": 4,
-      "type": "full-cone",
-      "diameterMm": 4,
-      "stockUnits": 10,
-      "status": "good"
-    },
-    {
-      "id": 5,
-      "type": "air-induction",
-      "diameterMm": 6,
-      "stockUnits": 2,
-      "status": "worn"
-    },
-    {
-      "id": 6,
-      "type": "hollow-cone",
-      "diameterMm": 3,
-      "stockUnits": 0,
-      "status": "damaged"
-    }
-  ],
-  "maintenance": [
-    {
-      "id": 1,
-      "droneId": 1,
-      "date": "2026-08-10",
-      "type": "preventive",
-      "description": "Revisión de motores y limpieza de boquilla",
-      "technician": "Carlos Ramírez"
-    },
-    {
-      "id": 2,
-      "droneId": 2,
-      "date": "2026-07-22",
-      "type": "preventive",
-      "description": "Cambio de hélices y calibración de sensores",
-      "technician": "Lucía Torres"
-    },
-    {
-      "id": 3,
-      "droneId": 3,
-      "date": "2026-06-15",
-      "type": "corrective",
-      "description": "Reemplazo de batería dañada",
-      "technician": "Carlos Ramírez"
-    },
-    {
-      "id": 4,
-      "droneId": 4,
-      "date": "2026-09-01",
-      "type": "preventive",
-      "description": "Inspección general y actualización de firmware",
-      "technician": "Mario Vega"
-    },
-    {
-      "id": 5,
-      "droneId": 5,
-      "date": "2026-08-25",
-      "type": "preventive",
-      "description": "Lubricación de ejes y revisión del sistema de rociado",
-      "technician": "Lucía Torres"
-    },
-    {
-      "id": 6,
-      "droneId": 6,
-      "date": "2026-03-10",
-      "type": "corrective",
-      "description": "Falla en motor trasero izquierdo, pendiente de repuesto",
-      "technician": "Mario Vega"
-    }
-  ],
-  "users": [
-    {
-      "id": 1,
-      "username": "admin",
-      "email": "admin@agridron.com",
-      "password": "admin123",
-      "role": "FARMER"
-    },
-    {
-      "id": 2,
-      "username": "pedro",
-      "email": "user@agridron.com",
-      "password": "pedro123",
-      "role": "FARMER"
+      "id": 105,
+      "type": "ALERTA_CLIMA",
+      "description": "Precipitación ligera imprevista que supera el umbral operativo del sensor.",
+      "occurredAt": "2026-10-07T16:30:00.000Z"
     }
   ]
 }
