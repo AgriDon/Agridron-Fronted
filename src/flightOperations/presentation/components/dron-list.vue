@@ -4,7 +4,7 @@ import { computed ,onUnmounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import {CAPACITY_RANGES} from "@/flightOperations/presentation/components/capacity-ranges.js";
 
-import {DroneUseCases} from "@/flightOperations/application/dron-uses-cases.js";
+import { DroneUseCases } from '@/flightOperations/application/dron-use-cases.js'
 
 const { t } = useI18n()
 

@@ -2,8 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { DroneUseCases } from '@/flightOperations/application/dron-uses-cases.js'
-
+import { DroneUseCases } from '@/flightOperations/application/dron-use-cases.js'
 
 const { t } = useI18n()
 const route = useRoute()

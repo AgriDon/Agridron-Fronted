@@ -1,36 +1,39 @@
+import { DroneStatus } from './dron-status.enum.js'
 
-import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.ts.js';
-
+/**
+ * Domain entity representing a Drone in Flight Operations.
+ */
 export class Drone {
-    id;
-    serialNumber;
-    modelName;
-    capacity;
-    status;
-    urlimg;
+  id
+  serialNumber
+  modelName
+  capacity
+  status
+  urlimg
 
-    constructor(id , serialNumber, modelName, capacity , status,urlimg) {
-
-        //Pequeña validación, no es tan necesaria, pero es buena practica de program
-        if (!Object.values(DroneStatus).includes(status)) {
-            throw new Error(`Estado inválido: "${status}". Debe ser un valor de DroneStatus.`);
-        }
-        this.id = id;
-        this.serialNumber = serialNumber;
-        this.modelName = modelName;
-        this.capacity = capacity;
-        this.status = status
-        this.urlimg = urlimg;
+  constructor(id, serialNumber, modelName, capacity, status = DroneStatus.AVAILABLE, urlimg = '') {
+    if (!Object.values(DroneStatus).includes(status)) {
+      throw new Error(`Estado inválido: "${status}". Debe ser un valor de DroneStatus.`)
     }
+    this.id = id
+    this.serialNumber = serialNumber
+    this.modelName = modelName
+    this.capacity = capacity
+    this.status = status
+    this.urlimg = urlimg
+  }
 
-    getId(){return this.id;}
-    getSerialNumber(){return this.serialNumber;}
-    getCapacity(){return this.capacity;}
-    getStatus(){return this.status;}
-    getUrlimg(){return this.urlimg;}
+  getId() { return this.id }
+  getSerialNumber() { return this.serialNumber }
+  getCapacity() { return this.capacity }
+  getStatus() { return this.status }
+  getUrlimg() { return this.urlimg }
 
-    assignToMission(){this.status = 'assignment';}
-    updateStatus(status){this.status = status;}
-    getLocation(){}
-
+  assignToMission() { this.status = DroneStatus.ASSIGNED }
+  updateStatus(status) {
+    if (!Object.values(DroneStatus).includes(status)) {
+      throw new Error(`Estado inválido: "${status}". Debe ser un valor de DroneStatus.`)
+    }
+    this.status = status
+  }
 }

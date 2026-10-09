@@ -60,20 +60,19 @@ const routes = [
   {
     path: '/misiones',
     name: 'misiones',
-    component: () => import('./flightOperations/presentation/views/MissionManagement.vue'),
+    component: () => import('./flightOperations/presentation/views/mission-management-view.vue'),
     meta: { title: 'Misiones' }
   },
-    
   {
     path: '/drones',
     name: 'drones',
-    component: () => import('./flightOperations/presentation/components/drones-view.vue'),
+    component: () => import('./flightOperations/presentation/views/drones-view.vue'),
     meta: { title: 'Drones' }
   },
   {
     path: '/drones/:id(\\d+)',
     name: 'drone-detail',
-    component: () => import('./flightOperations/presentation/components/dron-detail.vue'),
+    component: () => import('./flightOperations/presentation/views/dron-detail-view.vue'),
     meta: { title: 'Drones' }
   },
   {

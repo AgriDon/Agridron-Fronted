@@ -4,8 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import DroneList from '@/flightOperations/presentation/components/dron-list.vue'
-import { DroneUseCases } from '@/flightOperations/application/dron-uses-cases.js'
-import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.ts.js'
+import { DroneUseCases } from '@/flightOperations/application/dron-use-cases.js'
+import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.js'
 import { CAPACITY_RANGES } from '@/flightOperations/presentation/components/capacity-ranges.js'
 
 const { t } = useI18n()

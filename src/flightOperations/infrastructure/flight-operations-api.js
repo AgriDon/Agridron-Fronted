@@ -2,7 +2,7 @@ import { BaseApi } from '@/shared/infrastructure/base-api.js'
 import { DronApiEndpoint } from './dron-api-endpoint.js'
 import { IncidentApiEndpoint } from './incident-api-endpoint.js'
 import { MissionApiEndpoint } from './mission-api-endpoint.js'
-import { OperationStatusApiEndpoint } from './operationStatus-api-endpoint.js'
+import { OperationStatusApiEndpoint } from './operation-status-api-endpoint.js'
 
 /**
  * Infrastructure facade for flight operations, drones, incidents and missions endpoints.
