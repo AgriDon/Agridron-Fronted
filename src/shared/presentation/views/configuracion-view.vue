@@ -531,8 +531,46 @@ onMounted(loadUser)
   .settings-card-wrapper {
     grid-template-columns: 1fr;
   }
+  .settings-sidebar {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+  .tab-button {
+    white-space: nowrap;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+  }
   .settings-content-panel {
     padding: 1.5rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .settings-page-title {
+    font-size: 1.5rem;
+  }
+  .settings-content-panel {
+    padding: 1.25rem 1rem;
+  }
+  .user-info-grid {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+  .user-details {
+    align-items: center;
+  }
+  .edit-action-row {
+    justify-content: center;
+  }
+  .preference-item {
+    gap: 0.75rem;
+  }
+  .preference-text {
+    font-size: 0.92rem;
   }
 }
 </style>

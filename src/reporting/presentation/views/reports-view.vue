@@ -323,4 +323,47 @@ onMounted(loadData)
   width: 100%;
   margin-top: 0.5rem;
 }
+
+@media (max-width: 768px) {
+  .reports-page-wrapper {
+    padding: 1rem 0.75rem 2rem 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-title {
+    font-size: 1.45rem;
+  }
+
+  .tabs-nav {
+    gap: 0.5rem;
+  }
+
+  .tab-btn {
+    min-width: 90px;
+    flex: 1 1 auto;
+    padding: 0 0.75rem;
+    font-size: 0.9rem;
+    height: 40px;
+  }
+
+  .filter-bar {
+    gap: 0.65rem;
+  }
+
+  .filter-input-wrapper {
+    max-width: 100%;
+  }
+
+  .filter-date-input {
+    height: 44px;
+    font-size: 0.95rem;
+  }
+
+  .filter-submit-btn {
+    height: 44px;
+    width: 100%;
+    font-size: 1rem;
+  }
+}
 </style>

@@ -259,6 +259,19 @@ const close = () => {
   width: 100%;
 }
 
+@media (max-width: 520px) {
+  .spec-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .report-header-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+}
+
 @media print {
   :global(body *) {
     visibility: hidden;

@@ -275,4 +275,18 @@ const { t } = useI18n()
   padding: 0 0.5rem;
   white-space: nowrap;
 }
+
+@media (max-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  .row-meta {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .efficiency-comparison-card {
+    padding: 1.15rem 1rem;
+  }
+}
 </style>

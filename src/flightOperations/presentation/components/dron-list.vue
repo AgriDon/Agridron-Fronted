@@ -151,6 +151,17 @@ load()
   }
 }
 
+@media (max-width: 540px) {
+  .drone-card {
+    flex-direction: column;
+  }
+  .drone-media {
+    flex: 0 0 auto;
+    width: 100%;
+    height: 11rem;
+  }
+}
+
 .drone-card-skeleton {
   height: 10rem;
 }

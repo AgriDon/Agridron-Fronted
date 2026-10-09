@@ -445,6 +445,7 @@ onMounted(loadData)
 
 .missions-table {
   width: 100%;
+  min-width: 520px;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.95rem;
@@ -629,8 +630,22 @@ onMounted(loadData)
 }
 
 @media (max-width: 640px) {
+  .welcome-title {
+    font-size: 1.55rem;
+  }
+  .welcome-subtitle {
+    font-size: 0.95rem;
+  }
   .kpi-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .panel-header {
+    padding: 0.85rem 1rem;
+  }
+  .missions-table th,
+  .missions-table td {
+    padding: 0.8rem 1rem;
   }
 }
 </style>

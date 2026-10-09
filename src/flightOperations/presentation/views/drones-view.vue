@@ -221,4 +221,24 @@ const onView = (id) => {
 .filter-select {
   min-width: 12rem;
 }
+
+@media (max-width: 640px) {
+  .header-section {
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .view-subtitle {
+    font-size: 0.95rem;
+  }
+  .filters {
+    gap: 1rem;
+  }
+  .filter-select {
+    width: 100%;
+    min-width: unset;
+  }
+}
 </style>

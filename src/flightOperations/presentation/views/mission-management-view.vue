@@ -842,13 +842,43 @@ textarea:focus {
 }
 
 @media (max-width: 640px) {
+  .mission-panel {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .mission-form-panel {
+    padding: 1rem;
+    border-radius: 14px;
+  }
+
+  .panel-title {
+    font-size: 1.4rem;
+  }
+
   .selector-row,
   .compact-grid {
     grid-template-columns: 1fr;
   }
 
+  .mission-image-frame,
+  .mission-image-frame img {
+    min-height: 240px;
+  }
+
   .stepper {
-    justify-content: flex-start;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+
+  .step-bullet {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.15rem;
+  }
+
+  .step-line {
+    width: 1.25rem;
   }
 
   .step-label {

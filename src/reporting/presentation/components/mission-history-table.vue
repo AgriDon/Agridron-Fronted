@@ -156,13 +156,14 @@ const formatDate = (dateStr) => {
 .table-container {
   background: #ffffff;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   border: 1px solid #e5e7eb;
 }
 
 .custom-table {
   width: 100%;
+  min-width: 580px;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.96rem;
@@ -307,5 +308,17 @@ const formatDate = (dateStr) => {
   font-size: 2.5rem;
   margin-bottom: 0.75rem;
   color: #9ca3af;
+}
+
+@media (max-width: 640px) {
+  .custom-table th,
+  .custom-table td {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.88rem;
+  }
+  .custom-pagination {
+    justify-content: center;
+    padding: 0.75rem 1rem;
+  }
 }
 </style>

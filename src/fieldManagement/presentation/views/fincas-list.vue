@@ -225,6 +225,7 @@ load()
   display: flex;
   justify-content: flex-end;
   gap: 0.25rem;
+  flex-wrap: wrap;
 }
 
 /* Empty and error states */

@@ -159,4 +159,16 @@ const onSeeMore = (id) => {
   opacity: 0.75;
   line-height: 1.5;
 }
+
+@media (max-width: 640px) {
+  .header-section {
+    margin-bottom: 1.25rem;
+  }
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .view-subtitle {
+    font-size: 0.95rem;
+  }
+}
 </style>

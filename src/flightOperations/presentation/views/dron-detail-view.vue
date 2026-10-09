@@ -228,4 +228,17 @@ onMounted(load)
 .back-button {
   margin-top: 1.5rem;
 }
+
+@media (max-width: 560px) {
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .detail-list {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+  .detail-list dt {
+    margin-top: 0.65rem;
+  }
+}
 </style>

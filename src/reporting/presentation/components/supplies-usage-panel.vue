@@ -185,7 +185,7 @@ const lowStockCount = computed(() => {
 .table-card {
   background: #ffffff;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   border: 1px solid #e5e7eb;
 }
@@ -200,5 +200,12 @@ const lowStockCount = computed(() => {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
 }
 </style>
