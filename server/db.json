@@ -682,10 +682,17 @@
   "users": [
     {
       "id": 1,
-      "username": "admin",
-      "email": "admin@agridron.com",
+      "username": "juanperez",
+      "name": "Juan Pérez",
+      "email": "juan.perez@gmail.com",
       "password": "admin123",
-      "role": "FARMER"
+      "role": "Agricultor",
+      "avatar": "https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=400",
+      "preferences": {
+        "emailNotifications": true,
+        "appNotifications": true,
+        "weatherAlerts": true
+      }
     },
     {
       "id": 2,

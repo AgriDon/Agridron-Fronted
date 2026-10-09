@@ -27,6 +27,7 @@ import {
   Select,
   Skeleton,
   Tag,
+  ToggleSwitch,
   Toolbar,
   Tooltip
 } from 'primevue'
@@ -62,6 +63,7 @@ app.component('pv-progressbar', ProgressBar)
 app.component('pv-select', Select)
 app.component('pv-skeleton', Skeleton)
 app.component('pv-tag', Tag)
+app.component('pv-toggle-switch', ToggleSwitch)
 app.component('pv-toolbar', Toolbar)
 
 // Also register standard PrimeVue component names for flexibility
@@ -83,6 +85,7 @@ app.component('ProgressBar', ProgressBar)
 app.component('Select', Select)
 app.component('Skeleton', Skeleton)
 app.component('Tag', Tag)
+app.component('ToggleSwitch', ToggleSwitch)
 app.component('Toolbar', Toolbar)
 
 app.directive('tooltip', Tooltip)
