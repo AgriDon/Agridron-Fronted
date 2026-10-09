@@ -1,0 +1,553 @@
+{
+  "page-not-found": {
+    "title": "Página no encontrada",
+    "content": "La ruta <strong>{invalidPath}</strong> es inválida.",
+    "go-home": "Ir a Inicio"
+  },
+  "footer": {
+    "rights": "Derechos de autor © 2026 AgriDron, Todos los derechos reservados",
+    "intro": "Desarrollado ",
+    "author": "por el Equipo AgriDron Solutions"
+  },
+  "option": {
+    "farm": "Fincas",
+    "parcel": "Parcelas",
+    "crop": "Cultivos",
+    "fumigationArea": "Zonas de fumigación",
+    "analytics": "Reportes",
+    "drone": "Drones",
+    "profile": "Perfil",
+    "home": "Inicio",
+    "misiones": "Misiones"
+  },
+  "farm": {
+    "title": "Fincas",
+    "subtitle": "Gestión y registro de fincas agrícolas",
+    "newFarm": "Nueva finca",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar esta finca?",
+    "cancel": "Cancelar",
+    "empty": "No hay fincas registradas",
+    "parcelCount": "{count} parcelas",
+    "noImage": "Sin imagen",
+    "loading": "Cargando fincas...",
+    "button": {
+      "seeMore": "Ver más",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nueva finca",
+      "edit-title": "Editar finca",
+      "name": "Nombre",
+      "location": "Ubicación",
+      "ownerId": "ID del propietario",
+      "image": "URL de imagen",
+      "imageHint": "Opcional",
+      "create": "Crear",
+      "selectOwner": "Seleccionar propietario",
+      "unknownOwner": "Propietario desconocido (ID {id})",
+      "update": "Actualizar",
+      "error": {
+        "name-required": "El nombre es obligatorio",
+        "location-required": "La ubicación es obligatoria",
+        "ownerId-required": "El ID del propietario es obligatorio",
+        "ownerId-min": "El ID debe ser mayor que 0"
+      }
+    }
+  },
+  "parcel": {
+    "title": "Parcelas",
+    "subtitle": "Supervisión y delimitación de parcelas de cultivo",
+    "area": "Área",
+    "farm": "Finca",
+    "noCrop": "Sin cultivo",
+    "noImage": "Sin imagen",
+    "newParcel": "Nueva parcela",
+    "selectFarm": "Seleccionar finca",
+    "selectFarmPrompt": "Seleccione una finca para ver sus parcelas",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar esta parcela?",
+    "empty": "No hay parcelas registradas",
+    "loading": "Cargando parcelas...",
+    "button": {
+      "seeMore": "Ver más",
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nueva parcela",
+      "edit-title": "Editar parcela",
+      "name": "Nombre",
+      "area": "Área (ha)",
+      "geometry": "Geometría (GeoJSON)",
+      "farm": "Finca",
+      "crop": "Cultivo",
+      "image": "URL de imagen",
+      "imageHint": "Opcional",
+      "create": "Crear",
+      "update": "Actualizar",
+      "error": {
+        "name-required": "El nombre es obligatorio",
+        "area-required": "El área es obligatoria",
+        "area-min": "El área debe ser mayor que 0",
+        "geometry-required": "La geometría es obligatoria",
+        "farm-required": "Debe seleccionar una finca",
+        "crop-required": "Debe seleccionar un cultivo"
+      }
+    },
+    "detail": {
+      "title": "Detalle de parcela",
+      "name": "Nombre",
+      "geometry": "Geometría",
+      "notFound": "Parcela no encontrada",
+      "back": "Volver"
+    }
+  },
+  "crop": {
+    "title": "Cultivos",
+    "subtitle": "Gestión y registro de variedades de cultivos",
+    "newCrop": "Nuevo cultivo",
+    "variety": "Variedad",
+    "noVariety": "Sin variedad",
+    "information": "Información del cultivo",
+    "back": "Volver",
+    "notFound": "Cultivo no encontrado",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar este cultivo?",
+    "empty": "No hay cultivos registrados",
+    "loading": "Cargando cultivos...",
+    "button": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nuevo cultivo",
+      "edit-title": "Editar cultivo",
+      "name": "Nombre",
+      "variety": "Variedad",
+      "create": "Crear",
+      "update": "Actualizar",
+      "error": {
+        "name-required": "El nombre es obligatorio"
+      }
+    }
+  },
+  "fumigationArea": {
+    "title": "Zonas de fumigación",
+    "parcel": "Parcela",
+    "selectParcel": "Seleccionar parcela",
+    "newFumigationArea": "Nueva zona de fumigación",
+    "selectParcelPrompt": "Seleccione una parcela para ver sus zonas de fumigación",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar esta zona de fumigación?",
+    "empty": "No hay zonas de fumigación registradas",
+    "loading": "Cargando zonas de fumigación...",
+    "button": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "new-title": "Nueva zona de fumigación",
+      "edit-title": "Editar zona de fumigación",
+      "parcel": "Parcela",
+      "geometry": "Geometría (GeoJSON)",
+      "area": "Área (m²)",
+      "create": "Crear",
+      "update": "Actualizar",
+      "error": {
+        "parcel-required": "Debe seleccionar una parcela",
+        "geometry-required": "La geometría es obligatoria",
+        "area-required": "El área es obligatoria",
+        "area-min": "El área debe ser mayor que 0"
+      }
+    }
+  },
+  "weather": {
+    "title": "Estado del clima",
+    "subtitle": "Condiciones actuales por ubicación",
+    "temperature": "Temperatura",
+    "humidity": "Humedad",
+    "wind": "Velocidad del viento",
+    "precipitation": "Precipitación",
+    "observed": "Observado el",
+    "location": "Ubicación",
+    "noAlerts": "Sin alertas",
+    "alerts": "Alertas",
+    "empty": "Sin datos meteorológicos disponibles.",
+    "severity": {
+      "HIGH": "Alto",
+      "MEDIUM": "Medio",
+      "LOW": "Bajo"
+    }
+  },
+  "analytics": {
+    "title": "Reportes e Historial",
+    "tabs": {
+      "missions": "Misiones",
+      "supplyUsage": "Uso de insumos",
+      "indicators": "Indicadores"
+    },
+    "filter": {
+      "from": "Desde",
+      "to": "Hasta",
+      "apply": "Filtrar",
+      "clear": "Limpiar"
+    },
+    "columns": {
+      "id": "ID",
+      "mission": "Misión",
+      "date": "Fecha",
+      "status": "Estado",
+      "area": "Área (ha)",
+      "actions": "Acciones",
+      "type": "Tipo",
+      "volume": "Volumen (L)",
+      "density": "L/ha",
+      "generatedAt": "Generado"
+    },
+    "status": {
+      "PLANNED": "Programada",
+      "AUTHORIZED": "Autorizada",
+      "IN_PROGRESS": "En curso",
+      "PAUSED": "En pausa",
+      "COMPLETED": "Completada",
+      "CANCELLED": "Cancelada"
+    },
+    "reportType": {
+      "MISSION_SUMMARY": "Resumen de misión",
+      "PHYTOSANITARY": "Fitosanitario"
+    },
+    "actions": {
+      "download": "Descargar reporte",
+      "detail": "Ver detalle",
+      "back": "Volver a reportes",
+      "exportJson": "Exportar JSON",
+      "exportCsv": "Exportar CSV"
+    },
+    "indicators": {
+      "period": "Periodo",
+      "empty": "No hay indicadores disponibles."
+    },
+    "detail": {
+      "title": "Reporte",
+      "observations": "Observaciones",
+      "metrics": "Métricas operativas",
+      "noMetrics": "Sin métricas registradas.",
+      "notFound": "Reporte no encontrado."
+    },
+    "empty": "No se encontraron registros.",
+    "loading": "Cargando..."
+  },
+  "drone": {
+    "title": "Gestión de flota de drones",
+    "subtitle": "Flota de drones y estado operativo",
+    "newDrone": "Agregar dron",
+    "information": "Información del dron",
+    "capacity": "Capacidad",
+    "statusLabel": "Estado",
+    "notFound": "Dron no encontrado",
+    "delete-confirm": "¿Estás seguro de que deseas eliminar este dron?",
+    "button": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "status": {
+      "AVAILABLE": "Disponible",
+      "ASSIGNED": "Asignado",
+      "IN_FLIGHT": "En vuelo",
+      "PAUSED": "En pausa",
+      "MAINTENANCE": "Mantenimiento",
+      "MAINTENANCE_SOON": "Mantenimiento próx."
+    },
+    "capacityRange": {
+      "all": "Todas las capacidades",
+      "upTo20": "Hasta 20 L",
+      "upTo30": "Hasta 30 L",
+      "over30": "Más de 30 L"
+    },
+    "serial": "SN",
+    "model": "Modelo",
+    "battery": "Batería",
+    "nozzle": "Boquilla",
+    "noNozzle": "Sin boquilla",
+    "compatible": "Compatible",
+    "lastService": "Último mantenimiento",
+    "nextService": "Próximo mantenimiento",
+    "image": "URL de imagen",
+    "noPhoto": "Sin foto",
+    "loading": "Cargando drones...",
+    "empty": "No hay drones para mostrar",
+    "actions": {
+      "details": "Ver detalles",
+      "maintenance": "Ver mantenimientos"
+    }
+  },
+  "iam": {
+    "signIn": {
+      "title": "Iniciar Sesión",
+      "subtitle": "Ingresa tus credenciales para acceder a AgriDron",
+      "username": "Nombre de usuario",
+      "usernamePlaceholder": "ej. jdoe",
+      "usernameRequired": "El nombre de usuario es obligatorio",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMinLength": "Mínimo 4 caracteres",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "signingIn": "Iniciando sesión...",
+      "submit": "Ingresar",
+      "noAccount": "¿No tienes una cuenta?",
+      "signUpLink": "Regístrate aquí",
+      "invalidCredentials": "Credenciales inválidas"
+    },
+    "signUp": {
+      "title": "Crear Cuenta",
+      "subtitle": "Regístrate en la plataforma AgriDron",
+      "username": "Nombre de usuario",
+      "usernamePlaceholder": "ej. jdoe",
+      "usernameRequired": "El nombre de usuario es obligatorio",
+      "usernameMinLength": "Mínimo 3 caracteres",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "ej. usuario@ejemplo.com",
+      "emailRequired": "El correo electrónico es obligatorio",
+      "emailInvalid": "Formato de correo no válido",
+      "password": "Contraseña",
+      "passwordRequired": "La contraseña es obligatoria",
+      "passwordMinLength": "Mínimo 6 caracteres",
+      "showPassword": "Mostrar contraseña",
+      "hidePassword": "Ocultar contraseña",
+      "role": "Rol en el sistema",
+      "roleRequired": "Debes seleccionar un rol",
+      "signingUp": "Registrando cuenta...",
+      "submit": "Registrarse",
+      "hasAccount": "¿Ya tienes una cuenta?",
+      "signInLink": "Inicia sesión",
+      "signUpError": "Error al registrar usuario"
+    },
+    "profile": {
+      "title": "Perfil de Usuario",
+      "subtitle": "Información de la cuenta activa",
+      "username": "Usuario",
+      "email": "Correo electrónico",
+      "role": "Rol asignado",
+      "noSession": "No hay una sesión iniciada actualmente.",
+      "signIn": "Iniciar Sesión",
+      "goToFarms": "Ir a Fincas",
+      "signOut": "Cerrar Sesión"
+    }
+  },
+  "home": {
+    "greeting": "Hola {username}, bienvenido",
+    "subtitle": "Resumen de tu operación agrícola",
+    "metricsTitle": "Indicadores",
+    "shortcutsTitle": "Accesos rápidos",
+    "metrics": {
+      "farms": "Fincas",
+      "parcels": "Parcelas",
+      "crops": "Cultivos",
+      "fumigationAreas": "Zonas de fumigación"
+    },
+    "actions": {
+      "farms": "Ver fincas",
+      "analytics": "Ver reportes"
+    }
+  },
+  "missions": {
+    "title": "Misiones",
+    "subtitle": "Gestión de misiones de fumigación",
+    "newTitle": "Nueva misión de fumigación",
+    "cropLabel": "Cultivo",
+    "newMission": "Nueva misión",
+    "wizard": {
+      "step1": "Parcela",
+      "step2": "Fecha y hora",
+      "step3": "Insumos",
+      "step4": "Resumen"
+    },
+    "form": {
+      "farm": "Finca",
+      "parcel": "Parcela",
+      "date": "Fecha",
+      "time": "Hora",
+      "treatmentType": "Tipo de tratamiento",
+      "product": "Producto",
+      "dose": "Dosis (L/ha)",
+      "notes": "Notas",
+      "treatmentTypes": {
+        "Fungicida": "Fungicida",
+        "Herbicida": "Herbicida",
+        "Insecticida": "Insecticida",
+        "Fertilizante": "Fertilizante",
+        "Mezcla nutricional": "Mezcla nutricional"
+      },
+      "imageHint": "(Opcional)",
+      "products": {
+        "Fungicida 48%": "Fungicida 48%",
+        "Herbicida 70%": "Herbicida 70%",
+        "Insecticida 25%": "Insecticida 25%",
+        "Fertilizante": "Fertilizante",
+        "Mezcla nutricional": "Mezcla nutricional"
+      },
+      "area": "Área",
+      "crop": "Cultivo",
+      "operator": "Operador",
+      "productDose": "Dosis del producto"
+    },
+    "summary": {
+      "farm": "Finca",
+      "parcel": "Parcela",
+      "area": "Área",
+      "areaSelected": "Área seleccionada",
+      "crop": "Cultivo",
+      "dateTime": "Fecha y hora",
+      "treatmentType": "Tipo de tratamiento",
+      "product": "Producto",
+      "productDose": "Dosis del producto",
+      "notes": "Notas",
+      "status": "Estado",
+      "progress": "Progreso"
+    },
+    "card": {
+      "scheduled": "Programada",
+      "active": "En curso",
+      "progress": "Progreso",
+      "farmArea": "Área de finca",
+      "operator": "Operador",
+      "treatmentType": "Tipo de tratamiento",
+      "product": "Producto",
+      "productDose": "Dosis del producto",
+      "date": "Fecha"
+    },
+    "statusLabel": "Estado",
+    "status": {
+      "PLANNED": "Programada",
+      "IN_PROGRESS": "En curso",
+      "COMPLETED": "Completada",
+      "CANCELLED": "Cancelada",
+      "Pending": "Pendiente",
+      "Programada": "Programada",
+      "En curso": "En curso",
+      "Completada": "Completada",
+      "Cancelada": "Cancelada"
+    },
+    "statusProgrammed": "Programada",
+    "statusActive": "En curso",
+    "statusCompleted": "Completada",
+    "statusCancelled": "Cancelada",
+    "progress": "Progreso",
+    "mission": "Misión",
+    "noMissions": "No hay misiones registradas.",
+    "noMissionsPrompt": "Crea tu primera misión de fumigación",
+    "editMission": "Editar misión",
+    "deleteMission": "Eliminar misión",
+    "seeMore": "Ver más",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta misión?",
+    "loading": "Cargando misiones...",
+    "empty": "No hay misiones registradas.",
+    "step1": "Parcela",
+    "step2": "Fecha y hora",
+    "step3": "Insumos",
+    "step4": "Resumen",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "save": "Guardar misión",
+    "creating": "Creando misión...",
+    "success": "Misión creada correctamente.",
+    "error": "Error al crear la misión",
+    "selectFarm": "Seleccionar finca",
+    "selectParcel": "Seleccionar parcela",
+    "selectProduct": "Seleccionar producto",
+    "selectTreatmentType": "Seleccionar tipo de tratamiento",
+    "area": "Área",
+    "areaSelected": "Área seleccionada",
+    "configureDateTime": "Configurar fecha y hora",
+    "prepareSupplies": "Preparar insumos",
+    "missionSummary": "Resumen de la misión",
+    "dateTime": "Fecha y hora",
+    "product": "Producto",
+    "dose": "Dosis (L/ha)",
+    "notes": "Notas",
+    "operator": "Operador",
+    "treatmentType": "Tipo de tratamiento",
+    "productDose": "Dosis del producto"
+  },
+  "home": {
+    "welcome": "!Bienvenido, Juan¡",
+    "subtitle": "Aqui tienes un resumen de tus operaciones"
+  },
+  "drones": {
+    "title": "Drones",
+    "subtitle": "Flota de drones, telemetría y estado operativo"
+  },
+  "reports": {
+    "title": "Reportes e Historial",
+    "subtitle": "Análisis de rendimiento, cosechas y reportes operativos",
+    "empty": "No hay misiones registradas para el periodo seleccionado.",
+    "tabs": {
+      "missions": "Misiones",
+      "supplies": "Uso de insumos",
+      "savings": "Ahorros"
+    },
+    "filter": {
+      "button": "Filtrar",
+      "datePlaceholder": "01/04/2025 - 30/04/2025"
+    },
+    "table": {
+      "id": "ID",
+      "parcel": "Parcela",
+      "date": "Fecha",
+      "status": "Estado",
+      "area": "Área",
+      "actions": "Acciones",
+      "viewReport": "Ver informe fitosanitario"
+    },
+    "pagination": {
+      "next": "Next"
+    },
+    "dialog": {
+      "title": "Informe Técnico de Servicio Fitosanitario",
+      "subtitle": "Certificado digital de operación con dron",
+      "operator": "Operador responsable",
+      "treatmentType": "Tratamiento",
+      "product": "Insumo / Producto",
+      "dose": "Dosis aplicada",
+      "appliedVolume": "Volumen total",
+      "coverageTitle": "Telemetría y cobertura",
+      "defaultObservation": "Operación de fumigación completada con éxito. Cobertura uniforme y cumplimiento de estándares fitosanitarios.",
+      "progress": "Avance",
+      "precision": "Precisión",
+      "drift": "Deriva",
+      "close": "Cerrar",
+      "exportPdf": "Exportar PDF"
+    },
+    "supplies": {
+      "totalApplied": "Total Aplicado",
+      "activeProducts": "Insumos Activos",
+      "lowStockAlerts": "Alertas Stock Bajo",
+      "colProduct": "Producto",
+      "colType": "Tipo",
+      "colApplied": "Aplicado Acumulado",
+      "colStock": "Stock Disponible",
+      "colStatus": "Estado",
+      "statusLow": "Stock Bajo",
+      "statusOk": "Óptimo"
+    },
+    "savings": {
+      "waterSaved": "Agua Ahorrada",
+      "vsTraditional": "vs pulverización tradicional",
+      "chemicalOptimized": "Químico Optimizado",
+      "lessDrift": "menor deriva con dron",
+      "economicSaved": "Ahorro Estimado",
+      "laborCostSaved": "reducción en costo de mano de obra",
+      "efficiencyTime": "Tiempo Promedio",
+      "vsManualTime": "frente a 3 h/ha manual",
+      "comparisonTitle": "Comparativa de Eficiencia Operativa",
+      "comparisonSubtitle": "Rendimiento y consumo por hectárea tratada con AgriDron vs maquinaria tradicional",
+      "waterPerHa": "Consumo hídrico por hectárea",
+      "traditionalTractor": "Tractor tradicional",
+      "timePerHa": "Tiempo operativo por hectárea",
+      "traditionalManual": "Mochila manual"
+    }
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Ajustes del sistema, usuarios y preferencias"
+  }
+}
