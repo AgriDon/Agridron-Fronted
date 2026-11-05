@@ -1,28 +1,23 @@
 <script setup>
-import { ref, computed, onUnmounted } from 'vue'
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-import { WeatherUseCases } from '@/weatherIntegration/application/weather-use-cases.js'
+import { useWeatherStore } from '@/weatherIntegration/application/weather.store.js'
+
+/**
+ * Weather card. It shows the first loaded condition, or the one received
+ * in the "condition" prop (used by the weather simulator).
+ * The data is loaded by the view that hosts it (store.loadWeatherConditions()).
+ */
+const props = defineProps({
+  /** Optional condition shown instead of the loaded one. */
+  condition: { type: Object, default: null }
+})
 
 const { t } = useI18n()
+const weatherStore = useWeatherStore()
 
-const conditions = ref([])
-const loading = ref(true)
-const errorMessage = ref('')
-
-const useCases = new WeatherUseCases()
-
-// Only the first location is shown, same as the original widget.
-const condition = computed(() => conditions.value[0] ?? null)
-
-// Alert severity -> PrimeVue Message severity.
-const messageSeverity = {
-  LOW: 'info',
-  MEDIUM: 'warn',
-  HIGH: 'error'
-}
-
-const severityFor = (alert) => messageSeverity[alert.severity] ?? 'secondary'
+const shownCondition = computed(() => props.condition ?? weatherStore.weatherConditions[0] ?? null)
 
 // vue-i18n has no datetimeFormats configured, so the "dd/MM/yyyy · HH:mm"
 // format of the original widget is built by hand.
@@ -35,166 +30,148 @@ const formatObservedAt = (value) => {
 
   return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} · ${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
-
-// load() is fired during setup and its promise can resolve after the user
-// has already navigated away. Writing to the refs then would re-render an
-// unmounted component, which throws "node is null" on the next patch.
-let disposed = false
-
-onUnmounted(() => {
-  disposed = true
-})
-
-const load = async () => {
-  loading.value = true
-  errorMessage.value = ''
-
-  try {
-    const conditionList = await useCases.listWeatherConditions()
-
-    if (disposed) return
-
-    conditions.value = conditionList
-  } catch (error) {
-    if (disposed) return
-
-    errorMessage.value = error.message
-  } finally {
-    if (!disposed) {
-      loading.value = false
-    }
-  }
-}
-
-load()
 </script>
 
 <template>
   <div class="weather-widget">
-    <!-- Loading state -->
-    <pv-skeleton v-if="loading" class="weather-skeleton" aria-busy="true" />
+    <!-- Loading state (only for the real data, the simulator always has a condition) -->
+    <pv-skeleton v-if="!props.condition && weatherStore.loading" class="weather-skeleton" aria-busy="true" />
 
-    <!-- Error state -->
-    <pv-message v-else-if="errorMessage" severity="error" :closable="false">
-      {{ errorMessage }}
-    </pv-message>
+    <!-- Weather card -->
+    <article v-else-if="shownCondition" class="weather-box">
+      <h3 class="weather-title">{{ t('weather.title') }}</h3>
 
-    <!-- Empty state -->
-    <div v-else-if="!condition" class="weather-empty">
+      <p class="weather-location">
+        {{ shownCondition.location }}
+        <small v-if="!props.condition && weatherStore.usingDefaultLocation">({{ t('weather.referenceLocation') }})</small>
+      </p>
+      <small class="weather-observed">{{ t('weather.observed') }}: {{ formatObservedAt(shownCondition.observedAt) }}</small>
+
+      <div class="temp-row">
+        <i class="pi pi-cloud weather-icon"></i>
+        <span class="temp-value" :aria-label="t('weather.temperature')">{{ shownCondition.temperature }}° C</span>
+      </div>
+
+      <ul class="weather-specs">
+        <li>{{ t('weather.humidity') }}: <b>{{ shownCondition.humidity }}%</b></li>
+        <li>{{ t('weather.wind') }}: <b>{{ shownCondition.windSpeed }} km/h</b></li>
+        <li>{{ t('weather.precipitation') }}: <b>{{ shownCondition.precipitation }} mm</b></li>
+        <li>{{ t('weather.precipitationProbability') }}: <b>{{ shownCondition.precipitationProbability }}%</b></li>
+      </ul>
+
+      <div v-if="weatherStore.isSuitable(shownCondition)" class="weather-note favorable">
+        {{ t('weather.favorable') }}
+      </div>
+
+      <div
+        v-for="alert in shownCondition.alerts"
+        :key="alert.id"
+        class="weather-note"
+        :class="alert.severity.toLowerCase()"
+      >
+        <b>{{ t('weather.severity.' + alert.severity) }}</b>: {{ t(alert.message) }}
+      </div>
+
+      <small class="weather-source">
+        {{ t('weather.source') }}: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a>
+      </small>
+    </article>
+
+    <!-- Empty state (no data or the API failed) -->
+    <div v-else class="weather-box weather-empty">
       <i class="pi pi-cloud"></i>
       <p>{{ t('weather.empty') }}</p>
     </div>
-
-    <!-- Weather card -->
-    <pv-card v-else class="weather-card">
-      <template #title>
-        <span class="weather-title">{{ t('weather.title') }}</span>
-      </template>
-
-      <template #subtitle>
-        <span class="weather-location">{{ condition.location }}</span>
-        <small class="weather-observed">
-          {{ t('weather.observed') }}: {{ formatObservedAt(condition.observedAt) }}
-        </small>
-      </template>
-
-      <template #content>
-        <p class="weather-temperature" :aria-label="t('weather.temperature')">
-          {{ condition.temperature }}°C
-        </p>
-
-        <ul class="weather-details">
-          <li>{{ t('weather.humidity') }}: <b>{{ condition.humidity }}%</b></li>
-          <li>{{ t('weather.wind') }}: <b>{{ condition.windSpeed }} km/h</b></li>
-          <li>{{ t('weather.precipitation') }}: <b>{{ condition.precipitation }} mm</b></li>
-        </ul>
-
-        <div v-if="condition.alerts.length > 0" class="weather-alerts">
-          <pv-message
-            v-for="alert in condition.alerts"
-            :key="alert.id"
-            :severity="severityFor(alert)"
-            :closable="false"
-          >
-            <b>{{ t('weather.severity.' + alert.severity) }}</b>: {{ alert.message }}
-          </pv-message>
-        </div>
-      </template>
-    </pv-card>
   </div>
 </template>
 
 <style scoped>
+/* Same look as the weather box of the Home mockup. */
 .weather-widget {
   width: 100%;
-  max-width: 360px;
 }
 
 .weather-skeleton {
   height: 16rem;
 }
 
-/* Colors come from PrimeVue tokens so the card stays readable in both light
-   and dark mode. */
+.weather-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem;
+  border-radius: 8px;
+  background: #19906d;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
 .weather-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--p-primary-color);
+  margin: 0 0 0.5rem 0;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 .weather-location {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--p-text-color);
-}
-
-.weather-observed {
-  display: block;
-  margin-top: 0.25rem;
-  /* PrimeVue 5 has no --p-text-color-secondary token; dim the themed text
-     color instead of hardcoding a grey that breaks on dark surfaces. */
-  color: var(--p-text-color);
-  opacity: 0.62;
-}
-
-.weather-temperature {
-  margin: 0 0 0.75rem 0;
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--p-text-color);
-}
-
-.weather-details {
   margin: 0;
-  padding: 0;
-  list-style: none;
-  line-height: 1.8;
-  color: var(--p-text-color);
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
-.weather-alerts {
+.weather-observed,
+.weather-source,
+.weather-location small {
+  opacity: 0.85;
+  font-weight: 400;
+}
+
+.weather-source a {
+  color: #fef08a;
+}
+
+.temp-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-/* :deep() is required: .p-message-text is rendered by PrimeVue, so the
-   scoped data attribute of this component never lands on it. */
-.weather-alerts :deep(.p-message-text) {
-  font-size: 0.875rem;
-}
-
-/* Empty state */
-.weather-empty {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.weather-icon {
+  font-size: 2.2rem;
+  color: #fef08a;
+}
+
+.temp-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.weather-specs {
+  margin: 0 0 0.5rem 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+
+/* Favorable message and alerts: light boxes so the text stays readable on the green card. */
+.weather-note {
+  margin-bottom: 0.5rem;
+  padding: 0.6rem;
+  border-left: 4px solid;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.favorable { background: #E8F6F1; color: #1B463C; }
+.low { background: #EFF4FF; color: #1E3A8A; }
+.medium { background: #FFF7E6; color: #B45309; }
+.high { background: #FEECEC; color: #B91C1C; }
+
+.weather-empty {
+  align-items: center;
   padding: 2rem 1rem;
-  color: var(--p-text-color);
-  opacity: 0.6;
 }
 
 .weather-empty i {
@@ -204,15 +181,5 @@ load()
 .weather-empty p {
   margin: 0;
   font-weight: 600;
-}
-
-@media (max-width: 480px) {
-  .weather-widget {
-    max-width: none;
-  }
-
-  .weather-temperature {
-    font-size: 2.5rem;
-  }
 }
 </style>

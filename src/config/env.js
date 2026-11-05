@@ -38,7 +38,11 @@ const variables = {
   VITE_OPERATIONAL_METRICS_ENDPOINT_PATH: import.meta.env.VITE_OPERATIONAL_METRICS_ENDPOINT_PATH,
   VITE_PERFORMANCE_INDICATORS_ENDPOINT_PATH: import.meta.env.VITE_PERFORMANCE_INDICATORS_ENDPOINT_PATH,
 
-  VITE_WEATHER_ENDPOINT_PATH: import.meta.env.VITE_WEATHER_ENDPOINT_PATH
+  VITE_WEATHER_API_BASE_URL: import.meta.env.VITE_WEATHER_API_BASE_URL,
+  VITE_WEATHER_ENDPOINT_PATH: import.meta.env.VITE_WEATHER_ENDPOINT_PATH,
+  VITE_REVERSE_GEOCODING_URL: import.meta.env.VITE_REVERSE_GEOCODING_URL,
+
+  VITE_DEBUG_MODE: import.meta.env.VITE_DEBUG_MODE
 }
 
 // Report every missing variable at once: failing on the first one hides the rest.
@@ -56,6 +60,15 @@ if (missing.length > 0) {
 }
 
 export const API_BASE_URL = variables.VITE_API_BASE_URL
+
+/** Base URL of the external weather provider (Open-Meteo). Not part of API_BASE_URL. */
+export const WEATHER_API_BASE_URL = variables.VITE_WEATHER_API_BASE_URL
+
+/** Full URL of the reverse geocoding provider (BigDataCloud). */
+export const REVERSE_GEOCODING_URL = variables.VITE_REVERSE_GEOCODING_URL
+
+/** Shows the weather simulator (debug panel) on Home instead of the weather widget. */
+export const DEBUG_MODE = variables.VITE_DEBUG_MODE === 'true'
 
 /** Relative paths, combined with API_BASE_URL via buildUrl(). */
 export const ENDPOINTS = {
@@ -87,7 +100,7 @@ export const ENDPOINTS = {
   operationalMetrics: variables.VITE_OPERATIONAL_METRICS_ENDPOINT_PATH,
   performanceIndicators: variables.VITE_PERFORMANCE_INDICATORS_ENDPOINT_PATH,
 
-  // Weather
+  // Weather (joined with WEATHER_API_BASE_URL, not with API_BASE_URL)
   weather: variables.VITE_WEATHER_ENDPOINT_PATH
 }
 
