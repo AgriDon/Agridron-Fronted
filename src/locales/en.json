@@ -171,6 +171,25 @@
     "noAlerts": "No alerts",
     "alerts": "Alerts",
     "empty": "No weather data available.",
+    "precipitationProbability": "Rain probability",
+    "referenceLocation": "reference location",
+    "source": "Data",
+    "favorable": "Favorable conditions for spraying: wind of 15 km/h or less, temperature below 28 °C and no rain.",
+    "alert": {
+      "wind": "Wind above 15 km/h: high drift risk, spraying is not recommended.",
+      "rain": "Rain detected: high drift risk, postpone the mission.",
+      "moderateWind": "Wind between 10 and 15 km/h: spray with caution and anti-drift nozzles.",
+      "calmWind": "Wind below 3 km/h: possible temperature inversion, the product can stay suspended and move away.",
+      "rainLikely": "Rain probability of 70 % or more: the product could be washed off, consider rescheduling.",
+      "rainPossible": "Rain probability between 40 % and 69 %: check the sky before take-off.",
+      "heat": "Temperature above 30 °C: the product evaporates faster, prefer cooler hours.",
+      "lowHumidity": "Humidity below 50 %: droplets evaporate faster."
+    },
+    "simulator": {
+      "title": "Debug: weather simulator",
+      "hint": "Turn it on or off with VITE_DEBUG_MODE in .env.development (restart npm run dev). The real data is not modified.",
+      "reset": "Back to real data"
+    },
     "severity": {
       "HIGH": "High",
       "MEDIUM": "Medium",
@@ -334,20 +353,8 @@
     }
   },
   "home": {
-    "greeting": "Hello {username}, welcome",
-    "subtitle": "Overview of your agricultural operation",
-    "metricsTitle": "Metrics",
-    "shortcutsTitle": "Quick access",
-    "metrics": {
-      "farms": "Farms",
-      "parcels": "Parcels",
-      "crops": "Crops",
-      "fumigationAreas": "Fumigation areas"
-    },
-    "actions": {
-      "farms": "View farms",
-      "analytics": "View reports"
-    }
+    "welcome": "Welcome, Juan!",
+    "subtitle": "Here is a summary of your operations"
   },
   "missions": {
     "title": "Missions",
@@ -467,10 +474,6 @@
     "operator": "Operator",
     "treatmentType": "Treatment type",
     "productDose": "Product dose"
-  },
-  "home": {
-    "welcome": "Welcome, Juan!",
-    "subtitle": "Here is a summary of your operations"
   },
   "drones": {
     "title": "Drones",

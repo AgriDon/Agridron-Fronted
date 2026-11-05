@@ -1,32 +1,36 @@
 /**
- * Resource representation of a weather alert.
+ * Current conditions returned by the Open-Meteo forecast endpoint.
  *
- * @typedef {object} WeatherAlertResource
- * @property {number} id Unique identifier for the alert.
- * @property {string} severity Severity of the alert: "LOW", "MEDIUM" or "HIGH".
- * @property {string} message Human readable description of the alert.
- * @property {string} createdAt ISO date string of when the alert was raised.
- */
-
-/**
- * Resource representation of a weather condition.
- *
- * @typedef {object} WeatherConditionResource
- * @property {number} id Unique identifier for the weather condition.
- * @property {string} location Location the condition was observed at.
- * @property {number} temperature Temperature in degrees Celsius.
- * @property {number} humidity Relative humidity as a percentage.
- * @property {number} windSpeed Wind speed in kilometers per hour.
+ * @typedef {object} WeatherCurrentResource
+ * @property {string} time Local ISO date string of the observation.
+ * @property {number} temperature_2m Temperature in degrees Celsius.
+ * @property {number} relative_humidity_2m Relative humidity as a percentage.
+ * @property {number} wind_speed_10m Wind speed in kilometers per hour.
  * @property {number} precipitation Precipitation in millimeters.
- * @property {string} observedAt ISO date string of the observation.
- * @property {WeatherAlertResource[]} alerts Alerts raised for this location.
  */
 
 /**
- * Response envelope for weather condition collection queries.
+ * Hourly values returned by the Open-Meteo forecast endpoint.
+ *
+ * @typedef {object} WeatherHourlyResource
+ * @property {number[]} precipitation_probability Rain probability per hour, as a percentage.
+ */
+
+/**
+ * Current conditions and next-hour rain probability returned by the Open-Meteo forecast endpoint.
  *
  * @typedef {object} WeatherConditionResponse
- * @property {WeatherConditionResource[]} weatherConditions Array of weather condition resources included in the response.
+ * @property {WeatherCurrentResource} current Current weather values.
+ * @property {WeatherHourlyResource} hourly Hourly forecast values (only the next hour is requested).
+ */
+
+/**
+ * Place returned by the BigDataCloud reverse geocoding endpoint.
+ *
+ * @typedef {object} LocationNameResponse
+ * @property {string} city City name.
+ * @property {string} locality District or locality name.
+ * @property {string} principalSubdivision Region name.
  */
 
 export {};

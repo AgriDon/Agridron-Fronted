@@ -6,7 +6,10 @@ import { useI18n } from 'vue-i18n'
 import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
 import { MissionUseCases } from '@/flightOperations/application/mission-use-cases.js'
-import { WeatherUseCases } from '@/weatherIntegration/application/weather-use-cases.js'
+import { useWeatherStore } from '@/weatherIntegration/application/weather.store.js'
+import WeatherWidget from '@/weatherIntegration/presentation/components/weather-widget.vue'
+import WeatherSimulator from '@/weatherIntegration/presentation/components/weather-simulator.vue'
+import { DEBUG_MODE } from '@/config/env.js'
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
 
 const { t } = useI18n()
@@ -15,7 +18,7 @@ const router = useRouter()
 const fincaUseCases = new FincaUseCases()
 const parcelaUseCases = new ParcelaUseCases()
 const missionUseCases = new MissionUseCases()
-const weatherUseCases = new WeatherUseCases()
+const weatherStore = useWeatherStore()
 const userService = new UserProfileService()
 
 // State
@@ -24,15 +27,9 @@ const user = ref({ name: 'Juan Pérez', role: 'Agricultor' })
 const farms = ref([])
 const parcels = ref([])
 const missions = ref([])
-const weather = ref({
-  temp: 18,
-  condition: 'Parcialmente nublado',
-  wind: '12 km/h',
-  humidity: '65%'
-})
 
-// Dialog for weather forecast
-const showWeatherDialog = ref(false)
+// Shows the weather simulator instead of the widget (local tests only).
+const debugMode = DEBUG_MODE
 
 // Computed KPIs
 const farmsCount = computed(() => farms.value.length || 3)
@@ -95,12 +92,11 @@ const statusClass = (status) => {
 const loadData = async () => {
   loading.value = true
   try {
-    const [userData, farmList, parcelList, missionList, weatherList] = await Promise.allSettled([
+    const [userData, farmList, parcelList, missionList] = await Promise.allSettled([
       userService.getCurrentUser(),
       fincaUseCases.listFarms(),
       parcelaUseCases.listParcels(),
-      missionUseCases.listMissions(),
-      weatherUseCases.listWeatherConditions()
+      missionUseCases.listMissions()
     ])
 
     if (userData.status === 'fulfilled' && userData.value) {
@@ -115,15 +111,6 @@ const loadData = async () => {
     if (missionList.status === 'fulfilled' && Array.isArray(missionList.value)) {
       missions.value = missionList.value
     }
-    if (weatherList.status === 'fulfilled' && weatherList.value?.length > 0) {
-      const w = weatherList.value[0]
-      weather.value = {
-        temp: w.temperature ? Math.round(w.temperature) : 18,
-        condition: w.condition || 'Parcialmente nublado',
-        wind: w.windSpeed ? `${Math.round(w.windSpeed)} km/h` : '12 km/h',
-        humidity: w.humidity ? `${Math.round(w.humidity)}%` : '65%'
-      }
-    }
   } catch (err) {
     console.error('Error cargando datos del dashboard:', err)
   } finally {
@@ -131,7 +118,11 @@ const loadData = async () => {
   }
 }
 
-onMounted(loadData)
+onMounted(() => {
+  loadData()
+  // Loads the weather of the user's location (or the reference location).
+  weatherStore.loadWeatherConditions()
+})
 </script>
 
 <template>
@@ -250,27 +241,9 @@ onMounted(loadData)
 
       <!-- Right Column: Clima & Fotografía -->
       <aside class="dashboard-sidebar">
-        <!-- Weather Card matching mockup -->
-        <div class="weather-box">
-          <div class="weather-header">
-            <h3>Estado del clima</h3>
-          </div>
-          <div class="weather-body">
-            <div class="temp-row">
-              <i class="pi pi-cloud weather-icon"></i>
-              <span class="temp-value">{{ weather.temp }}° C</span>
-            </div>
-            <p class="weather-desc">{{ weather.condition }}</p>
-            <div class="weather-specs">
-              <p>Viento : {{ weather.wind }}</p>
-              <p>Humedad : {{ weather.humidity }}</p>
-            </div>
-          </div>
-          <button class="forecast-btn" @click="showWeatherDialog = true">
-            <span>Ver pronostico</span>
-            <i class="pi pi-arrow-right"></i>
-          </button>
-        </div>
+        <!-- Weather: simulator in debug mode, real widget otherwise -->
+        <WeatherSimulator v-if="debugMode" />
+        <WeatherWidget v-else />
 
         <!-- Landscape Satellite Imagery Box -->
         <div class="terrain-box">
@@ -283,25 +256,6 @@ onMounted(loadData)
       </aside>
     </div>
 
-    <!-- Weather Forecast Dialog -->
-    <pv-dialog
-      v-model:visible="showWeatherDialog"
-      modal
-      header="Pronóstico Meteorológico Agrícola"
-      :style="{ width: '32rem' }"
-    >
-      <div class="forecast-dialog-content">
-        <p><strong>Condiciones en campo:</strong> Adecuadas para pulverización con drones.</p>
-        <ul class="forecast-list">
-          <li><strong>Ventana óptima de vuelo:</strong> 06:00 - 10:30 hrs</li>
-          <li><strong>Velocidad de viento estimada:</strong> &lt; 15 km/h (Seguro para deriva)</li>
-          <li><strong>Probabilidad de precipitación:</strong> 10%</li>
-        </ul>
-      </div>
-      <template #footer>
-        <pv-button label="Cerrar" text @click="showWeatherDialog = false" />
-      </template>
-    </pv-dialog>
   </div>
 </template>
 
@@ -527,75 +481,6 @@ onMounted(loadData)
   gap: 1.25rem;
 }
 
-/* Weather Box */
-.weather-box {
-  background: #19906d;
-  color: #ffffff;
-  border-radius: 8px;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-}
-
-.weather-header h3 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin: 0 0 0.75rem 0;
-}
-
-.temp-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.25rem;
-}
-
-.weather-icon {
-  font-size: 2.2rem;
-  color: #fef08a;
-}
-
-.temp-value {
-  font-size: 2.2rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.weather-desc {
-  font-size: 0.9rem;
-  font-weight: 500;
-  margin: 0 0 0.75rem 0;
-  opacity: 0.9;
-}
-
-.weather-specs p {
-  margin: 0.25rem 0;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.forecast-btn {
-  margin-top: 1rem;
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 0.9rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.4rem;
-  cursor: pointer;
-  padding: 0;
-  transition: opacity 0.2s;
-}
-
-.forecast-btn:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
 /* Terrain Box */
 .terrain-box {
   border-radius: 8px;
@@ -608,15 +493,6 @@ onMounted(loadData)
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.forecast-dialog-content {
-  line-height: 1.6;
-}
-
-.forecast-list {
-  margin: 0.75rem 0 0 1.25rem;
-  padding: 0;
 }
 
 /* Responsiveness */

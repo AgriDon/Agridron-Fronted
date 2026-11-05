@@ -21,6 +21,9 @@ export class WeatherCondition {
     /** @type {number} */
     #precipitation;
 
+    /** @type {number} */
+    #precipitationProbability;
+
     /** @type {string} */
     #observedAt;
 
@@ -35,16 +38,18 @@ export class WeatherCondition {
      * @param {number} humidity - Percentage.
      * @param {number} windSpeed - Kilometers per hour.
      * @param {number} precipitation - Millimeters.
+     * @param {number} precipitationProbability - Rain probability of the next hour, as a percentage.
      * @param {string} observedAt - ISO date string.
      * @param {import('./weather-alert.entity.js').WeatherAlert[]} [alerts]
      */
-    constructor(id, location, temperature, humidity, windSpeed, precipitation, observedAt, alerts = []) {
+    constructor(id, location, temperature, humidity, windSpeed, precipitation, precipitationProbability, observedAt, alerts = []) {
         this.#id = id;
         this.#location = location;
         this.#temperature = temperature;
         this.#humidity = humidity;
         this.#windSpeed = windSpeed;
         this.#precipitation = precipitation;
+        this.#precipitationProbability = precipitationProbability;
         this.#observedAt = observedAt;
         this.#alerts = alerts;
     }
@@ -102,6 +107,15 @@ export class WeatherCondition {
 
     set precipitation(value) {
         this.#precipitation = value;
+    }
+
+    /** @returns {number} */
+    get precipitationProbability() {
+        return this.#precipitationProbability;
+    }
+
+    set precipitationProbability(value) {
+        this.#precipitationProbability = value;
     }
 
     /** @returns {string} */
