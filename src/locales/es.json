@@ -552,5 +552,126 @@
   "settings": {
     "title": "Configuración",
     "subtitle": "Ajustes del sistema, usuarios y preferencias"
+  },
+  "inventory": {
+    "title": "Gestión de Inventario y Recursos",
+    "subtitle": "Control de existencias de agroquímicos y boquillas de asperjar para la flota de drones",
+    "tabs": {
+      "chemicals": "Agroquímicos e Insumos",
+      "nozzles": "Boquillas y Repuestos"
+    },
+    "kpis": {
+      "activeProducts": "Insumos Activos",
+      "lowStockAlerts": "Alertas Stock Bajo",
+      "totalLiters": "Total en Almacén",
+      "wornNozzles": "Boquillas Desgastadas"
+    },
+    "filters": {
+      "searchPlaceholder": "Buscar por nombre del insumo...",
+      "category": "Categoría / Tipo",
+      "lowStockOnly": "Solo bajo stock"
+    },
+    "columns": {
+      "product": "Insumo / Producto",
+      "type": "Categoría",
+      "stock": "Stock / Nivel",
+      "expiration": "Vencimiento",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "types": {
+      "all": "Todos los tipos",
+      "herbicide": "Herbicida",
+      "insecticide": "Insecticida",
+      "fungicide": "Fungicida",
+      "fertilizer": "Fertilizante"
+    },
+    "status": {
+      "optimal": "Óptimo",
+      "low": "Bajo Stock"
+    },
+    "buttons": {
+      "newChemical": "Nuevo Químico",
+      "newNozzle": "Nueva Boquilla",
+      "restock": "Reabastecer stock",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "save": "Guardar",
+      "cancel": "Cancelar",
+      "confirmRestock": "Confirmar Reabastecimiento",
+      "confirmDelete": "Sí, eliminar",
+      "toggleStatus": "Alternar condición"
+    },
+    "dialog": {
+      "newChemical": "Registrar Nuevo Insumo Químico",
+      "editChemical": "Editar Insumo Químico",
+      "restockTitle": "Reabastecimiento Rápido de Insumo",
+      "restockDescription": "Añadir litros al inventario de {name}.",
+      "restockLitersLabel": "Litros a incorporar",
+      "newNozzle": "Registrar Nueva Boquilla",
+      "editNozzle": "Editar Boquilla",
+      "deleteTitle": "Confirmar Eliminación",
+      "deletePrompt": "¿Estás seguro de que deseas eliminar \"{name}\"? Esta acción no se puede deshacer."
+    },
+    "form": {
+      "name": "Nombre comercial",
+      "namePlaceholder": "Ej. Glifosato 48%, Abamectina 1.8%",
+      "type": "Categoría / Tipo de producto",
+      "stockLiters": "Stock Actual (Litros)",
+      "minStockLiters": "Stock Mínimo de Seguridad (Litros)",
+      "stockCurrent": "Stock actual",
+      "expirationDate": "Fecha de Vencimiento",
+      "error": {
+        "nameRequired": "El nombre del químico es obligatorio.",
+        "typeRequired": "Debe seleccionar una categoría.",
+        "stockInvalid": "El stock debe ser un número igual o mayor a cero.",
+        "minStockInvalid": "El stock mínimo debe ser igual o mayor a cero.",
+        "expirationRequired": "La fecha de vencimiento es obligatoria."
+      }
+    },
+    "nozzles": {
+      "columns": {
+        "type": "Tipo de Boquilla",
+        "diameter": "Diámetro",
+        "units": "Unidades",
+        "condition": "Condición"
+      },
+      "types": {
+        "flatFan": "Abanico Plano (Flat-Fan)",
+        "hollowCone": "Cono Hueco (Hollow-Cone)"
+      },
+      "status": {
+        "all": "Todos los estados",
+        "good": "Buen estado",
+        "worn": "Desgastada / Cambio"
+      },
+      "filters": {
+        "status": "Filtrar por condición"
+      },
+      "form": {
+        "diameter": "Diámetro (mm)",
+        "units": "Unidades disponibles",
+        "status": "Estado operativo"
+      },
+      "error": {
+        "typeRequired": "Debe seleccionar el tipo de boquilla.",
+        "diameterInvalid": "El diámetro debe ser un número positivo.",
+        "unitsInvalid": "Las unidades deben ser un número igual o mayor a cero."
+      }
+    },
+    "messages": {
+      "chemicalCreated": "Insumo químico registrado exitosamente.",
+      "chemicalUpdated": "Insumo químico actualizado correctamente.",
+      "chemicalDeleted": "Insumo químico eliminado del inventario.",
+      "restockSuccess": "Stock reabastecido correctamente.",
+      "nozzleCreated": "Boquilla registrada exitosamente.",
+      "nozzleUpdated": "Boquilla actualizada correctamente.",
+      "nozzleDeleted": "Boquilla eliminada del catálogo.",
+      "nozzleStatusToggled": "Estado de la boquilla actualizado."
+    },
+    "empty": {
+      "chemicals": "No se encontraron insumos químicos que coincidan con la búsqueda.",
+      "nozzles": "No hay boquillas registradas en el inventario."
+    }
   }
 }

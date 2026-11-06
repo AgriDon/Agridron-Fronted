@@ -54,6 +54,7 @@ const menuItems = ref([
   { id: 'misiones', label: 'Misiones', icon: 'pi pi-bullseye', to: '/misiones' },
   { id: 'drones', label: 'Drones', icon: 'pi pi-send', to: '/drones' },
   { id: 'reportes', label: 'Reportes', icon: 'pi pi-clipboard', to: '/reportes' },
+  { id: 'inventario', label: 'Inventario', icon: 'pi pi-box', to: '/inventario' },
   { id: 'configuracion', label: 'Configuración', icon: 'pi pi-cog', to: '/configuracion' }
 ])
 
@@ -549,3 +550,4 @@ const isRouteActive = (targetPath) => {
   }
 }
 </style>
+

@@ -82,6 +82,12 @@ const routes = [
     meta: { title: 'Reportes' }
   },
   {
+    path: '/inventario',
+    name: 'inventario',
+    component: () => import('./inventoryManagement/presentation/views/inventory-view.vue'),
+    meta: { title: 'Inventario' }
+  },
+  {
     path: '/configuracion',
     name: 'configuracion',
     component: () => import('./shared/presentation/views/configuracion-view.vue'),
