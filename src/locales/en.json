@@ -552,5 +552,126 @@
   "settings": {
     "title": "Settings",
     "subtitle": "System settings, users and preferences"
+  },
+  "inventory": {
+    "title": "Inventory & Resource Management",
+    "subtitle": "Inventory control of agrochemicals and spray nozzles for the drone fleet",
+    "tabs": {
+      "chemicals": "Agrochemicals & Supplies",
+      "nozzles": "Nozzles & Spare Parts"
+    },
+    "kpis": {
+      "activeProducts": "Active Products",
+      "lowStockAlerts": "Low Stock Alerts",
+      "totalLiters": "Total Stock (L)",
+      "wornNozzles": "Worn Nozzles"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by chemical name...",
+      "category": "Category / Type",
+      "lowStockOnly": "Low stock only"
+    },
+    "columns": {
+      "product": "Supply / Product",
+      "type": "Category",
+      "stock": "Stock / Level",
+      "expiration": "Expiration",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "types": {
+      "all": "All types",
+      "herbicide": "Herbicide",
+      "insecticide": "Insecticide",
+      "fungicide": "Fungicide",
+      "fertilizer": "Fertilizer"
+    },
+    "status": {
+      "optimal": "Optimal",
+      "low": "Low Stock"
+    },
+    "buttons": {
+      "newChemical": "New Chemical",
+      "newNozzle": "New Nozzle",
+      "restock": "Replenish stock",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirmRestock": "Confirm Restock",
+      "confirmDelete": "Yes, delete",
+      "toggleStatus": "Toggle condition"
+    },
+    "dialog": {
+      "newChemical": "Register New Chemical Supply",
+      "editChemical": "Edit Chemical Supply",
+      "restockTitle": "Quick Restock Supply",
+      "restockDescription": "Add liters to {name} inventory.",
+      "restockLitersLabel": "Liters to add",
+      "newNozzle": "Register New Nozzle",
+      "editNozzle": "Edit Nozzle",
+      "deleteTitle": "Confirm Deletion",
+      "deletePrompt": "Are you sure you want to delete \"{name}\"? This action cannot be undone."
+    },
+    "form": {
+      "name": "Commercial name",
+      "namePlaceholder": "E.g. Glyphosate 48%, Abamectin 1.8%",
+      "type": "Category / Product type",
+      "stockLiters": "Current Stock (Liters)",
+      "minStockLiters": "Safety Minimum Stock (Liters)",
+      "stockCurrent": "Current stock",
+      "expirationDate": "Expiration Date",
+      "error": {
+        "nameRequired": "Chemical name is required.",
+        "typeRequired": "A category must be selected.",
+        "stockInvalid": "Stock must be a number greater than or equal to zero.",
+        "minStockInvalid": "Minimum stock must be greater than or equal to zero.",
+        "expirationRequired": "Expiration date is required."
+      }
+    },
+    "nozzles": {
+      "columns": {
+        "type": "Nozzle Type",
+        "diameter": "Diameter",
+        "units": "Units",
+        "condition": "Condition"
+      },
+      "types": {
+        "flatFan": "Flat-Fan",
+        "hollowCone": "Hollow-Cone"
+      },
+      "status": {
+        "all": "All statuses",
+        "good": "Good condition",
+        "worn": "Worn / Replacement"
+      },
+      "filters": {
+        "status": "Filter by condition"
+      },
+      "form": {
+        "diameter": "Diameter (mm)",
+        "units": "Available units",
+        "status": "Operating status"
+      },
+      "error": {
+        "typeRequired": "Nozzle type must be selected.",
+        "diameterInvalid": "Diameter must be a positive number.",
+        "unitsInvalid": "Units must be greater than or equal to zero."
+      }
+    },
+    "messages": {
+      "chemicalCreated": "Chemical supply registered successfully.",
+      "chemicalUpdated": "Chemical supply updated successfully.",
+      "chemicalDeleted": "Chemical supply removed from inventory.",
+      "restockSuccess": "Stock replenished successfully.",
+      "nozzleCreated": "Nozzle registered successfully.",
+      "nozzleUpdated": "Nozzle updated successfully.",
+      "nozzleDeleted": "Nozzle removed from catalog.",
+      "nozzleStatusToggled": "Nozzle condition updated."
+    },
+    "empty": {
+      "chemicals": "No chemical supplies found matching the search criteria.",
+      "nozzles": "No nozzles registered in inventory."
+    }
   }
 }
