@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import InicioView from './shared/presentation/views/inicio-view.vue'
 import { fieldManagementRoutes } from './fieldManagement/presentation/field-management-routes.js'
+import { flightOperationsRoutes } from './flightOperations/presentation/flight-operations-routes.js'
 
 const routes = [
   {
@@ -10,24 +11,7 @@ const routes = [
     meta: { title: 'Inicio' }
   },
   ...fieldManagementRoutes,
-  {
-    path: '/misiones',
-    name: 'misiones',
-    component: () => import('./flightOperations/presentation/views/mission-management-view.vue'),
-    meta: { title: 'Misiones' }
-  },
-  {
-    path: '/drones',
-    name: 'drones',
-    component: () => import('./flightOperations/presentation/views/drones-view.vue'),
-    meta: { title: 'Drones' }
-  },
-  {
-    path: '/drones/:id(\\d+)',
-    name: 'drone-detail',
-    component: () => import('./flightOperations/presentation/views/dron-detail-view.vue'),
-    meta: { title: 'Drones' }
-  },
+  ...flightOperationsRoutes,
   {
     path: '/reportes',
     name: 'reportes',
