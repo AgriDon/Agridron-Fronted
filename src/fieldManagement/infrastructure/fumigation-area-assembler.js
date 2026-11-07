@@ -10,11 +10,13 @@ import { FumigationArea } from '../domain/model/fumigationArea.entity.js';
 export class FumigationAreaAssembler {
 
     /**
-     * @param {import('./field-management-response.js').FumigationAreaResponse} response
+     * @param {import('./field-management-response.js').FumigationAreaResponse|any[]} response
      * @returns {FumigationArea[]}
      */
-    toEntitiesFromResponse = (response) =>
-        response.fumigationAreas.map(resource => this.toEntityFromResource(resource));
+    toEntitiesFromResponse = (response) => {
+        const list = Array.isArray(response) ? response : (response?.fumigationAreas ?? []);
+        return list.map(resource => this.toEntityFromResource(resource));
+    };
 
     /**
      * @param {import('./field-management-response.js').FumigationAreaResource} resource
@@ -23,12 +25,22 @@ export class FumigationAreaAssembler {
     toEntityFromResource = (resource) =>
         // markRaw: see farm-assembler.js for why entities must stay out of
         // Vue's reactivity system.
-        markRaw(new FumigationArea(resource.id, resource.parcelId, resource.geometry, resource.area));
+        markRaw(new FumigationArea(
+            resource.id,
+            resource.parcelId,
+            resource.geometry,
+            Number(resource.area ?? resource.areaHectares) || 0
+        ));
 
     /**
      * @param {FumigationArea} entity
      * @returns {import('./field-management-response.js').FumigationAreaResource}
      */
-    toResourceFromEntity = (entity) =>
-        ({ id: entity.id, parcelId: entity.parcelId, geometry: entity.geometry, area: entity.area });
+    toResourceFromEntity = (entity) => ({
+        id: entity.id,
+        parcelId: Number(entity.parcelId),
+        geometry: entity.geometry,
+        area: Number(entity.area) || 0,
+        areaHectares: Number(entity.area) || 0
+    });
 }

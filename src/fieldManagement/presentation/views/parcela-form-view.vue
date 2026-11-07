@@ -37,11 +37,14 @@ const titleKey = computed(() =>
 )
 
 const farmOptions = computed(() =>
-  farms.value.map(farm => ({ id: farm.id, label: farm.name }))
+  farms.value.map(farm => ({ id: Number(farm.id), label: farm.name }))
 )
 
 const cropOptions = computed(() =>
-  crops.value.map(crop => ({ id: crop.id, label: crop.name }))
+  crops.value.map(crop => ({
+    id: Number(crop.id),
+    label: crop.variety ? `${crop.name} (${crop.variety})` : crop.name
+  }))
 )
 
 const stageOptions = [
@@ -55,11 +58,13 @@ const errorFor = (field) => (errors.value[field] ? t(errors.value[field]) : '')
 
 const applyForm = (parcel) => {
   form.value = {
-    name: parcel.name,
-    area: parcel.area,
-    geometry: parcel.geometry,
-    farmId: parcel.farmId,
-    cropId: parcel.cropId,
+    name: parcel.name ?? '',
+    area: parcel.area != null ? String(parcel.area) : '',
+    geometry: typeof parcel.geometry === 'string'
+      ? parcel.geometry
+      : (parcel.geometry ? JSON.stringify(parcel.geometry) : ''),
+    farmId: parcel.farmId != null ? Number(parcel.farmId) : null,
+    cropId: parcel.cropId != null ? Number(parcel.cropId) : null,
     image: parcel.image ?? '',
     phenologicalStage: parcel.phenologicalStage ?? ''
   }
@@ -67,6 +72,7 @@ const applyForm = (parcel) => {
 
 const load = async () => {
   loading.value = true
+  submitError.value = ''
 
   try {
     const [farmList, cropList] = await Promise.all([
@@ -162,7 +168,7 @@ onMounted(load)
         <label class="field-label" for="parcel-geometry">{{ t('parcel.form.geometry') }}</label>
         <GeojsonPolygonHelper
           v-model="form.geometry"
-          @update:area="(val) => { if (!form.area) form.area = val }"
+          @update:area="(val) => { if (!form.area) form.area = String(val) }"
         />
         <small v-if="errors.geometry" class="field-error">{{ errorFor('geometry') }}</small>
       </div>

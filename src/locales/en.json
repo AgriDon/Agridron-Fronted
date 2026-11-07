@@ -110,7 +110,7 @@
       "title": "Geometry and Polygon Assistant",
       "previewBadge": "Preview",
       "invalidHint": "Enter a valid GeoJSON Polygon format",
-      "placeholder": "{\"type\":\"Polygon\",\"coordinates\":[[[lng,lat],...]]}"
+      "placeholder": "Select a preset above or paste a valid GeoJSON Polygon..."
     },
     "fumigation": {
       "title": "Fumigation Areas",

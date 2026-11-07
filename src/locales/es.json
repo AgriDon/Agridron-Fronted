@@ -110,7 +110,7 @@
       "title": "Asistente de Geometría y Polígono",
       "previewBadge": "Vista previa",
       "invalidHint": "Ingrese un formato GeoJSON Polygon válido",
-      "placeholder": "{\"type\":\"Polygon\",\"coordinates\":[[[lng,lat],...]]}"
+      "placeholder": "Seleccione una plantilla arriba o pegue un GeoJSON Polygon válido..."
     },
     "fumigation": {
       "title": "Áreas de Fumigación",
