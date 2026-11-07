@@ -36,7 +36,7 @@ export class FlightOperationsApi extends BaseApi {
   deleteDrone = (id) => this.#droneEndpoint.delete(id)
 
   // ---- Incidents ----
-  getAllIncidents = () => this.#incidentEndpoint.getAll()
+  getAllIncidents = (params) => this.#incidentEndpoint.getAll(params)
   getIncidentById = (id) => this.#incidentEndpoint.getById(id)
   createIncident = (incident) => this.#incidentEndpoint.create(incident)
   updateIncident = (incident) => this.#incidentEndpoint.update(incident, incident.id)
@@ -60,8 +60,8 @@ export class FlightOperationsApi extends BaseApi {
   completeMission = (id, payload) => this.#missionEndpoint.complete(id, payload)
   cancelMission = (id, reason) => this.#missionEndpoint.cancel(id, reason)
 
-  // ---- Operation Status ----
-  getAllOperationStatuses = () => this.#operationStatusEndpoint.getAll()
+  // ---- Operation Status Telemetry ----
+  getAllOperationStatuses = (params) => this.#operationStatusEndpoint.getAll(params)
   getOperationStatusById = (id) => this.#operationStatusEndpoint.getById(id)
   createOperationStatus = (status) => this.#operationStatusEndpoint.create(status)
   updateOperationStatus = (status) => this.#operationStatusEndpoint.update(status, status.id)
