@@ -30,7 +30,7 @@ export class ParcelaUseCases {
     }
 
     /**
-     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string }} data
+     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string, phenologicalStage?: string }} data
      * @returns {Record<string, string>} Field name -> i18n key. Empty when valid.
      */
     static validate(data) {
@@ -50,6 +50,15 @@ export class ParcelaUseCases {
 
         if (!data.geometry?.trim()) {
             errors.geometry = 'parcel.form.error.geometry-required';
+        } else {
+            try {
+                const parsed = JSON.parse(data.geometry);
+                if (parsed.type !== 'Polygon' || !Array.isArray(parsed.coordinates) || parsed.coordinates.length === 0) {
+                    errors.geometry = 'parcel.form.error.geometry-invalid';
+                }
+            } catch {
+                errors.geometry = 'parcel.form.error.geometry-invalid';
+            }
         }
 
         const farmId = Number(data.farmId);
@@ -74,10 +83,7 @@ export class ParcelaUseCases {
     /**
      * Builds the domain entity out of the validated payload.
      *
-     * area, farmId and cropId are coerced to numbers: a text input would
-     * otherwise persist strings and break later numeric comparisons.
-     *
-     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string }} data
+     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string, phenologicalStage?: string }} data
      * @param {number} id
      * @returns {Parcel}
      */
@@ -85,12 +91,14 @@ export class ParcelaUseCases {
         return new Parcel(
             id,
             data.name.trim(),
-            Number(data.area),
+            Number(data.area) || 0,
             data.geometry.trim(),
             Number(data.farmId),
             Number(data.cropId),
             data.image?.trim() ? data.image.trim() : null,
-            null
+            null,
+            data.phenologicalStage?.trim() ? data.phenologicalStage.trim() : null,
+            data.isActive ?? true
         );
     }
 
@@ -118,7 +126,7 @@ export class ParcelaUseCases {
     /**
      * Creates a parcel. The backend assigns the id.
      *
-     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string }} data
+     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string, phenologicalStage?: string }} data
      * @returns {Promise<import('../domain/model/parcel.entity.js').Parcel>}
      * @throws {ParcelValidationError}
      */
@@ -134,7 +142,7 @@ export class ParcelaUseCases {
 
     /**
      * @param {number|string} id
-     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string }} data
+     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string, phenologicalStage?: string }} data
      * @returns {Promise<import('../domain/model/parcel.entity.js').Parcel>}
      * @throws {ParcelValidationError}
      */

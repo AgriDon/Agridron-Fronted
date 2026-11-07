@@ -84,8 +84,11 @@
         "area-min": "Area must be greater than 0",
         "geometry-required": "Geometry is required",
         "farm-required": "You must select a farm",
-        "crop-required": "You must select a crop"
-      }
+        "crop-required": "You must select a crop",
+        "geometry-invalid": "GeoJSON format must be a valid Polygon"
+      },
+      "phenologicalStage": "Phenological stage",
+      "stagePlaceholder": "Select stage..."
     },
     "empty": "No parcels registered",
     "loading": "Loading parcels...",
@@ -100,6 +103,28 @@
       "seeMore": "See more",
       "edit": "Edit",
       "delete": "Delete"
+    },
+    "phenologicalStage": "Phenological stage",
+    "noStage": "Not specified",
+    "geometryHelper": {
+      "title": "Geometry and Polygon Assistant",
+      "previewBadge": "Preview",
+      "invalidHint": "Enter a valid GeoJSON Polygon format",
+      "placeholder": "{\"type\":\"Polygon\",\"coordinates\":[[[lng,lat],...]]}"
+    },
+    "fumigation": {
+      "title": "Fumigation Areas",
+      "subtitle": "Spraying zones delimited within this parcel",
+      "newArea": "New Area",
+      "noAreas": "No fumigation areas registered for this parcel.",
+      "delete": "Delete area",
+      "dialogTitle": "Register Fumigation Area",
+      "dialogHint": "Define the specific polygon for drone spraying.",
+      "error": {
+        "parcelRequired": "Parcel is required",
+        "geometryRequired": "Geometry is required",
+        "geometryInvalid": "Geometry must be a valid GeoJSON Polygon"
+      }
     }
   },
   "crop": {

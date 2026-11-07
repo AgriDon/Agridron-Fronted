@@ -13,22 +13,43 @@ export class ParcelAssembler {
      * @param {import('./field-management-response.js').ParcelResponse} response
      * @returns {Parcel[]}
      */
-    toEntitiesFromResponse = (response) =>
-        response.parcels.map(resource => this.toEntityFromResource(resource));
+    toEntitiesFromResponse = (response) => {
+        const list = Array.isArray(response) ? response : (response?.parcels ?? []);
+        return list.map(resource => this.toEntityFromResource(resource));
+    };
 
     /**
      * @param {import('./field-management-response.js').ParcelResource} resource
      * @returns {Parcel}
      */
     toEntityFromResource = (resource) =>
-        // markRaw: see farm-assembler.js for why entities must stay out of
-        // Vue's reactivity system.
-        markRaw(new Parcel(resource.id, resource.name, resource.area, resource.geometry, resource.farmId, resource.cropId, resource.image ?? null));
+        markRaw(new Parcel(
+            resource.id,
+            resource.name,
+            Number(resource.area ?? resource.areaHectares) || 0,
+            resource.geometry,
+            resource.farmId,
+            resource.cropId,
+            resource.image ?? resource.imageUrl ?? null,
+            null,
+            resource.phenologicalStage ?? null,
+            resource.isActive ?? true
+        ));
 
     /**
      * @param {Parcel} entity
      * @returns {import('./field-management-response.js').ParcelResource}
      */
-    toResourceFromEntity = (entity) =>
-        ({ id: entity.id, name: entity.name, area: entity.area, geometry: entity.geometry, farmId: entity.farmId, cropId: entity.cropId, image: entity.image ?? undefined });
+    toResourceFromEntity = (entity) => ({
+        id: entity.id,
+        name: entity.name,
+        area: entity.area,
+        areaHectares: entity.area,
+        geometry: entity.geometry,
+        farmId: entity.farmId,
+        cropId: entity.cropId,
+        image: entity.image ?? undefined,
+        imageUrl: entity.image ?? undefined,
+        phenologicalStage: entity.phenologicalStage ?? undefined
+    });
 }
