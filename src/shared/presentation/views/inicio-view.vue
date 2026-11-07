@@ -56,10 +56,12 @@ const recentMissions = computed(() => {
   }
 
   return missions.value.slice(0, 5).map((m, idx) => ({
+    rawId: m.id,
     id: `M1-00${m.id || idx + 1}`,
     parcel: m.farmArea || `Lote ${m.id || idx + 1}`,
     date: formatDate(m.date),
     status: formatStatus(m.status),
+    statusCode: m.status,
     progress: Number(m.progress) || (m.status === 'COMPLETED' ? 100 : m.status === 'IN_PROGRESS' ? 60 : 0)
   }))
 })
@@ -87,6 +89,14 @@ const statusClass = (status) => {
   if (/completado/i.test(status)) return 'badge--completed'
   if (/curso|proceso/i.test(status)) return 'badge--in-progress'
   return 'badge--planned'
+}
+
+const onMissionClick = (m) => {
+  if (m.rawId && (m.statusCode === 'IN_PROGRESS' || m.statusCode === 'PAUSED')) {
+    router.push({ name: 'mision-monitoreo', params: { id: m.rawId } })
+  } else {
+    router.push('/misiones')
+  }
 }
 
 const loadData = async () => {
@@ -216,7 +226,7 @@ onMounted(() => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="m in recentMissions" :key="m.id">
+              <tr v-for="m in recentMissions" :key="m.id" class="clickable-mission-row" @click="onMissionClick(m)">
                 <td class="col-id">{{ m.id }}</td>
                 <td class="col-parcel">{{ m.parcel }}</td>
                 <td class="col-date">{{ m.date }}</td>
@@ -523,5 +533,14 @@ onMounted(() => {
   .missions-table td {
     padding: 0.8rem 1rem;
   }
+}
+
+.clickable-mission-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.clickable-mission-row:hover {
+  background-color: rgba(16, 185, 129, 0.08);
 }
 </style>
