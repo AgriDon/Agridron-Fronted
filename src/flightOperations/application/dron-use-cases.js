@@ -27,17 +27,32 @@ export class DroneUseCases {
   }
 
   /**
-   * @param {{ serialNumber?: string, model?: string, capacity?: number|string, status?: string, urlimg?: string }} data
+   * @param {{
+   *   serialNumber?: string,
+   *   model?: string,
+   *   modelName?: string,
+   *   capacity?: number|string,
+   *   status?: string,
+   *   urlimg?: string,
+   *   imageUrl?: string,
+   *   batteryLevel?: number|string,
+   *   flightHours?: number|string,
+   *   nozzleId?: number|string|null,
+   *   lastMaintenanceDate?: string|Date|null,
+   *   nextMaintenanceDate?: string|Date|null
+   * }} data
+   * @param {boolean} [isEditing=false]
    * @returns {Record<string, string>} Field name -> i18n key. Empty when valid.
    */
-  static validate(data) {
+  static validate(data, isEditing = false) {
     const errors = {}
 
-    if (!data.serialNumber?.trim()) {
+    if (!isEditing && !data.serialNumber?.trim()) {
       errors.serialNumber = 'drone.form.error.serial-number-required'
     }
 
-    if (!data.model?.trim()) {
+    const modelName = data.model?.trim() || data.modelName?.trim()
+    if (!modelName) {
       errors.model = 'drone.form.error.model-required'
     }
 
@@ -51,23 +66,40 @@ export class DroneUseCases {
 
   /**
    * Transform information data from form to entity drone.
-   * @param {{ serialNumber: string, model: string, capacity: number|string, status?: string, urlimg?: string }} data
-   * @param {number} id
+   * @param {Record<string, any>} data
+   * @param {number|string} id
    * @returns {Drone}
    */
   static toEntity(data, id) {
+    const model = (data.model || data.modelName || '').trim()
+    const serial = (data.serialNumber || '').trim()
+    const url = data.urlimg || data.imageUrl || ''
+    const battery = data.batteryLevel != null ? Number(data.batteryLevel) : 100
+    const hours = Number(data.flightHours) || 0
+    const nozzle = data.nozzleId != null && data.nozzleId !== '' ? Number(data.nozzleId) : null
+    const status = data.status || DroneStatus.AVAILABLE
+
     return new Drone(
       id,
-      data.serialNumber.trim(),
-      data.model.trim(),
-      Number(data.capacity),
-      data.status ?? DroneStatus.AVAILABLE,
-      data.urlimg
+      serial,
+      model,
+      Number(data.capacity) || 0,
+      status,
+      url,
+      battery,
+      hours,
+      nozzle,
+      data.lastMaintenanceDate || null,
+      data.nextMaintenanceDate || null,
+      data.isActive !== false
     )
   }
 
-  /** @returns {Promise<Drone[]>} */
-  listDrones = () => this.#api.getAllDrones()
+  /**
+   * @param {{ status?: string, minCapacity?: number, maxCapacity?: number }} [params]
+   * @returns {Promise<Drone[]>}
+   */
+  listDrones = (params) => this.#api.getAllDrones(params)
 
   /**
    * @param {number|string} id
@@ -76,12 +108,12 @@ export class DroneUseCases {
   getDrone = (id) => this.#api.getDroneById(id)
 
   /**
-   * @param {{ serialNumber?: string, model?: string, capacity?: number|string, status?: string, urlimg?: string }} data
+   * @param {Record<string, any>} data
    * @returns {Promise<Drone>}
    * @throws {DroneValidationError}
    */
   createDrone = async (data) => {
-    const errors = DroneUseCases.validate(data)
+    const errors = DroneUseCases.validate(data, false)
 
     if (Object.keys(errors).length > 0) {
       throw new DroneValidationError(errors)
@@ -92,12 +124,12 @@ export class DroneUseCases {
 
   /**
    * @param {number|string} id
-   * @param {{ serialNumber?: string, model?: string, capacity?: number|string, status?: string, urlimg?: string }} data
+   * @param {Record<string, any>} data
    * @returns {Promise<Drone>}
    * @throws {DroneValidationError}
    */
   updateDrone = async (id, data) => {
-    const errors = DroneUseCases.validate(data)
+    const errors = DroneUseCases.validate(data, true)
 
     if (Object.keys(errors).length > 0) {
       throw new DroneValidationError(errors)

@@ -29,7 +29,7 @@ export class FlightOperationsApi extends BaseApi {
   }
 
   // ---- Drones ----
-  getAllDrones = () => this.#droneEndpoint.getAll()
+  getAllDrones = (params) => this.#droneEndpoint.getAll(params)
   getDroneById = (id) => this.#droneEndpoint.getById(id)
   createDrone = (drone) => this.#droneEndpoint.create(drone)
   updateDrone = (drone) => this.#droneEndpoint.update(drone, drone.id)
