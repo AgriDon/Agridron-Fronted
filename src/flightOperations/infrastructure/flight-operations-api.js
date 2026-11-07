@@ -43,11 +43,22 @@ export class FlightOperationsApi extends BaseApi {
   deleteIncident = (id) => this.#incidentEndpoint.delete(id)
 
   // ---- Missions ----
-  getAllMissions = () => this.#missionEndpoint.getAll()
+  getAllMissions = (params) => this.#missionEndpoint.getAll(params)
   getMissionById = (id) => this.#missionEndpoint.getById(id)
   createMission = (mission) => this.#missionEndpoint.create(mission)
   updateMission = (mission) => this.#missionEndpoint.update(mission, mission.id)
   deleteMission = (id) => this.#missionEndpoint.delete(id)
+
+  // ---- Mission Lifecycle & Config ----
+  assignMissionResources = (id, payload) => this.#missionEndpoint.assignResources(id, payload)
+  assignMissionOperator = (id, payload) => this.#missionEndpoint.assignOperator(id, payload)
+  configureMissionFlightParameters = (id, payload) => this.#missionEndpoint.configureFlightParameters(id, payload)
+  approveMission = (id) => this.#missionEndpoint.approve(id)
+  startMission = (id, startedAt) => this.#missionEndpoint.start(id, startedAt)
+  pauseMission = (id, payload) => this.#missionEndpoint.pause(id, payload)
+  resumeMission = (id) => this.#missionEndpoint.resume(id)
+  completeMission = (id, payload) => this.#missionEndpoint.complete(id, payload)
+  cancelMission = (id, reason) => this.#missionEndpoint.cancel(id, reason)
 
   // ---- Operation Status ----
   getAllOperationStatuses = () => this.#operationStatusEndpoint.getAll()
