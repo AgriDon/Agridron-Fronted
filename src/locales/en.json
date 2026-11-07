@@ -469,15 +469,17 @@
     },
     "statusLabel": "Status",
     "status": {
-      "PLANNED": "Scheduled",
-      "IN_PROGRESS": "In progress",
+      "PLANNED": "Planned",
+      "IN_PROGRESS": "In Progress",
       "COMPLETED": "Completed",
       "CANCELLED": "Cancelled",
       "Pending": "Pending",
       "Programada": "Scheduled",
       "En curso": "In progress",
       "Completada": "Completed",
-      "Cancelada": "Cancelled"
+      "Cancelada": "Cancelled",
+      "AUTHORIZED": "Authorized",
+      "PAUSED": "Paused"
     },
     "statusProgrammed": "Scheduled",
     "statusActive": "In progress",
@@ -717,6 +719,59 @@
     "empty": {
       "chemicals": "No chemical supplies found matching the search criteria.",
       "nozzles": "No nozzles registered in inventory."
+    }
+  },
+  "mission": {
+    "config": {
+      "title": "Operational Setup & Resources",
+      "resourcesTitle": "Resource Allocation (MI-002)",
+      "droneSelect": "Assigned Drone",
+      "dronePlaceholder": "Select an available drone",
+      "productName": "Chemical Product",
+      "productPlaceholder": "e.g. Copper Fungicide",
+      "productDose": "Dose (L/ha)",
+      "dosePlaceholder": "e.g. 2.5",
+      "operatorTitle": "Certified Technical Operator (MI-003)",
+      "operatorName": "Pilot / Operator Name",
+      "operatorPlaceholder": "e.g. Carlos Mendoza",
+      "flightParamsTitle": "Autonomous Flight Parameters (MI-004)",
+      "altitude": "Flight Altitude (m)",
+      "speed": "Flight Speed (m/s)",
+      "sprayRate": "Spray Rate (L/ha)",
+      "overlap": "Swath Overlap (%)",
+      "saveAction": "Save Configuration",
+      "errorDroneRequired": "You must select a drone",
+      "errorOperatorRequired": "Operator name is required"
+    },
+    "complete": {
+      "title": "Complete Spray Mission (TR-005)",
+      "desc": "Upon completing this mission, the allocated drone is automatically released and marked available.",
+      "treatedArea": "Total Treated Area (ha)",
+      "completedAt": "Completion Date & Time",
+      "closingNotes": "Field Observations & Closing Notes",
+      "notesPlaceholder": "e.g. Uniform coverage completed without technical issues.",
+      "submit": "Complete and Release Drone"
+    },
+    "action": {
+      "configure": "Configure",
+      "approve": "Approve Flight",
+      "start": "Start Flight",
+      "monitor": "Live Cockpit",
+      "pause": "Pause",
+      "resume": "Resume",
+      "complete": "Complete",
+      "cancel": "Cancel"
+    },
+    "weather": {
+      "warningTitle": "Pre-Flight Weather Advisory",
+      "warningQuestion": "Do you want to authorize and proceed under manual oversight, or wait for optimal conditions?",
+      "abort": "Wait for Conditions",
+      "proceed": "Proceed Anyway"
+    },
+    "cancel": {
+      "title": "Confirm Mission Cancellation",
+      "reasonLabel": "Cancellation Reason (MI-006)",
+      "reasonPlaceholder": "e.g. Sudden adverse weather / Urgent maintenance"
     }
   }
 }
