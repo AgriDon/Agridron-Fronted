@@ -5,6 +5,9 @@ import { useI18n } from 'vue-i18n'
 import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
 import { MissionUseCases } from '@/flightOperations/application/mission-use-cases.js'
+import MissionConfigDialog from '../components/mission-config-dialog.vue'
+import MissionCompleteDialog from '../components/mission-complete-dialog.vue'
+import MissionLifecycleActions from '../components/mission-lifecycle-actions.vue'
 
 const { t } = useI18n()
 
@@ -19,6 +22,30 @@ const crops = ref([])
 const missions = ref([])
 const loading = ref(true)
 const errorMessage = ref('')
+
+const configDialogVisible = ref(false)
+const completeDialogVisible = ref(false)
+const selectedMissionForAction = ref(null)
+const filterStatus = ref('ALL')
+
+const filteredMissions = computed(() => {
+  if (filterStatus.value === 'ALL') return missions.value
+  return missions.value.filter(m => m.status === filterStatus.value)
+})
+
+const onOpenConfig = (mission) => {
+  selectedMissionForAction.value = mission
+  configDialogVisible.value = true
+}
+
+const onOpenComplete = (mission) => {
+  selectedMissionForAction.value = mission
+  completeDialogVisible.value = true
+}
+
+const reloadMissions = async () => {
+  missions.value = await missionUseCases.listMissions()
+}
 
 const selectedFarmId = ref(null)
 const selectedParcelId = ref(null)
@@ -176,7 +203,8 @@ const submitMission = async () => {
       product: productName.value,
       productDose: productDose.value,
       notes: missionNotes.value,
-      status: 'Programada',
+      status: 'PLANNED',
+      plannedAreaHectares: selectedParcel.value.area || 1.0,
       progress: 10,
       date: missionDateTime
     })
@@ -396,17 +424,28 @@ onMounted(load)
       <section class="mission-list-panel">
         <div class="mission-list-header">
           <h2>{{ t('missions.noMissionsPrompt') }}</h2>
+          <div class="mission-status-filter">
+            <pv-button
+              v-for="st in ['ALL', 'PLANNED', 'AUTHORIZED', 'IN_PROGRESS', 'PAUSED', 'COMPLETED', 'CANCELLED']"
+              :key="st"
+              :label="st === 'ALL' ? 'Todas' : t('missions.status.' + st, st)"
+              size="small"
+              :severity="filterStatus === st ? 'primary' : 'secondary'"
+              :outlined="filterStatus !== st"
+              @click="filterStatus = st"
+            />
+          </div>
         </div>
 
-        <div v-if="missions.length === 0" class="mission-empty">
+        <div v-if="filteredMissions.length === 0" class="mission-empty">
           {{ t('missions.noMissions') }}
         </div>
 
         <div v-else class="mission-card-grid">
-          <article v-for="mission in missions" :key="mission.id" class="mission-card">
+          <article v-for="mission in filteredMissions" :key="mission.id" class="mission-card">
             <div class="mission-card-top">
-              <span class="mission-badge" :class="(mission.status === 'PLANNED' || mission.status === 'Programada') ? 'scheduled' : 'active'">
-                {{ t('missions.status.' + (mission.status || 'PLANNED')) }}
+              <span class="mission-badge" :class="'badge-' + String(mission.status || 'PLANNED').toLowerCase().replace(/_/g, '-')">
+                {{ t('missions.status.' + (mission.status || 'PLANNED'), mission.status) }}
               </span>
               <span class="mission-id">{{ t('missions.mission') }} #{{ mission.id }}</span>
             </div>
@@ -414,20 +453,42 @@ onMounted(load)
             <h3>{{ mission.farmArea || t('missions.card.farmArea') }}</h3>
             <p><strong>{{ t('missions.cropLabel') }}:</strong> {{ mission.cropType || t('crop.noCrop') }}</p>
             <p><strong>{{ t('missions.card.operator') }}:</strong> {{ mission.operator || t('missions.card.operator') }}</p>
+            <p v-if="mission.product"><strong>{{ t('mission.config.productName', 'Producto') }}:</strong> {{ mission.product }} ({{ mission.productDose || '-' }} L/ha)</p>
             <p><strong>{{ t('missions.card.date') }}:</strong> {{ new Date(mission.date || Date.now()).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) }}</p>
 
             <div class="progress-block">
               <div class="progress-meta">
                 <span>{{ t('missions.card.progress') }}</span>
-                <strong>{{ mission.progress || 10 }}%</strong>
+                <strong>{{ mission.progress || 0 }}%</strong>
               </div>
               <div class="progress-bar">
-                <span :style="{ width: `${mission.progress || 10}%` }"></span>
+                <span :style="{ width: `${mission.progress || 0}%` }"></span>
               </div>
+            </div>
+
+            <div class="mission-card-actions">
+              <MissionLifecycleActions
+                :mission="mission"
+                @action-done="reloadMissions"
+                @open-config="onOpenConfig"
+                @open-complete="onOpenComplete"
+              />
             </div>
           </article>
         </div>
       </section>
+
+      <MissionConfigDialog
+        v-model:visible="configDialogVisible"
+        :mission="selectedMissionForAction"
+        @saved="reloadMissions"
+      />
+
+      <MissionCompleteDialog
+        v-model:visible="completeDialogVisible"
+        :mission="selectedMissionForAction"
+        @completed="reloadMissions"
+      />
     </div>
   </div>
 </template>
@@ -885,4 +946,49 @@ textarea:focus {
     display: none;
   }
 }
+
+.mission-status-filter {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mission-card-actions {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15);
+}
+
+.badge-planned {
+  background: #3b82f6 !important;
+  color: #fff !important;
+}
+
+.badge-authorized {
+  background: #f59e0b !important;
+  color: #000 !important;
+}
+
+.badge-in-progress,
+.badge-in-flight {
+  background: #10b981 !important;
+  color: #fff !important;
+}
+
+.badge-paused {
+  background: #eab308 !important;
+  color: #000 !important;
+}
+
+.badge-completed {
+  background: #059669 !important;
+  color: #fff !important;
+}
+
+.badge-cancelled {
+  background: #ef4444 !important;
+  color: #fff !important;
+}
+
 </style>
