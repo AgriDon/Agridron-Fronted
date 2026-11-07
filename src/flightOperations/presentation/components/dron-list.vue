@@ -1,60 +1,40 @@
-
 <script setup>
-import { computed ,onUnmounted, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import {CAPACITY_RANGES} from "@/flightOperations/presentation/components/capacity-ranges.js";
-
 import { DroneUseCases } from '@/flightOperations/application/dron-use-cases.js'
+import { CAPACITY_RANGES } from './capacity-ranges.js'
 
-const { t } = useI18n()
+const props = defineProps({
+  status: { type: String, default: null },
+  capacity: { type: String, default: null }
+})
 
 const emit = defineEmits(['view', 'edit', 'delete'])
 
-const props = defineProps({
-  // Status to show (e.g. 'AVAILABLE'). null = all.
-  status: { type: String, default: null },
-  // Capacity in liters. null = all.
-  capacity: { type: String, default: null }
-})
+const { t } = useI18n()
+const useCases = new DroneUseCases()
 
 const drones = ref([])
 const loading = ref(true)
 const errorMessage = ref('')
-
-const useCases = new DroneUseCases()
-
-let disposed = false
-
-onUnmounted(() => {
-  disposed = true
-})
 
 const load = async () => {
   loading.value = true
   errorMessage.value = ''
 
   try {
-    const droneList = await useCases.listDrones()
-
-    if (disposed) return
-
-    drones.value = droneList
+    drones.value = await useCases.listDrones()
   } catch (error) {
-    if (disposed) return
-
     errorMessage.value = error.message
   } finally {
-    if (!disposed) {
-      loading.value = false
-    }
+    loading.value = false
   }
 }
 
+watch(() => [props.status, props.capacity], () => {
+  // Client-side filtering reacts immediately
+})
 
-/**
- * Allow filter drones for capacity
- * @type {ComputedRef<UnwrapRefSimple<*>[]>}
- */
 const filteredDrones = computed(() => {
   const range = CAPACITY_RANGES.find((r) => r.key === props.capacity)
 
@@ -66,9 +46,24 @@ const filteredDrones = computed(() => {
   })
 })
 
-// Maps the status value to a CSS modifier (e.g. IN_FLIGHT -> in-flight).
 const badgeClass = (status) =>
-    `drone-badge--${String(status).toLowerCase().replace(/_/g, '-')}`
+  `drone-badge--${String(status).toLowerCase().replace(/_/g, '-')}`
+
+const getBatterySeverity = (level) => {
+  if (level > 60) return 'success'
+  if (level >= 25) return 'warn'
+  return 'danger'
+}
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-'
+  try {
+    const d = new Date(dateStr)
+    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString()
+  } catch {
+    return '-'
+  }
+}
 
 load()
 </script>
@@ -83,7 +78,6 @@ load()
       {{ errorMessage }}
     </pv-message>
 
-
     <div v-else-if="filteredDrones.length === 0" class="drone-empty">
       <i class="pi pi-send"></i>
       <p>{{ t('drone.empty') }}</p>
@@ -97,10 +91,10 @@ load()
           </span>
 
           <img
-              v-if="drone.urlimg"
-              :src="drone.urlimg"
-              :alt="drone.modelName"
-              class="drone-image"
+            v-if="drone.urlimg"
+            :src="drone.urlimg"
+            :alt="drone.modelName"
+            class="drone-image"
           />
           <div v-else class="drone-image drone-image--empty">
             {{ t('drone.noPhoto') }}
@@ -108,24 +102,53 @@ load()
         </div>
 
         <div class="drone-info">
-          <h3 class="drone-name">{{ drone.modelName }}</h3>
-          <p class="drone-detail">{{ t('drone.serial') }}: {{ drone.serialNumber }}</p>
-          <p class="drone-detail">{{ t('drone.capacity') }}: {{ drone.capacity }} L</p>
+          <div>
+            <h3 class="drone-name" @click="emit('view', drone.id)">{{ drone.modelName }}</h3>
+            <p class="drone-detail">
+              <span class="detail-label">{{ t('drone.serial') }}:</span>
+              <strong>{{ drone.serialNumber }}</strong>
+            </p>
+            <p class="drone-detail">
+              <span class="detail-label">{{ t('drone.capacity') }}:</span>
+              <span>{{ drone.capacity }} L</span>
+            </p>
+            <p class="drone-detail">
+              <span class="detail-label">{{ t('drone.flightHours') }}:</span>
+              <span>{{ drone.flightHours }} h</span>
+            </p>
+
+            <!-- Battery Level Indicator -->
+            <div class="battery-indicator">
+              <span class="detail-label">{{ t('drone.battery') }}:</span>
+              <div class="battery-bar-wrapper">
+                <pv-progressbar
+                  :value="drone.batteryLevel"
+                  :show-value="false"
+                  :class="`battery-bar--${getBatterySeverity(drone.batteryLevel)}`"
+                  style="height: 0.5rem; flex: 1"
+                />
+                <span class="battery-text" :class="`text-${getBatterySeverity(drone.batteryLevel)}`">
+                  {{ drone.batteryLevel }}%
+                </span>
+              </div>
+            </div>
+          </div>
 
           <div class="drone-actions">
             <pv-button
-                :label="t('drone.button.edit')"
-                icon="pi pi-pencil"
-                size="small"
-                @click="emit('edit', drone.id)"
+              :label="t('drone.button.edit')"
+              icon="pi pi-pencil"
+              size="small"
+              text
+              @click="emit('edit', drone.id)"
             />
             <pv-button
-                :label="t('drone.button.delete')"
-                icon="pi pi-trash"
-                size="small"
-                severity="danger"
-                outlined
-                @click="emit('delete', drone.id)"
+              :label="t('drone.button.delete')"
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              text
+              @click="emit('delete', drone.id)"
             />
           </div>
         </div>
@@ -169,10 +192,16 @@ load()
 .drone-card {
   display: flex;
   gap: 1rem;
-  padding: 0.75rem;
+  padding: 0.85rem;
   border-radius: 12px;
   background: var(--p-content-background, #fff);
   border: 1px solid var(--p-content-border-color, #e2e8f0);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.drone-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
 }
 
 .drone-media {
@@ -187,14 +216,15 @@ load()
   left: 0;
   right: 0;
   z-index: 1;
-  padding: 0.2rem 0;
+  padding: 0.25rem 0;
   border-radius: 8px 8px 0 0;
   text-align: center;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   color: #fff;
   background: #64748b;
+  letter-spacing: 0.03em;
 }
 
 .drone-badge--available {
@@ -209,16 +239,20 @@ load()
   background: #7c3aed;
 }
 
+.drone-badge--paused {
+  background: #f59e0b;
+}
+
 .drone-badge--maintenance,
 .drone-badge--maintenance-soon {
-  background: #eab308;
-  color: #1f2937;
+  background: #ea580c;
+  color: #fff;
 }
 
 .drone-image {
   width: 100%;
   height: 100%;
-  min-height: 8rem;
+  min-height: 8.5rem;
   object-fit: cover;
   border-radius: 8px;
   display: block;
@@ -243,23 +277,63 @@ load()
 }
 
 .drone-name {
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.4rem;
   font-size: 1.15rem;
   font-weight: 800;
   color: var(--p-text-color);
+  cursor: pointer;
+}
+
+.drone-name:hover {
+  color: var(--p-primary-color, #16a34a);
 }
 
 .drone-detail {
-  margin: 0;
+  margin: 0 0 0.25rem 0;
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
   color: var(--p-text-color);
-  opacity: 0.8;
 }
+
+.detail-label {
+  opacity: 0.75;
+}
+
+.battery-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 0.35rem;
+}
+
+.battery-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 55%;
+}
+
+.battery-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 2.2rem;
+  text-align: right;
+}
+
+.text-success { color: #16a34a; }
+.text-warn { color: #d97706; }
+.text-danger { color: #dc2626; }
 
 .drone-actions {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.75rem;
-  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--p-content-border-color, #e2e8f0);
 }
 
 .drone-empty {

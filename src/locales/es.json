@@ -321,6 +321,26 @@
     "actions": {
       "details": "Ver detalles",
       "maintenance": "Ver mantenimientos"
+    },
+    "flightHours": "Horas de vuelo",
+    "nozzleId": "ID de boquilla",
+    "lastMaintenance": "Último mantenimiento",
+    "nextMaintenance": "Próximo mantenimiento",
+    "preview": "Vista previa",
+    "form": {
+      "new-title": "Nuevo Dron",
+      "edit-title": "Editar Dron",
+      "serial-placeholder": "Ej. AGR-2024-001",
+      "model-placeholder": "Ej. DJI Agras T40",
+      "capacity-placeholder": "Ej. 40",
+      "nozzle-placeholder": "Ej. 101",
+      "image-url": "URL de imagen",
+      "image-placeholder": "https://ejemplo.com/dron.jpg",
+      "error": {
+        "serial-number-required": "El número de serie es obligatorio",
+        "model-required": "El modelo es obligatorio",
+        "capacity-invalid": "La capacidad debe ser un número mayor a 0"
+      }
     }
   },
   "iam": {

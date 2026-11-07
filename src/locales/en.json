@@ -321,6 +321,26 @@
     "actions": {
       "details": "View details",
       "maintenance": "View maintenance"
+    },
+    "flightHours": "Flight Hours",
+    "nozzleId": "Nozzle ID",
+    "lastMaintenance": "Last Maintenance",
+    "nextMaintenance": "Next Maintenance",
+    "preview": "Preview",
+    "form": {
+      "new-title": "New Drone",
+      "edit-title": "Edit Drone",
+      "serial-placeholder": "e.g. AGR-2024-001",
+      "model-placeholder": "e.g. DJI Agras T40",
+      "capacity-placeholder": "e.g. 40",
+      "nozzle-placeholder": "e.g. 101",
+      "image-url": "Image URL",
+      "image-placeholder": "https://example.com/drone.jpg",
+      "error": {
+        "serial-number-required": "Serial number is required",
+        "model-required": "Model is required",
+        "capacity-invalid": "Capacity must be greater than 0"
+      }
     }
   },
   "iam": {
