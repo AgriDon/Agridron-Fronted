@@ -251,7 +251,7 @@ onMounted(loadDrone)
           @click="router.push('/drones')"
         />
         <pv-button
-          :label="t('parcel.form.submit')"
+          :label="isEditing ? t('drone.form.update') : t('drone.form.create')"
           icon="pi pi-check"
           type="submit"
           :loading="saving"

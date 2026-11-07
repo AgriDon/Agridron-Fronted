@@ -340,7 +340,9 @@
         "serial-number-required": "El número de serie es obligatorio",
         "model-required": "El modelo es obligatorio",
         "capacity-invalid": "La capacidad debe ser un número mayor a 0"
-      }
+      },
+      "create": "Crear dron",
+      "update": "Actualizar dron"
     }
   },
   "iam": {

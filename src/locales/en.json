@@ -340,7 +340,9 @@
         "serial-number-required": "Serial number is required",
         "model-required": "Model is required",
         "capacity-invalid": "Capacity must be greater than 0"
-      }
+      },
+      "create": "Create drone",
+      "update": "Update drone"
     }
   },
   "iam": {
