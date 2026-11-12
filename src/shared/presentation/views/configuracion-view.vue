@@ -1,20 +1,22 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'primevue/usetoast'
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
 
 const { t } = useI18n()
+const toast = useToast()
 const userService = new UserProfileService()
 
 // Active tab
 const activeTab = ref('perfil')
 
-const tabs = [
-  { id: 'perfil', label: 'Perfil' },
-  { id: 'notificaciones', label: 'Notificaciones' },
-  { id: 'seguridad', label: 'Seguridad' },
-  { id: 'integraciones', label: 'Integraciones' }
-]
+const tabs = computed(() => [
+  { id: 'perfil', label: t('settings.tabs.profile') },
+  { id: 'notificaciones', label: t('settings.tabs.notifications') },
+  { id: 'seguridad', label: t('settings.tabs.security') },
+  { id: 'integraciones', label: t('settings.tabs.integrations') }
+])
 
 // User data
 const loading = ref(true)
@@ -91,8 +93,20 @@ const handleSaveProfile = async () => {
       }
     }))
     showEditDialog.value = false
+    toast.add({
+      severity: 'success',
+      summary: t('toast.success'),
+      detail: t('settings.profile.savedSuccess'),
+      life: 3000
+    })
   } catch (err) {
-    feedbackMessage.value = 'No se pudo actualizar el perfil.'
+    feedbackMessage.value = t('settings.profile.saveError')
+    toast.add({
+      severity: 'error',
+      summary: t('toast.error'),
+      detail: t('settings.profile.saveError'),
+      life: 3000
+    })
   } finally {
     saving.value = false
   }
@@ -101,6 +115,12 @@ const handleSaveProfile = async () => {
 const handlePreferenceChange = async () => {
   try {
     await userService.updatePreferences(user.value.id, user.value.preferences)
+    toast.add({
+      severity: 'info',
+      summary: t('toast.info'),
+      detail: t('settings.preferences.title'),
+      life: 2000
+    })
   } catch (err) {
     console.error('Error guardando preferencias:', err)
   }
@@ -111,7 +131,7 @@ onMounted(loadUser)
 
 <template>
   <div class="settings-view">
-    <h1 class="settings-page-title">Configuración</h1>
+    <h1 class="settings-page-title">{{ t('settings.title') }}</h1>
 
     <div class="settings-card-wrapper">
       <!-- Left Vertical Navigation Tabs -->
@@ -132,7 +152,7 @@ onMounted(loadUser)
         <!-- Tab: Perfil -->
         <section v-if="activeTab === 'perfil'" class="tab-content">
           <div class="section-block">
-            <h2 class="section-title">Información del usuario</h2>
+            <h2 class="section-title">{{ t('settings.profile.title') }}</h2>
 
             <div class="user-info-grid">
               <!-- Avatar -->
@@ -148,17 +168,17 @@ onMounted(loadUser)
               <!-- Details -->
               <div class="user-details">
                 <div class="detail-field">
-                  <span class="field-label">Nombre</span>
+                  <span class="field-label">{{ t('settings.profile.name') }}</span>
                   <span class="field-value">{{ user.name }}</span>
                 </div>
 
                 <div class="detail-field">
-                  <span class="field-label">Correo</span>
+                  <span class="field-label">{{ t('settings.profile.email') }}</span>
                   <span class="field-value">{{ user.email }}</span>
                 </div>
 
                 <div class="detail-field">
-                  <span class="field-label">Rol</span>
+                  <span class="field-label">{{ t('settings.profile.role') }}</span>
                   <span class="field-value">{{ user.role }}</span>
                 </div>
               </div>
@@ -167,7 +187,7 @@ onMounted(loadUser)
             <!-- Edit Button Row -->
             <div class="edit-action-row">
               <pv-button
-                label="Editar Perfil"
+                :label="t('settings.profile.editBtn')"
                 class="edit-profile-btn"
                 @click="openEditModal"
               />
@@ -176,14 +196,14 @@ onMounted(loadUser)
 
           <!-- Preferences Section -->
           <div class="section-block preferences-block">
-            <h2 class="section-title">Preferencias</h2>
+            <h2 class="section-title">{{ t('settings.preferences.title') }}</h2>
 
             <div class="preference-list">
               <!-- Item 1: Email -->
               <div class="preference-item">
                 <div class="preference-info">
                   <i class="pi pi-envelope preference-icon"></i>
-                  <span class="preference-text">Notificaciones por correo</span>
+                  <span class="preference-text">{{ t('settings.preferences.emailNotifications') }}</span>
                 </div>
                 <pv-toggle-switch
                   v-model="user.preferences.emailNotifications"
@@ -196,7 +216,7 @@ onMounted(loadUser)
               <div class="preference-item">
                 <div class="preference-info">
                   <i class="pi pi-bell preference-icon"></i>
-                  <span class="preference-text">Notificaciones en la app</span>
+                  <span class="preference-text">{{ t('settings.preferences.appNotifications') }}</span>
                 </div>
                 <pv-toggle-switch
                   v-model="user.preferences.appNotifications"
@@ -209,7 +229,7 @@ onMounted(loadUser)
               <div class="preference-item">
                 <div class="preference-info">
                   <i class="pi pi-cloud preference-icon"></i>
-                  <span class="preference-text">Alertas meteorológicas</span>
+                  <span class="preference-text">{{ t('settings.preferences.weatherAlerts') }}</span>
                 </div>
                 <pv-toggle-switch
                   v-model="user.preferences.weatherAlerts"
@@ -223,15 +243,15 @@ onMounted(loadUser)
 
         <!-- Tab: Notificaciones -->
         <section v-else-if="activeTab === 'notificaciones'" class="tab-content">
-          <h2 class="section-title">Canales de Notificación</h2>
+          <h2 class="section-title">{{ t('settings.tabs.notifications') }}</h2>
           <p class="tab-placeholder-desc">
-            Configura la frecuencia de los resúmenes semanales y avisos de telemetría de vuelo.
+            {{ t('settings.preferences.emailNotifications') }} & {{ t('settings.preferences.appNotifications') }}
           </p>
           <div class="preference-list">
             <div class="preference-item">
               <div class="preference-info">
                 <i class="pi pi-envelope preference-icon"></i>
-                <span class="preference-text">Resumen semanal de labores fitosanitarias</span>
+                <span class="preference-text">{{ t('settings.preferences.emailNotifications') }}</span>
               </div>
               <pv-toggle-switch v-model="user.preferences.emailNotifications" @change="handlePreferenceChange" />
             </div>
@@ -240,27 +260,27 @@ onMounted(loadUser)
 
         <!-- Tab: Seguridad -->
         <section v-else-if="activeTab === 'seguridad'" class="tab-content">
-          <h2 class="section-title">Seguridad y Credenciales</h2>
+          <h2 class="section-title">{{ t('settings.security.title') }}</h2>
           <p class="tab-placeholder-desc">
-            Administra tus credenciales de acceso y permisos de operador.
+            {{ t('settings.security.title') }}
           </p>
           <div class="security-box">
-            <p><strong>Contraseña:</strong> ••••••••••••</p>
-            <pv-button label="Cambiar contraseña" severity="secondary" outlined size="small" />
+            <p><strong>{{ t('settings.security.passwordLabel') }}:</strong> ••••••••••••</p>
+            <pv-button :label="t('settings.security.passwordChange')" severity="secondary" outlined size="small" />
           </div>
         </section>
 
         <!-- Tab: Integraciones -->
         <section v-else-if="activeTab === 'integraciones'" class="tab-content">
-          <h2 class="section-title">Integraciones Externas</h2>
+          <h2 class="section-title">{{ t('settings.integrations.title') }}</h2>
           <p class="tab-placeholder-desc">
-            Conexión con estaciones meteorológicas locales y APIs satelitales.
+            {{ t('settings.integrations.title') }}
           </p>
           <div class="integration-item">
             <div>
-              <strong>OpenWeatherMap API:</strong> Conectado activamente.
+              <strong>{{ t('settings.integrations.weatherService') }}:</strong> {{ t('settings.integrations.connected') }}
             </div>
-            <pv-tag severity="success" value="En línea" />
+            <pv-tag severity="success" :value="t('settings.integrations.connected')" />
           </div>
         </section>
       </main>
@@ -270,7 +290,7 @@ onMounted(loadUser)
     <pv-dialog
       v-model:visible="showEditDialog"
       modal
-      header="Editar Perfil de Usuario"
+      :header="t('settings.profile.editDialogTitle')"
       :style="{ width: '28rem' }"
     >
       <form class="edit-profile-form" @submit.prevent="handleSaveProfile">
@@ -279,23 +299,23 @@ onMounted(loadUser)
         </pv-message>
 
         <div class="form-group">
-          <label for="edit-name">Nombre completo</label>
+          <label for="edit-name">{{ t('settings.profile.name') }}</label>
           <pv-input-text id="edit-name" v-model="editForm.name" required class="w-full" />
         </div>
 
         <div class="form-group">
-          <label for="edit-email">Correo electrónico</label>
+          <label for="edit-email">{{ t('settings.profile.email') }}</label>
           <pv-input-text id="edit-email" v-model="editForm.email" type="email" required class="w-full" />
         </div>
 
         <div class="form-group">
-          <label for="edit-avatar">URL de Avatar</label>
+          <label for="edit-avatar">{{ t('settings.profile.avatarUrl') }}</label>
           <pv-input-text id="edit-avatar" v-model="editForm.avatar" class="w-full" />
         </div>
 
         <div class="dialog-actions">
-          <pv-button label="Cancelar" text severity="secondary" @click="showEditDialog = false" />
-          <pv-button label="Guardar cambios" type="submit" :loading="saving" />
+          <pv-button :label="t('settings.profile.cancel')" text severity="secondary" @click="showEditDialog = false" />
+          <pv-button :label="t('settings.profile.save')" type="submit" :loading="saving" />
         </div>
       </form>
     </pv-dialog>

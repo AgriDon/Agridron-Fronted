@@ -25,8 +25,11 @@ import {
   Paginator,
   ProgressBar,
   Select,
+  SelectButton,
   Skeleton,
   Tag,
+  Toast,
+  ToastService,
   ToggleSwitch,
   Toolbar,
   Tooltip
@@ -37,6 +40,7 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.use(i18n)
+app.use(ToastService)
 app.use(PrimeVue, {
   ripple: true,
   theme: {
@@ -61,8 +65,10 @@ app.component('pv-message', Message)
 app.component('pv-paginator', Paginator)
 app.component('pv-progressbar', ProgressBar)
 app.component('pv-select', Select)
+app.component('pv-select-button', SelectButton)
 app.component('pv-skeleton', Skeleton)
 app.component('pv-tag', Tag)
+app.component('pv-toast', Toast)
 app.component('pv-toggle-switch', ToggleSwitch)
 app.component('pv-toolbar', Toolbar)
 
@@ -83,8 +89,10 @@ app.component('Message', Message)
 app.component('Paginator', Paginator)
 app.component('ProgressBar', ProgressBar)
 app.component('Select', Select)
+app.component('SelectButton', SelectButton)
 app.component('Skeleton', Skeleton)
 app.component('Tag', Tag)
+app.component('Toast', Toast)
 app.component('ToggleSwitch', ToggleSwitch)
 app.component('Toolbar', Toolbar)
 

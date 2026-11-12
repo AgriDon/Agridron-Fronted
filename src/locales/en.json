@@ -18,7 +18,15 @@
     "drone": "Drones",
     "profile": "Profile",
     "home": "Home",
-    "missions": "Missions"
+    "misiones": "Missions",
+    "missions": "Missions",
+    "inventory": "Inventory",
+    "settings": "Settings"
+  },
+  "header": {
+    "searchPlaceholder": "What are you looking for today?",
+    "searchAria": "Search",
+    "menuToggleAria": "Open or close menu"
   },
   "farm": {
     "title": "Farms",
@@ -400,8 +408,30 @@
     }
   },
   "home": {
-    "welcome": "Welcome, Juan!",
-    "subtitle": "Here is a summary of your operations"
+    "welcome": "Welcome, {name}!",
+    "subtitle": "Here is a summary of your operations",
+    "kpi": {
+      "farms": "Registered Farms",
+      "parcels": "Parcels",
+      "missions": "Missions",
+      "totalArea": "Total Area (ha)"
+    },
+    "recentMissions": {
+      "title": "Recent missions",
+      "viewAll": "View all",
+      "id": "ID",
+      "parcel": "Parcel",
+      "date": "Date",
+      "status": "Status",
+      "progress": "Progress"
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "planned": "Scheduled",
+      "paused": "Paused",
+      "cancelled": "Cancelled"
+    }
   },
   "missions": {
     "title": "Missions",
@@ -600,7 +630,52 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "System settings, users and preferences"
+    "subtitle": "System settings, users and preferences",
+    "tabs": {
+      "profile": "Profile",
+      "notifications": "Notifications",
+      "security": "Security",
+      "integrations": "Integrations"
+    },
+    "profile": {
+      "title": "User Information",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "editBtn": "Edit Profile",
+      "editDialogTitle": "Edit Profile",
+      "avatarUrl": "Profile picture URL",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "savedSuccess": "Profile updated successfully.",
+      "saveError": "Could not update profile."
+    },
+    "preferences": {
+      "title": "Preferences",
+      "emailNotifications": "Email notifications",
+      "appNotifications": "In-app notifications",
+      "weatherAlerts": "Live weather alerts"
+    },
+    "security": {
+      "title": "Account Security",
+      "passwordLabel": "Password",
+      "passwordChange": "Change password",
+      "twoFactor": "Two-factor authentication (2FA)",
+      "sessions": "Active sessions"
+    },
+    "integrations": {
+      "title": "Integrations & External Services",
+      "weatherService": "Weather Forecast Service (Open-Meteo)",
+      "connected": "Connected"
+    }
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "info": "Information",
+    "created": "Record created successfully",
+    "updated": "Record updated successfully",
+    "deleted": "Record deleted successfully"
   },
   "inventory": {
     "title": "Inventory & Resource Management",
