@@ -132,7 +132,9 @@
         "parcelRequired": "La parcela es requerida",
         "geometryRequired": "La geometría es requerida",
         "geometryInvalid": "La geometría debe ser un GeoJSON Polygon válido"
-      }
+      },
+      "save": "Guardar Área",
+      "cancel": "Cancelar"
     }
   },
   "crop": {
