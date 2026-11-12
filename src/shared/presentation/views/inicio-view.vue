@@ -76,13 +76,13 @@ const formatDate = (dateStr) => {
 
 const formatStatus = (st) => {
   const map = {
-    'COMPLETED': 'Completado',
-    'IN_PROGRESS': 'En curso',
-    'PLANNED': 'Programado',
-    'PAUSED': 'En pausa',
-    'CANCELLED': 'Cancelado'
+    'COMPLETED': t('home.status.completed'),
+    'IN_PROGRESS': t('home.status.inProgress'),
+    'PLANNED': t('home.status.planned'),
+    'PAUSED': t('home.status.paused'),
+    'CANCELLED': t('home.status.cancelled')
   }
-  return map[st] || st || 'Programado'
+  return map[st] || st || t('home.status.planned')
 }
 
 const statusClass = (status) => {
@@ -139,8 +139,8 @@ onMounted(() => {
   <div class="dashboard-container">
     <!-- Welcome Header -->
     <header class="welcome-header">
-      <h1 class="welcome-title">¡Bienvenido, {{ user.name ? user.name.split(' ')[0] : 'Juan' }}!</h1>
-      <p class="welcome-subtitle">Aquí tienes un resumen de tus operaciones</p>
+      <h1 class="welcome-title">{{ t('home.welcome', { name: user.name ? user.name.split(' ')[0] : 'Juan' }) }}</h1>
+      <p class="welcome-subtitle">{{ t('home.subtitle') }}</p>
     </header>
 
     <!-- Top KPI Cards Row -->
@@ -150,12 +150,12 @@ onMounted(() => {
         <div class="kpi-image-wrapper">
           <img
             :src="farms[0]?.image || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600'"
-            alt="Fincas"
+            :alt="t('home.kpi.farms')"
             class="kpi-image"
             @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600'"
           />
         </div>
-        <span class="kpi-label">Fincas Registradas</span>
+        <span class="kpi-label">{{ t('home.kpi.farms') }}</span>
         <span class="kpi-value">{{ farmsCount }}</span>
       </div>
 
@@ -164,12 +164,12 @@ onMounted(() => {
         <div class="kpi-image-wrapper">
           <img
             :src="parcels[0]?.image || 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600'"
-            alt="Parcelas"
+            :alt="t('home.kpi.parcels')"
             class="kpi-image"
             @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600'"
           />
         </div>
-        <span class="kpi-label">Parcelas</span>
+        <span class="kpi-label">{{ t('home.kpi.parcels') }}</span>
         <span class="kpi-value">{{ parcelsCount }}</span>
       </div>
 
@@ -178,12 +178,12 @@ onMounted(() => {
         <div class="kpi-image-wrapper">
           <img
             src="https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
-            alt="Misiones"
+            :alt="t('home.kpi.missions')"
             class="kpi-image"
             @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600'"
           />
         </div>
-        <span class="kpi-label">Misiones</span>
+        <span class="kpi-label">{{ t('home.kpi.missions') }}</span>
         <span class="kpi-value">{{ missionsCount }}</span>
       </div>
 
@@ -192,12 +192,12 @@ onMounted(() => {
         <div class="kpi-image-wrapper">
           <img
             :src="parcels[1]?.image || 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600'"
-            alt="Área Total"
+            :alt="t('home.kpi.totalArea')"
             class="kpi-image"
             @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600'"
           />
         </div>
-        <span class="kpi-label">Área Total(ha)</span>
+        <span class="kpi-label">{{ t('home.kpi.totalArea') }}</span>
         <span class="kpi-value">{{ totalArea }}</span>
       </div>
     </section>
@@ -207,9 +207,9 @@ onMounted(() => {
       <!-- Left Column: Misiones recientes Table -->
       <section class="recent-missions-panel">
         <div class="panel-header">
-          <h2 class="panel-title">Misiones recientes</h2>
+          <h2 class="panel-title">{{ t('home.recentMissions.title') }}</h2>
           <button class="view-all-btn" @click="router.push('/misiones')">
-            <span>Ver todas</span>
+            <span>{{ t('home.recentMissions.viewAll') }}</span>
             <i class="pi pi-arrow-right"></i>
           </button>
         </div>
@@ -218,11 +218,11 @@ onMounted(() => {
           <table class="missions-table">
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Parcela</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Progreso</th>
+                <th>{{ t('home.recentMissions.id') }}</th>
+                <th>{{ t('home.recentMissions.parcel') }}</th>
+                <th>{{ t('home.recentMissions.date') }}</th>
+                <th>{{ t('home.recentMissions.status') }}</th>
+                <th>{{ t('home.recentMissions.progress') }}</th>
               </tr>
             </thead>
             <tbody>

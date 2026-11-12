@@ -18,7 +18,15 @@
     "drone": "Drones",
     "profile": "Perfil",
     "home": "Inicio",
-    "misiones": "Misiones"
+    "misiones": "Misiones",
+    "missions": "Misiones",
+    "inventory": "Inventario",
+    "settings": "Configuración"
+  },
+  "header": {
+    "searchPlaceholder": "¿Qué buscas hoy?",
+    "searchAria": "Buscar",
+    "menuToggleAria": "Abrir o cerrar menú"
   },
   "farm": {
     "title": "Fincas",
@@ -400,8 +408,30 @@
     }
   },
   "home": {
-    "welcome": "!Bienvenido, Juan¡",
-    "subtitle": "Aqui tienes un resumen de tus operaciones"
+    "welcome": "¡Bienvenido, {name}!",
+    "subtitle": "Aquí tienes un resumen de tus operaciones",
+    "kpi": {
+      "farms": "Fincas Registradas",
+      "parcels": "Parcelas",
+      "missions": "Misiones",
+      "totalArea": "Área Total (ha)"
+    },
+    "recentMissions": {
+      "title": "Misiones recientes",
+      "viewAll": "Ver todas",
+      "id": "ID",
+      "parcel": "Parcela",
+      "date": "Fecha",
+      "status": "Estado",
+      "progress": "Progreso"
+    },
+    "status": {
+      "completed": "Completado",
+      "inProgress": "En curso",
+      "planned": "Programado",
+      "paused": "En pausa",
+      "cancelled": "Cancelado"
+    }
   },
   "missions": {
     "title": "Misiones",
@@ -600,7 +630,52 @@
   },
   "settings": {
     "title": "Configuración",
-    "subtitle": "Ajustes del sistema, usuarios y preferencias"
+    "subtitle": "Ajustes del sistema, usuarios y preferencias",
+    "tabs": {
+      "profile": "Perfil",
+      "notifications": "Notificaciones",
+      "security": "Seguridad",
+      "integrations": "Integraciones"
+    },
+    "profile": {
+      "title": "Información del usuario",
+      "name": "Nombre",
+      "email": "Correo",
+      "role": "Rol",
+      "editBtn": "Editar Perfil",
+      "editDialogTitle": "Editar Perfil",
+      "avatarUrl": "URL de imagen de perfil",
+      "save": "Guardar cambios",
+      "cancel": "Cancelar",
+      "savedSuccess": "Perfil actualizado correctamente.",
+      "saveError": "No se pudo actualizar el perfil."
+    },
+    "preferences": {
+      "title": "Preferencias",
+      "emailNotifications": "Notificaciones por correo",
+      "appNotifications": "Notificaciones en la app",
+      "weatherAlerts": "Alertas climáticas en vivo"
+    },
+    "security": {
+      "title": "Seguridad de la cuenta",
+      "passwordLabel": "Contraseña",
+      "passwordChange": "Cambiar contraseña",
+      "twoFactor": "Autenticación de dos factores (2FA)",
+      "sessions": "Sesiones activas"
+    },
+    "integrations": {
+      "title": "Integraciones y Servicios Externos",
+      "weatherService": "Servicio de pronóstico del clima (Open-Meteo)",
+      "connected": "Conectado"
+    }
+  },
+  "toast": {
+    "success": "Éxito",
+    "error": "Error",
+    "info": "Información",
+    "created": "Registro creado exitosamente",
+    "updated": "Registro actualizado exitosamente",
+    "deleted": "Registro eliminado exitosamente"
   },
   "inventory": {
     "title": "Gestión de Inventario y Recursos",
