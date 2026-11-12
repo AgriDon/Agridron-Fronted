@@ -168,7 +168,7 @@ onMounted(load)
         <label class="field-label" for="parcel-geometry">{{ t('parcel.form.geometry') }}</label>
         <GeojsonPolygonHelper
           v-model="form.geometry"
-          @update:area="(val) => { if (!form.area) form.area = String(val) }"
+          @update:area="(val) => form.area = String(val)"
         />
         <small v-if="errors.geometry" class="field-error">{{ errorFor('geometry') }}</small>
       </div>
