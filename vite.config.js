@@ -22,11 +22,15 @@ export default defineConfig(({ mode }) => {
       },
     },
     server: {
-      // Proxy /api to json-server so the browser stays on one origin.
-      // The app therefore uses a relative VITE_API_BASE_URL ("/api/v1").
+      // Hybrid proxy: route Sprint 3 Bounded Contexts to real backend
+      // and keep Sprint 4 Bounded Contexts (inventory, reports) routed to json-server.
       proxy: {
+        '^/api/v1/(farms|parcels|crops|fumigation-areas|drones|missions|operations|incidents)': {
+          target: env.VITE_DEV_PROXY_TARGET || 'http://localhost:5000',
+          changeOrigin: true
+        },
         '/api': {
-          target: env.VITE_DEV_PROXY_TARGET || 'http://localhost:3000',
+          target: env.VITE_MOCK_PROXY_TARGET || 'http://localhost:3000',
           changeOrigin: true
         }
       }

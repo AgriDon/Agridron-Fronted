@@ -1,5 +1,7 @@
+import { IncidentSeverity } from './incident-severity.enum.js'
+
 /**
- * Domain entity representing an Incident in Flight Operations.
+ * Domain entity representing an Incident or telemetry anomaly in Flight Operations.
  */
 export class Incident {
   id
@@ -7,12 +9,33 @@ export class Incident {
   description
   occurredAt
   missionId
+  droneId
+  severity
 
-  constructor(id, type, description, occurredAt, missionId = null) {
-    this.id = id
-    this.type = type
-    this.description = description
-    this.occurredAt = occurredAt
-    this.missionId = missionId
+  /**
+   * @param {number|null} [id=null]
+   * @param {string} [type='']
+   * @param {string} [description='']
+   * @param {string} [occurredAt='']
+   * @param {number|null} [missionId=null]
+   * @param {number|null} [droneId=null]
+   * @param {string} [severity=IncidentSeverity.LOW]
+   */
+  constructor(
+    id = null,
+    type = '',
+    description = '',
+    occurredAt = '',
+    missionId = null,
+    droneId = null,
+    severity = IncidentSeverity.LOW
+  ) {
+    this.id = id != null ? Number(id) : null
+    this.type = type || 'ANOMALY'
+    this.description = description || ''
+    this.occurredAt = occurredAt || new Date().toISOString()
+    this.missionId = missionId != null ? Number(missionId) : null
+    this.droneId = droneId != null ? Number(droneId) : null
+    this.severity = severity || IncidentSeverity.LOW
   }
 }

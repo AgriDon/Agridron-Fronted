@@ -27,6 +27,11 @@ export class Parcel {
     /** @type {string | null} */
     #image;
 
+    /** @type {string | null} */
+    #phenologicalStage;
+
+    /** @type {boolean} */
+    #isActive;
 
     /**
      * @param {number} id
@@ -37,8 +42,10 @@ export class Parcel {
      * @param {number} cropId
      * @param {string | null} [image]
      * @param {import('./crop.entity.js').Crop | null} [crop] Resolved crop, when the parcel was loaded with it.
+     * @param {string | null} [phenologicalStage]
+     * @param {boolean} [isActive=true]
      */
-    constructor(id, name, area, geometry, farmId, cropId, image = null, crop = null) {
+    constructor(id, name, area, geometry, farmId, cropId, image = null, crop = null, phenologicalStage = null, isActive = true) {
         this.#id = id;
         this.#name = name;
         this.#area = area;
@@ -47,8 +54,9 @@ export class Parcel {
         this.#cropId = cropId;
         this.#image = image;
         this.#crop = crop;
+        this.#phenologicalStage = phenologicalStage;
+        this.#isActive = isActive;
     }
-
 
     /** @returns {number} */
     get id() {
@@ -120,5 +128,23 @@ export class Parcel {
 
     set image(value) {
         this.#image = value;
+    }
+
+    /** @returns {string | null} */
+    get phenologicalStage() {
+        return this.#phenologicalStage;
+    }
+
+    set phenologicalStage(value) {
+        this.#phenologicalStage = value;
+    }
+
+    /** @returns {boolean} */
+    get isActive() {
+        return this.#isActive;
+    }
+
+    set isActive(value) {
+        this.#isActive = value;
     }
 }

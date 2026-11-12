@@ -91,8 +91,11 @@
         "area-min": "El área debe ser mayor que 0",
         "geometry-required": "La geometría es obligatoria",
         "farm-required": "Debe seleccionar una finca",
-        "crop-required": "Debe seleccionar un cultivo"
-      }
+        "crop-required": "Debe seleccionar un cultivo",
+        "geometry-invalid": "El formato GeoJSON debe ser un Polygon válido"
+      },
+      "phenologicalStage": "Etapa fenológica",
+      "stagePlaceholder": "Seleccionar etapa..."
     },
     "detail": {
       "title": "Detalle de parcela",
@@ -100,6 +103,28 @@
       "geometry": "Geometría",
       "notFound": "Parcela no encontrada",
       "back": "Volver"
+    },
+    "phenologicalStage": "Etapa fenológica",
+    "noStage": "No especificada",
+    "geometryHelper": {
+      "title": "Asistente de Geometría y Polígono",
+      "previewBadge": "Vista previa",
+      "invalidHint": "Ingrese un formato GeoJSON Polygon válido",
+      "placeholder": "Seleccione una plantilla arriba o pegue un GeoJSON Polygon válido..."
+    },
+    "fumigation": {
+      "title": "Áreas de Fumigación",
+      "subtitle": "Zonas de aplicación delimitadas dentro de esta parcela",
+      "newArea": "Nueva Área",
+      "noAreas": "No hay áreas de fumigación registradas para esta parcela.",
+      "delete": "Eliminar área",
+      "dialogTitle": "Registrar Área de Fumigación",
+      "dialogHint": "Defina el polígono específico para la aplicación del dron.",
+      "error": {
+        "parcelRequired": "La parcela es requerida",
+        "geometryRequired": "La geometría es requerida",
+        "geometryInvalid": "La geometría debe ser un GeoJSON Polygon válido"
+      }
     }
   },
   "crop": {
@@ -296,6 +321,28 @@
     "actions": {
       "details": "Ver detalles",
       "maintenance": "Ver mantenimientos"
+    },
+    "flightHours": "Horas de vuelo",
+    "nozzleId": "ID de boquilla",
+    "lastMaintenance": "Último mantenimiento",
+    "nextMaintenance": "Próximo mantenimiento",
+    "preview": "Vista previa",
+    "form": {
+      "new-title": "Nuevo Dron",
+      "edit-title": "Editar Dron",
+      "serial-placeholder": "Ej. AGR-2024-001",
+      "model-placeholder": "Ej. DJI Agras T40",
+      "capacity-placeholder": "Ej. 40",
+      "nozzle-placeholder": "Ej. 101",
+      "image-url": "URL de imagen",
+      "image-placeholder": "https://ejemplo.com/dron.jpg",
+      "error": {
+        "serial-number-required": "El número de serie es obligatorio",
+        "model-required": "El modelo es obligatorio",
+        "capacity-invalid": "La capacidad debe ser un número mayor a 0"
+      },
+      "create": "Crear dron",
+      "update": "Actualizar dron"
     }
   },
   "iam": {
@@ -424,15 +471,17 @@
     },
     "statusLabel": "Estado",
     "status": {
-      "PLANNED": "Programada",
-      "IN_PROGRESS": "En curso",
+      "PLANNED": "Planificada",
+      "IN_PROGRESS": "En ejecución",
       "COMPLETED": "Completada",
       "CANCELLED": "Cancelada",
       "Pending": "Pendiente",
       "Programada": "Programada",
       "En curso": "En curso",
       "Completada": "Completada",
-      "Cancelada": "Cancelada"
+      "Cancelada": "Cancelada",
+      "AUTHORIZED": "Autorizada",
+      "PAUSED": "Pausada"
     },
     "statusProgrammed": "Programada",
     "statusActive": "En curso",
@@ -672,6 +721,59 @@
     "empty": {
       "chemicals": "No se encontraron insumos químicos que coincidan con la búsqueda.",
       "nozzles": "No hay boquillas registradas en el inventario."
+    }
+  },
+  "mission": {
+    "config": {
+      "title": "Configuración Operativa y Recursos",
+      "resourcesTitle": "Asignación de Recursos (MI-002)",
+      "droneSelect": "Dron Asignado",
+      "dronePlaceholder": "Seleccione un dron disponible",
+      "productName": "Producto Químico",
+      "productPlaceholder": "Ej. Fungicida Cobre",
+      "productDose": "Dosis (L/ha)",
+      "dosePlaceholder": "Ej. 2.5",
+      "operatorTitle": "Operador Técnico Certificado (MI-003)",
+      "operatorName": "Nombre del Piloto / Operador",
+      "operatorPlaceholder": "Ej. Ing. Carlos Mendoza",
+      "flightParamsTitle": "Parámetros de Vuelo Autónomo (MI-004)",
+      "altitude": "Altitud de Vuelo (m)",
+      "speed": "Velocidad de Avance (m/s)",
+      "sprayRate": "Tasa de Aspersión (L/ha)",
+      "overlap": "Solape de Pasada (%)",
+      "saveAction": "Guardar Configuración",
+      "errorDroneRequired": "Debe seleccionar un dron",
+      "errorOperatorRequired": "El operador técnico es obligatorio"
+    },
+    "complete": {
+      "title": "Completar Misión de Aspersión (TR-005)",
+      "desc": "Al completar la misión, el dron asignado quedará automáticamente liberado y disponible para nuevas operaciones.",
+      "treatedArea": "Área Total Tratada (ha)",
+      "completedAt": "Fecha y Hora de Cierre",
+      "closingNotes": "Observaciones Finales / Notas de Campo",
+      "notesPlaceholder": "Ej. Cobertura uniforme completada sin incidencias técnicas.",
+      "submit": "Finalizar y Liberar Dron"
+    },
+    "action": {
+      "configure": "Configurar",
+      "approve": "Aprobar Vuelo",
+      "start": "Iniciar Vuelo",
+      "monitor": "Cabina en Vivo",
+      "pause": "Pausar",
+      "resume": "Reanudar",
+      "complete": "Completar",
+      "cancel": "Cancelar"
+    },
+    "weather": {
+      "warningTitle": "Advertencia Meteorológica Pre-Vuelo",
+      "warningQuestion": "¿Desea autorizar e iniciar la operación bajo supervisión manual o prefiere esperar a condiciones óptimas?",
+      "abort": "Esperar Condiciones",
+      "proceed": "Continuar de Todos Modos"
+    },
+    "cancel": {
+      "title": "Confirmar Cancelación de Misión",
+      "reasonLabel": "Motivo de Cancelación (MI-006)",
+      "reasonPlaceholder": "Ej. Cambio climático repentino / Mantenimiento urgente"
     }
   }
 }

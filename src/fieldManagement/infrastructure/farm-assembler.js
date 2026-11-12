@@ -10,11 +10,13 @@ import { Farm } from '../domain/model/farm.entity.js';
 export class FarmAssembler {
 
     /**
-     * @param {import('./field-management-response.js').FarmResponse} response
+     * @param {import('./field-management-response.js').FarmResponse|any[]} response
      * @returns {Farm[]}
      */
-    toEntitiesFromResponse = (response) =>
-        response.farms.map(resource => this.toEntityFromResource(resource));
+    toEntitiesFromResponse = (response) => {
+        const list = Array.isArray(response) ? response : (response?.farms ?? []);
+        return list.map(resource => this.toEntityFromResource(resource));
+    };
 
     /**
      * @param {import('./field-management-response.js').FarmResource} resource
@@ -25,12 +27,25 @@ export class FarmAssembler {
         // Vue wraps objects placed in ref()/reactive() in a Proxy, and reading a
         // private field through a Proxy throws "object is not the right class".
         // Marking the instance as raw keeps it out of the reactivity system.
-        markRaw(new Farm(resource.id, resource.name, resource.location, resource.ownerId, [], resource.image ?? null));
+        markRaw(new Farm(
+            resource.id,
+            resource.name,
+            resource.location,
+            resource.ownerId,
+            [],
+            resource.image ?? resource.imageUrl ?? null
+        ));
 
     /**
      * @param {Farm} entity
      * @returns {import('./field-management-response.js').FarmResource}
      */
-    toResourceFromEntity = (entity) =>
-        ({ id: entity.id, name: entity.name, location: entity.location, ownerId: entity.ownerId, image: entity.image ?? undefined });
+    toResourceFromEntity = (entity) => ({
+        id: entity.id,
+        name: entity.name,
+        location: entity.location,
+        ownerId: Number(entity.ownerId),
+        image: entity.image ?? undefined,
+        imageUrl: entity.image ?? undefined
+    });
 }

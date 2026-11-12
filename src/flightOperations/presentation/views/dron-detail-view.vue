@@ -19,6 +19,8 @@ const droneId = computed(() => route.params.id)
 
 const load = async () => {
   loading.value = true
+  errorMessage.value = ''
+  notFound.value = false
 
   try {
     drone.value = await useCases.getDrone(droneId.value)
@@ -66,6 +68,22 @@ const confirmDelete = async () => {
   }
 }
 
+const getBatterySeverity = (level) => {
+  if (level > 60) return 'success'
+  if (level >= 25) return 'warn'
+  return 'danger'
+}
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-'
+  try {
+    const d = new Date(dateStr)
+    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString()
+  } catch {
+    return '-'
+  }
+}
+
 onMounted(load)
 </script>
 
@@ -76,8 +94,9 @@ onMounted(load)
     </div>
 
     <div v-if="loading" aria-busy="true">
-      <pv-skeleton height="3rem"></pv-skeleton>
-      <pv-skeleton height="3rem"></pv-skeleton>
+      <pv-skeleton height="3rem" class="mb-3"></pv-skeleton>
+      <pv-skeleton height="3rem" class="mb-3"></pv-skeleton>
+      <pv-skeleton height="12rem"></pv-skeleton>
     </div>
 
     <pv-message v-else-if="notFound" severity="warn" :closable="false">
@@ -89,42 +108,72 @@ onMounted(load)
     </pv-message>
 
     <div v-else-if="drone" class="detail-card">
-      <img
+      <div class="detail-header-media">
+        <img
           v-if="drone.urlimg"
           :src="drone.urlimg"
           :alt="drone.modelName"
           class="detail-image"
-      />
-      <p v-else class="detail-no-photo">{{ t('drone.noPhoto') }}</p>
+        />
+        <div v-else class="detail-image detail-image--empty">
+          {{ t('drone.noPhoto') }}
+        </div>
+      </div>
 
-      <dl class="detail-list">
-        <dt>{{ t('drone.model') }}</dt>
-        <dd>{{ drone.modelName }}</dd>
+      <div class="detail-content">
+        <h2 class="detail-title">{{ drone.modelName }}</h2>
 
-        <dt>{{ t('drone.serial') }}</dt>
-        <dd>{{ drone.serialNumber }}</dd>
+        <dl class="detail-list">
+          <dt>{{ t('drone.serial') }}</dt>
+          <dd><strong>{{ drone.serialNumber }}</strong></dd>
 
-        <dt>{{ t('drone.capacity') }}</dt>
-        <dd>{{ drone.capacity }} L</dd>
+          <dt>{{ t('drone.statusLabel') }}</dt>
+          <dd>
+            <pv-tag :value="t(`drone.status.${drone.status}`)" :severity="drone.status === 'AVAILABLE' ? 'success' : 'info'" />
+          </dd>
 
-        <dt>{{ t('drone.statusLabel') }}</dt>
-        <dd>{{ t(`drone.status.${drone.status}`) }}</dd>
-      </dl>
+          <dt>{{ t('drone.capacity') }}</dt>
+          <dd>{{ drone.capacity }} L</dd>
 
-      <div class="detail-actions">
-        <pv-button
+          <dt>{{ t('drone.battery') }}</dt>
+          <dd class="battery-cell">
+            <pv-progressbar
+              :value="drone.batteryLevel"
+              :show-value="false"
+              style="height: 0.6rem; width: 8rem"
+            />
+            <span :class="`text-${getBatterySeverity(drone.batteryLevel)} font-bold`">
+              {{ drone.batteryLevel }}%
+            </span>
+          </dd>
+
+          <dt>{{ t('drone.flightHours') }}</dt>
+          <dd>{{ drone.flightHours }} h</dd>
+
+          <dt>{{ t('drone.nozzleId') }}</dt>
+          <dd>{{ drone.nozzleId != null ? drone.nozzleId : '-' }}</dd>
+
+          <dt>{{ t('drone.lastMaintenance') }}</dt>
+          <dd>{{ formatDate(drone.lastMaintenanceDate) }}</dd>
+
+          <dt>{{ t('drone.nextMaintenance') }}</dt>
+          <dd>{{ formatDate(drone.nextMaintenanceDate) }}</dd>
+        </dl>
+
+        <div class="detail-actions">
+          <pv-button
             :label="t('drone.button.edit')"
             icon="pi pi-pencil"
-            text
             @click="onEdit"
-        />
-        <pv-button
+          />
+          <pv-button
             :label="t('drone.button.delete')"
             icon="pi pi-trash"
-            text
             severity="danger"
+            outlined
             @click="onDelete"
-        />
+          />
+        </div>
       </div>
     </div>
 
@@ -141,27 +190,27 @@ onMounted(load)
 
       <template #footer>
         <pv-button
-            :label="t('farm.cancel')"
-            severity="secondary"
-            text
-            @click="cancelDelete"
+          :label="t('farm.cancel')"
+          severity="secondary"
+          text
+          @click="cancelDelete"
         />
         <pv-button
-            :label="t('drone.button.delete')"
-            icon="pi pi-trash"
-            severity="danger"
-            :loading="deleting"
-            @click="confirmDelete"
+          :label="t('drone.button.delete')"
+          icon="pi pi-trash"
+          severity="danger"
+          :loading="deleting"
+          @click="confirmDelete"
         />
       </template>
     </pv-dialog>
 
     <pv-button
-        :label="t('parcel.detail.back')"
-        icon="pi pi-arrow-left"
-        text
-        class="back-button"
-        @click="router.push('/drones')"
+      :label="t('parcel.detail.back')"
+      icon="pi pi-arrow-left"
+      text
+      class="back-button"
+      @click="router.push('/drones')"
     />
   </div>
 </template>
@@ -169,7 +218,7 @@ onMounted(load)
 <style scoped>
 .view-container {
   width: 100%;
-  max-width: 44rem;
+  max-width: 48rem;
 }
 
 .header-section {
@@ -186,43 +235,83 @@ onMounted(load)
 .detail-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  background: var(--p-content-background, #fff);
+  border: 1px solid var(--p-content-border-color, #e2e8f0);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.detail-header-media {
+  width: 100%;
+  max-height: 18rem;
+  overflow: hidden;
 }
 
 .detail-image {
   width: 100%;
-  max-height: 18rem;
+  height: 18rem;
   object-fit: cover;
-  border-radius: 8px;
+  display: block;
 }
 
-.detail-no-photo {
-  margin: 0;
+.detail-image--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--p-form-field-background, #f1f5f9);
+  color: var(--p-text-color);
   opacity: 0.6;
+}
+
+.detail-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--p-text-color);
 }
 
 .detail-list {
   display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: 0.5rem 1rem;
+  grid-template-columns: 12rem 1fr;
+  gap: 0.75rem 1rem;
   margin: 0;
+  align-items: center;
 }
 
 .detail-list dt {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--p-text-color);
+  opacity: 0.8;
 }
 
 .detail-list dd {
   margin: 0;
   color: var(--p-text-color);
-  opacity: 0.8;
 }
+
+.battery-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.text-success { color: #16a34a; }
+.text-warn { color: #d97706; }
+.text-danger { color: #dc2626; }
 
 .detail-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--p-content-border-color, #e2e8f0);
 }
 
 .back-button {
@@ -230,15 +319,12 @@ onMounted(load)
 }
 
 @media (max-width: 560px) {
-  .view-title {
-    font-size: 1.5rem;
-  }
   .detail-list {
     grid-template-columns: 1fr;
     gap: 0.25rem;
   }
   .detail-list dt {
-    margin-top: 0.65rem;
+    margin-top: 0.5rem;
   }
 }
 </style>

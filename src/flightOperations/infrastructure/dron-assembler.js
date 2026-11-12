@@ -27,14 +27,27 @@ export class DronAssembler {
     if (status === 'MAINTENANCE_SOON') status = DroneStatus.MAINTENANCE
     if (!Object.values(DroneStatus).includes(status)) status = DroneStatus.AVAILABLE
 
+    const battery = resource.batteryLevel ?? resource.battery ?? 100
+    const flightHours = Number(resource.flightHours) || 0
+    const nozzleId = resource.nozzleId != null ? Number(resource.nozzleId) : null
+    const lastMaintenanceDate = resource.lastMaintenanceDate || null
+    const nextMaintenanceDate = resource.nextMaintenanceDate || null
+    const isActive = resource.isActive ?? true
+
     return markRaw(
       new Drone(
         resource.id,
         resource.serialNumber ?? '',
-        resource.model ?? '',
-        Number(resource.capacity) || 0,
+        resource.model ?? resource.modelName ?? '',
+        Number(resource.capacity ?? resource.capacityLiters) || 0,
         status,
-        resource.urlimg || resource.image || ''
+        resource.urlimg || resource.imageUrl || resource.image || '',
+        battery,
+        flightHours,
+        nozzleId,
+        lastMaintenanceDate,
+        nextMaintenanceDate,
+        isActive
       )
     )
   }
@@ -42,14 +55,36 @@ export class DronAssembler {
   /**
    * Converts a Drone entity into the JSON resource sent to the backend.
    * @param {Drone} entity
-   * @returns {import('./flight-operations-response.js').DronResource}
+   * @returns {Record<string, any>}
    */
-  toResourceFromEntity = (entity) => ({
-    id: entity.id,
-    serialNumber: entity.serialNumber,
-    model: entity.modelName,
-    capacity: entity.capacity,
-    status: entity.status,
-    urlimg: entity.urlimg
-  })
+  toResourceFromEntity = (entity) => {
+    const formatIsoDate = (d) => {
+      if (!d) return null
+      if (d instanceof Date) return d.toISOString()
+      if (typeof d === 'string' && d.trim().length > 0) {
+        const parsed = new Date(d)
+        return isNaN(parsed.getTime()) ? null : parsed.toISOString()
+      }
+      return null
+    }
+
+    return {
+      id: entity.id,
+      serialNumber: entity.serialNumber,
+      model: entity.modelName,
+      modelName: entity.modelName,
+      capacity: Number(entity.capacity) || 0,
+      capacityLiters: Number(entity.capacity) || 0,
+      status: entity.status,
+      battery: entity.batteryLevel,
+      batteryLevel: entity.batteryLevel,
+      flightHours: entity.flightHours,
+      nozzleId: entity.nozzleId,
+      urlimg: entity.urlimg,
+      imageUrl: entity.urlimg,
+      lastMaintenanceDate: formatIsoDate(entity.lastMaintenanceDate),
+      nextMaintenanceDate: formatIsoDate(entity.nextMaintenanceDate),
+      isActive: entity.isActive
+    }
+  }
 }

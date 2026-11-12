@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import InicioView from './shared/presentation/views/inicio-view.vue'
+import { fieldManagementRoutes } from './fieldManagement/presentation/field-management-routes.js'
+import { flightOperationsRoutes } from './flightOperations/presentation/flight-operations-routes.js'
 
 const routes = [
   {
@@ -8,73 +10,8 @@ const routes = [
     component: InicioView,
     meta: { title: 'Inicio' }
   },
-  {
-    path: '/fincas',
-    name: 'fincas',
-    component: () => import('./fieldManagement/presentation/views/fincas-view.vue'),
-    meta: { title: 'Fincas' }
-  },
-  {
-    // Optional id: without it the form creates, with it the form edits.
-    path: '/fincas/edit/:id?',
-    name: 'fincas-edit',
-    component: () => import('./fieldManagement/presentation/views/finca-form-view.vue'),
-    meta: { title: 'Fincas' }
-  },
-  {
-    path: '/parcelas',
-    name: 'parcelas',
-    component: () => import('./fieldManagement/presentation/views/parcelas-view.vue'),
-    meta: { title: 'Parcelas' }
-  },
-  {
-    path: '/parcelas/edit/:id?',
-    name: 'parcelas-edit',
-    component: () => import('./fieldManagement/presentation/views/parcela-form-view.vue'),
-    meta: { title: 'Parcelas' }
-  },
-  {
-    path: '/parcelas/:id(\\d+)',
-    name: 'parcela-detail',
-    component: () => import('./fieldManagement/presentation/views/parcela-detail-view.vue'),
-    meta: { title: 'Parcelas' }
-  },
-  {
-    path: '/cultivos/:id(\\d+)',
-    name: 'cultivo-detail',
-    component: () => import('./fieldManagement/presentation/views/cultivo-detail-view.vue'),
-    meta: { title: 'Cultivos' }
-  },
-  {
-    path: '/cultivos',
-    name: 'cultivos',
-    component: () => import('./fieldManagement/presentation/views/cultivo-view.vue'),
-    meta: { title: 'Cultivos' }
-  },
-  {
-    path: '/cultivos/edit/:id?',
-    name: 'cultivos-edit',
-    component: () => import('./fieldManagement/presentation/views/cultivo-form-view.vue'),
-    meta: { title: 'Cultivos' }
-  },
-  {
-    path: '/misiones',
-    name: 'misiones',
-    component: () => import('./flightOperations/presentation/views/mission-management-view.vue'),
-    meta: { title: 'Misiones' }
-  },
-  {
-    path: '/drones',
-    name: 'drones',
-    component: () => import('./flightOperations/presentation/views/drones-view.vue'),
-    meta: { title: 'Drones' }
-  },
-  {
-    path: '/drones/:id(\\d+)',
-    name: 'drone-detail',
-    component: () => import('./flightOperations/presentation/views/dron-detail-view.vue'),
-    meta: { title: 'Drones' }
-  },
+  ...fieldManagementRoutes,
+  ...flightOperationsRoutes,
   {
     path: '/reportes',
     name: 'reportes',
