@@ -132,7 +132,9 @@
         "parcelRequired": "Parcel is required",
         "geometryRequired": "Geometry is required",
         "geometryInvalid": "Geometry must be a valid GeoJSON Polygon"
-      }
+      },
+      "save": "Save Area",
+      "cancel": "Cancel"
     }
   },
   "crop": {
