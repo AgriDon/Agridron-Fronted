@@ -35,6 +35,7 @@ export class FlightOperationsApi extends BaseApi {
         this.#incidentEndpoint = new IncidentApiEndpoint(http);
         this.#missionEndpoint = new MissionApiEndpoint(http);
         this.#operationStatusEndpoint = new OperationStatusApiEndpoint(http);
+        this.#maintenanceEndpoint = new MaintenanceRecordApiEndpoint(http);
     }
 
     // ---- Drones ----
@@ -65,6 +66,38 @@ export class FlightOperationsApi extends BaseApi {
      * @returns {Promise<void>}
      */
     deleteDrone = (id) => this.#droneEndpoint.delete(id);
+
+    // -----Maintenance
+    /**
+     * @returns {Promise<MaintenanceRecord[]>}
+     */
+    getAllMaintenanceRecords(params = {}) {
+        return this.#maintenanceEndpoint.getAll(params)
+    }
+
+    /**
+     * @param {number} id
+     * @returns {Promise<MaintenanceRecord>}
+     */
+    getMaintenanceRecord(id) {
+        return this.#maintenanceEndpoint.getById(id)
+    }
+
+    /**
+     * @param {number} droneId
+     * @returns {Promise<MaintenanceRecord[]>}
+     */
+    getMaintenanceRecordsByDroneId(droneId) {
+        return this.#maintenanceEndpoint.getAllByDroneId(droneId)
+    }
+
+    /**
+     * @param {MaintenanceRecord} record
+     * @returns {Promise<MaintenanceRecord>}
+     */
+    createMaintenanceRecord(record) {
+        return this.#maintenanceEndpoint.create(record)
+    }
 
     // ---- Incidents ----
 
