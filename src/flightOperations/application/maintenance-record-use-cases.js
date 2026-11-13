@@ -81,6 +81,12 @@ export class MaintenanceRecordUseCases {
      * @throws {MaintenanceValidationError}
      */
     registerMaintenance = async (drone, data) => {
+
+        // A drone with a reported failure can only receive a corrective maintenance (repair).
+        if (drone.status === DroneStatus.OUT_OF_SERVICE) {
+            data = { ...data, type: MaintenanceType.CORRECTIVE }
+        }
+
         const errors = MaintenanceRecordUseCases.validate(data)
         if (Object.keys(errors).length > 0) {
             throw new MaintenanceValidationError(errors)
@@ -100,7 +106,9 @@ export class MaintenanceRecordUseCases {
         const changes = {
             lastMaintenanceDate: record.date,
             nextMaintenanceDate: toIsoDate(data.nextMaintenanceDate),
-            status: drone.status === DroneStatus.MAINTENANCE ? DroneStatus.AVAILABLE : drone.status
+            status: [DroneStatus.MAINTENANCE, DroneStatus.OUT_OF_SERVICE].includes(drone.status)
+                ? DroneStatus.AVAILABLE
+                : drone.status
         }
         const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, changes)
 
