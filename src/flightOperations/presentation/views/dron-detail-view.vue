@@ -3,11 +3,11 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { DroneUseCases } from '@/flightOperations/application/dron-use-cases.js'
+import { IncidentUseCases } from '@/flightOperations/application/incident-use-cases.js'
 import {
   MaintenanceRecordUseCases,
   MaintenanceValidationError
 } from '@/flightOperations/application/maintenance-record-use-cases.js'
-
 import { MaintenanceType } from '@/flightOperations/domain/model/maintenance-type.enum.js'
 import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.js'
 
@@ -17,7 +17,7 @@ const router = useRouter()
 
 const useCases = new DroneUseCases()
 const maintenanceUseCases = new MaintenanceRecordUseCases()
-
+const incidentUseCases = new IncidentUseCases()
 
 const drone = ref(null)
 const loading = ref(true)
@@ -26,6 +26,7 @@ const errorMessage = ref('')
 
 const droneId = computed(() => route.params.id)
 
+// ---- Maintenance history (DR-005) ----
 const maintenanceRecords = ref([])
 const loadingRecords = ref(false)
 
@@ -40,28 +41,17 @@ const loadMaintenanceRecords = async () => {
   }
 }
 
-const showSendDialog = ref(false)
-const sending = ref(false)
-const sendError = ref('')
+// ---- Active failure (DR-006) ----
+const activeFailure = ref(null)
 
-const canSendToMaintenance = computed(() => drone.value?.status === DroneStatus.AVAILABLE)
-
-const openSendDialog = () => {
-  sendError.value = ''
-  showSendDialog.value = true
-}
-
-const confirmSendToMaintenance = async () => {
-  sending.value = true
-  sendError.value = ''
-
+/** Shows the last reported failure only while the drone is out of service. */
+const loadActiveFailure = async () => {
+  activeFailure.value = null
+  if (drone.value?.status !== DroneStatus.OUT_OF_SERVICE) return
   try {
-    drone.value = await useCases.sendToMaintenance(drone.value)
-    showSendDialog.value = false
-  } catch (error) {
-    sendError.value = error.message.startsWith('drone.') ? t(error.message) : error.message
-  } finally {
-    sending.value = false
+    activeFailure.value = await incidentUseCases.getLatestDroneFailure(drone.value.id)
+  } catch {
+    activeFailure.value = null
   }
 }
 
@@ -73,6 +63,7 @@ const load = async () => {
   try {
     drone.value = await useCases.getDrone(droneId.value)
     await loadMaintenanceRecords()
+    await loadActiveFailure()
   } catch (error) {
     if (/not found/i.test(error.message)) {
       notFound.value = true
@@ -117,6 +108,68 @@ const confirmDelete = async () => {
   }
 }
 
+// ---- Report failure (DR-006) ----
+const showFailureDialog = ref(false)
+const failureDescription = ref('')
+const failureError = ref('')
+const reportingFailure = ref(false)
+
+const canReportFailure = computed(() => DroneUseCases.canReportFailure(drone.value))
+
+/** Warn when the failure leaves a mission without a usable drone. */
+const hasMissionInProgress = computed(() =>
+    [DroneStatus.ASSIGNED, DroneStatus.PAUSED].includes(drone.value?.status)
+)
+
+const openFailureDialog = () => {
+  failureDescription.value = ''
+  failureError.value = ''
+  showFailureDialog.value = true
+}
+
+const confirmReportFailure = async () => {
+  reportingFailure.value = true
+  failureError.value = ''
+
+  try {
+    drone.value = await useCases.reportFailure(drone.value, failureDescription.value)
+    await loadActiveFailure()
+    showFailureDialog.value = false
+  } catch (error) {
+    failureError.value = error.message.startsWith('drone.') ? t(error.message) : error.message
+  } finally {
+    reportingFailure.value = false
+  }
+}
+
+// ---- Send to maintenance (DR-005) ----
+const showSendDialog = ref(false)
+const sending = ref(false)
+const sendError = ref('')
+
+/** Only an available drone can be taken out of operation for maintenance. */
+const canSendToMaintenance = computed(() => drone.value?.status === DroneStatus.AVAILABLE)
+
+const openSendDialog = () => {
+  sendError.value = ''
+  showSendDialog.value = true
+}
+
+const confirmSendToMaintenance = async () => {
+  sending.value = true
+  sendError.value = ''
+
+  try {
+    drone.value = await useCases.sendToMaintenance(drone.value)
+    showSendDialog.value = false
+  } catch (error) {
+    sendError.value = error.message.startsWith('drone.') ? t(error.message) : error.message
+  } finally {
+    sending.value = false
+  }
+}
+
+// ---- Register maintenance dialog (DR-005) ----
 const emptyMaintenanceForm = () => ({
   date: new Date(),
   type: MaintenanceType.PREVENTIVE,
@@ -131,10 +184,13 @@ const maintenanceSaveError = ref('')
 const savingMaintenance = ref(false)
 const showMaintenanceDialog = ref(false)
 
-/** Only an available drone or one already in maintenance can receive a maintenance. */
+/** A maintenance is registered when the drone leaves the workshop: planned (MAINTENANCE) or repair (OUT_OF_SERVICE). */
 const canRegisterMaintenance = computed(() =>
-    [DroneStatus.AVAILABLE, DroneStatus.MAINTENANCE].includes(drone.value?.status)
+    [DroneStatus.MAINTENANCE, DroneStatus.OUT_OF_SERVICE].includes(drone.value?.status)
 )
+
+/** A drone with a reported failure only accepts a corrective maintenance. */
+const isRepair = computed(() => drone.value?.status === DroneStatus.OUT_OF_SERVICE)
 
 const maintenanceTypes = computed(() =>
     Object.values(MaintenanceType).map(value => ({
@@ -145,6 +201,10 @@ const maintenanceTypes = computed(() =>
 
 const openMaintenanceDialog = () => {
   maintenanceForm.value = emptyMaintenanceForm()
+  if (isRepair.value) {
+    maintenanceForm.value.type = MaintenanceType.CORRECTIVE
+    maintenanceForm.value.description = activeFailure.value?.description || ''
+  }
   maintenanceErrors.value = {}
   maintenanceSaveError.value = ''
   showMaintenanceDialog.value = true
@@ -163,6 +223,7 @@ const onMaintenanceSubmit = async () => {
     const result = await maintenanceUseCases.registerMaintenance(drone.value, maintenanceForm.value)
     drone.value = result.drone
     await loadMaintenanceRecords()
+    await loadActiveFailure()
     closeMaintenanceDialog()
   } catch (error) {
     if (error instanceof MaintenanceValidationError) {
@@ -194,15 +255,18 @@ const getBatterySeverity = (level) => {
 }
 
 /**
- * Formats a date-only value ("YYYY-MM-DD" or ISO) in local time.
- * Avoids new Date("YYYY-MM-DD"), which is parsed as UTC and shows the previous day in Lima.
+ * Formats a date in local time.
+ * - "YYYY-MM-DD" (date only) is built as a local date: new Date("YYYY-MM-DD") would be UTC
+ *   and show the previous day in Lima.
+ * - Values with time ("...T23:17:19Z") are real instants, so they are converted normally.
  * @param {string|Date|null} value
  * @returns {string}
  */
 const formatDate = (value) => {
   if (!value) return '-'
-  if (value instanceof Date) {
-    return isNaN(value.getTime()) ? '-' : value.toLocaleDateString()
+  if (value instanceof Date || String(value).includes('T')) {
+    const date = new Date(value)
+    return isNaN(date.getTime()) ? '-' : date.toLocaleDateString()
   }
   const [y, m, d] = String(value).slice(0, 10).split('-').map(Number)
   if (!y || !m || !d) return '-'
@@ -285,34 +349,54 @@ onMounted(load)
           <dd>{{ formatDate(drone.nextMaintenanceDate) }}</dd>
         </dl>
 
+        <pv-message v-if="activeFailure" severity="error" :closable="false" class="failure-banner">
+          <strong>⚠ {{ t('drone.failure.banner') }} · {{ formatDate(activeFailure.occurredAt) }}</strong>
+          <div>{{ activeFailure.description }}</div>
+        </pv-message>
+
         <div class="detail-actions">
-          <pv-button
-              :label="t('drone.button.edit')"
-              icon="pi pi-pencil"
-              @click="onEdit"
-          />
-          <pv-button
-              :label="t('drone.button.delete')"
-              icon="pi pi-trash"
-              severity="danger"
-              outlined
-              @click="onDelete"
-          />
-          <pv-button
-              v-if="canSendToMaintenance"
-              :label="t('drone.maintenance.sendButton')"
-              icon="pi pi-cog"
-              severity="warn"
-              outlined
-              @click="openSendDialog"
-          />
-          <pv-button
-              v-if="canRegisterMaintenance"
-              :label="t('drone.maintenance.registerButton')"
-              icon="pi pi-wrench"
-              severity="secondary"
-              @click="openMaintenanceDialog"
-          />
+          <div class="detail-actions__main">
+            <pv-button
+                v-if="canSendToMaintenance"
+                :label="t('drone.maintenance.sendButton')"
+                icon="pi pi-cog"
+                severity="warn"
+                outlined
+                @click="openSendDialog"
+            />
+            <pv-button
+                v-if="canRegisterMaintenance"
+                :label="t('drone.maintenance.registerButton')"
+                icon="pi pi-wrench"
+                @click="openMaintenanceDialog"
+            />
+            <pv-button
+                v-if="canReportFailure"
+                :label="t('drone.failure.reportButton')"
+                icon="pi pi-exclamation-triangle"
+                severity="danger"
+                outlined
+                @click="openFailureDialog"
+            />
+          </div>
+
+          <div class="detail-actions__manage">
+            <pv-button
+                icon="pi pi-pencil"
+                rounded
+                :aria-label="t('drone.button.edit')"
+                v-tooltip.top="t('drone.button.edit')"
+                @click="onEdit"
+            />
+            <pv-button
+                icon="pi pi-trash"
+                severity="danger"
+                rounded
+                :aria-label="t('drone.button.delete')"
+                v-tooltip.top="t('drone.button.delete')"
+                @click="onDelete"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -381,6 +465,45 @@ onMounted(load)
         class="back-button"
         @click="router.push('/drones')"
     />
+    <pv-dialog v-model:visible="showFailureDialog" modal :style="{ width: '30rem' }">
+      <template #header>
+        <span class="dialog-title">{{ t('drone.failure.dialog.title') }}</span>
+      </template>
+
+      <p class="dialog-message">{{ t('drone.failure.dialog.hint') }}</p>
+
+      <pv-message v-if="hasMissionInProgress" severity="warn" :closable="false" class="mb-3">
+        {{ t('drone.failure.dialog.missionWarning') }}
+      </pv-message>
+
+      <div class="form-field">
+        <label for="failure-description">{{ t('drone.failure.dialog.description') }}</label>
+        <pv-input-text
+            id="failure-description"
+            v-model="failureDescription"
+            :placeholder="t('drone.failure.dialog.placeholder')"
+            :invalid="!!failureError"
+        />
+        <small v-if="failureError" class="text-danger">{{ failureError }}</small>
+      </div>
+
+      <template #footer>
+        <pv-button
+            :label="t('farm.cancel')"
+            severity="secondary"
+            text
+            @click="showFailureDialog = false"
+        />
+        <pv-button
+            :label="t('drone.failure.dialog.confirm')"
+            icon="pi pi-exclamation-triangle"
+            severity="danger"
+            :loading="reportingFailure"
+            @click="confirmReportFailure"
+        />
+      </template>
+    </pv-dialog>
+
     <pv-dialog v-model:visible="showSendDialog" modal :style="{ width: '26rem' }">
       <template #header>
         <span class="dialog-title">{{ t('drone.maintenance.sendDialog.title') }}</span>
@@ -408,6 +531,7 @@ onMounted(load)
         />
       </template>
     </pv-dialog>
+
     <pv-dialog v-model:visible="showMaintenanceDialog" modal :style="{ width: '30rem' }">
       <template #header>
         <span class="dialog-title">{{ t('drone.maintenance.registerDialog.title') }}</span>
@@ -434,8 +558,10 @@ onMounted(load)
               :options="maintenanceTypes"
               option-label="label"
               option-value="value"
+              :disabled="isRepair"
               :invalid="!!maintenanceErrors.type"
           />
+          <small v-if="isRepair" class="field-hint">{{ t('drone.failure.correctiveOnly') }}</small>
           <small v-if="maintenanceErrors.type" class="text-danger">{{ t(maintenanceErrors.type) }}</small>
         </div>
 
@@ -585,6 +711,9 @@ onMounted(load)
 
 .detail-actions {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 0.5rem;
   padding-top: 1rem;
@@ -627,6 +756,25 @@ onMounted(load)
 
 .form-field label {
   font-weight: 600;
+}
+
+.detail-actions__main,
+.detail-actions__manage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.detail-actions__manage {
+  margin-left: auto;
+}
+
+.failure-banner div {
+  margin-top: 0.25rem;
+}
+
+.field-hint {
+  opacity: 0.7;
 }
 
 .back-button {

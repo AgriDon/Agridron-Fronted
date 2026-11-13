@@ -393,6 +393,23 @@
         "next-date-after": "Must be after the maintenance date.",
         "send-not-available": "Only an available drone can be sent to maintenance."
       }
+    },
+    "failure": {
+      "reportButton": "Report failure",
+      "dialog": {
+        "title": "Report failure",
+        "hint": "The drone will be set Out of service and cannot be assigned to missions until its corrective maintenance is registered.",
+        "description": "Failure description",
+        "placeholder": "e.g. The battery drains too fast",
+        "missionWarning": "This drone has an assigned or paused mission. You will need to reassign or cancel it.",
+        "confirm": "Report"
+      },
+      "banner": "Failure reported",
+      "correctiveOnly": "An out of service drone only accepts corrective maintenance.",
+      "error": {
+        "not-allowed": "A failure cannot be reported in the drone's current status.",
+        "description-required": "Describe the failure."
+      }
     }
   },
   "iam": {

@@ -393,6 +393,23 @@
         "next-date-after": "Debe ser posterior a la fecha del mantenimiento.",
         "send-not-available": "Solo un dron disponible puede enviarse a mantenimiento."
       }
+    },
+    "failure": {
+      "reportButton": "Reportar falla",
+      "dialog": {
+        "title": "Reportar falla",
+        "hint": "El dron quedará Fuera de servicio y no podrá asignarse a misiones hasta registrar su mantenimiento correctivo.",
+        "description": "Descripción de la falla",
+        "placeholder": "Ej. La batería se descarga muy rápido",
+        "missionWarning": "Este dron tiene una misión asignada o en pausa. Deberás reasignarla o cancelarla.",
+        "confirm": "Reportar"
+      },
+      "banner": "Falla reportada",
+      "correctiveOnly": "Un dron fuera de servicio solo admite mantenimiento correctivo.",
+      "error": {
+        "not-allowed": "No se puede reportar una falla en el estado actual del dron.",
+        "description-required": "Describe la falla."
+      }
     }
   },
   "iam": {
