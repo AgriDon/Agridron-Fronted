@@ -1,19 +1,64 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { UserProfileService } from '@/shared/application/user-profile-service.js'
+import LanguageSwitcher from '@/shared/presentation/components/language-switcher.vue'
 
+const { t } = useI18n()
 const route = useRoute()
+const userService = new UserProfileService()
+const currentUser = ref({
+  name: 'Juan Pérez',
+  role: 'Agricultor',
+  avatar: ''
+})
+
+const isMobileSidebarOpen = ref(false)
+
+const toggleSidebar = () => {
+  isMobileSidebarOpen.value = !isMobileSidebarOpen.value
+}
+
+const closeSidebar = () => {
+  isMobileSidebarOpen.value = false
+}
+
+watch(() => route.path, () => {
+  isMobileSidebarOpen.value = false
+})
+
+const loadProfile = async () => {
+  try {
+    const data = await userService.getCurrentUser(1)
+    if (data) {
+      currentUser.value = data
+    }
+  } catch (e) {
+    // fallback defaults
+  }
+}
+
+onMounted(() => {
+  loadProfile()
+  window.addEventListener('user-profile-updated', (e) => {
+    if (e.detail) {
+      currentUser.value = { ...currentUser.value, ...e.detail }
+    }
+  })
+})
 
 // Navigation items matching the reference image with respective routes
-const menuItems = ref([
-  { id: 'inicio', label: 'inicio', icon: 'pi pi-home', to: '/inicio' },
-  { id: 'fincas', label: 'Fincas', icon: 'pi pi-map', to: '/fincas' },
-  { id: 'parcelas', label: 'Parcelas', icon: 'pi pi-th-large', to: '/parcelas' },
-  { id: 'cultivos', label: 'Cultivos', icon: 'pi pi-apple', to: '/cultivos' },
-  { id: 'misiones', label: 'Misiones', icon: 'pi pi-bullseye', to: '/misiones' },
-  { id: 'drones', label: 'Drones', icon: 'pi pi-send', to: '/drones' },
-  { id: 'reportes', label: 'Reportes', icon: 'pi pi-clipboard', to: '/reportes' },
-  { id: 'configuracion', label: 'Configuración', icon: 'pi pi-cog', to: '/configuracion' }
+const menuItems = computed(() => [
+  { id: 'inicio', label: t('option.home'), icon: 'pi pi-home', to: '/inicio' },
+  { id: 'fincas', label: t('option.farm'), icon: 'pi pi-map', to: '/fincas' },
+  { id: 'parcelas', label: t('option.parcel'), icon: 'pi pi-th-large', to: '/parcelas' },
+  { id: 'cultivos', label: t('option.crop'), icon: 'pi pi-apple', to: '/cultivos' },
+  { id: 'misiones', label: t('option.missions') || t('option.misiones'), icon: 'pi pi-bullseye', to: '/misiones' },
+  { id: 'drones', label: t('option.drone'), icon: 'pi pi-send', to: '/drones' },
+  { id: 'reportes', label: t('option.analytics'), icon: 'pi pi-clipboard', to: '/reportes' },
+  { id: 'inventario', label: t('option.inventory'), icon: 'pi pi-box', to: '/inventario' },
+  { id: 'configuracion', label: t('option.settings'), icon: 'pi pi-cog', to: '/configuracion' }
 ])
 
 // Search input query
@@ -36,7 +81,16 @@ const isRouteActive = (targetPath) => {
     <header class="app-header">
       <!-- Fixed Logo Box on the top-left (matching sidebar width) -->
       <div class="logo-wrapper">
-        <router-link to="/inicio" class="logo-link">
+        <button
+          type="button"
+          class="mobile-toggle-btn"
+          :aria-label="t('header.menuToggleAria')"
+          @click="toggleSidebar"
+        >
+          <i :class="isMobileSidebarOpen ? 'pi pi-times' : 'pi pi-bars'"></i>
+        </button>
+
+        <router-link to="/inicio" class="logo-link" @click="closeSidebar">
           <img
             src="/Agridron_Logo.png"
             alt="AgriDron Solutions"
@@ -54,37 +108,51 @@ const isRouteActive = (targetPath) => {
         <template #center>
           <!-- Search input with PrimeVue components -->
           <div class="search-container">
-            <button class="search-btn" aria-label="Buscar">
+            <button class="search-btn" :aria-label="t('header.searchAria')">
               <i class="pi pi-search"></i>
             </button>
             <pv-input-text
               v-model="searchQuery"
-              placeholder="¿Que buscas hoy?"
+              :placeholder="t('header.searchPlaceholder')"
               class="search-input"
             />
           </div>
         </template>
 
         <template #end>
+          <!-- Language Switcher -->
+          <LanguageSwitcher />
+
           <!-- User Profile Section with PrimeVue Avatar -->
           <div class="user-profile">
             <pv-avatar
-              icon="pi pi-user"
+              :image="currentUser.avatar || undefined"
+              :icon="!currentUser.avatar ? 'pi pi-user' : undefined"
               shape="circle"
               class="user-avatar"
             />
             <div class="user-info">
-              <span class="user-name">Juan Perez</span>
-              <span class="user-role">Agricultor</span>
+              <span class="user-name">{{ currentUser.name }}</span>
+              <span class="user-role">{{ currentUser.role }}</span>
             </div>
           </div>
         </template>
       </pv-toolbar>
     </header>
 
-    <!-- Fixed Left Sidebar -->
-    <aside class="app-sidebar">
-      <nav class="sidebar-nav">
+    <!-- Backdrop for mobile drawer -->
+    <div
+      v-if="isMobileSidebarOpen"
+      class="sidebar-backdrop"
+      @click="closeSidebar"
+    ></div>
+
+    <!-- Left Sidebar (fixed desktop, drawer overlay mobile) -->
+    <aside
+      class="app-sidebar"
+      :class="{ 'sidebar-open': isMobileSidebarOpen }"
+    >
+      <nav class="sidebar-nav" aria-label="Navegación principal / Main navigation">
         <ul class="nav-list">
           <li
             v-for="item in menuItems"
@@ -94,6 +162,8 @@ const isRouteActive = (targetPath) => {
               :to="item.to"
               class="nav-item"
               :class="{ active: isRouteActive(item.to) }"
+              :aria-current="isRouteActive(item.to) ? 'page' : undefined"
+              @click="closeSidebar"
             >
               <i :class="[item.icon, 'nav-icon']"></i>
               <span class="nav-label">{{ item.label }}</span>
@@ -318,6 +388,30 @@ const isRouteActive = (targetPath) => {
   letter-spacing: 0.2px;
 }
 
+/* Mobile Menu Toggle Button */
+.mobile-toggle-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--p-text-color, #111827);
+  font-size: 1.35rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 6px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-toggle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Sidebar Backdrop for Mobile */
+.sidebar-backdrop {
+  display: none;
+}
+
 /* Main Content Area */
 .main-content {
   margin-left: 240px;
@@ -327,4 +421,140 @@ const isRouteActive = (targetPath) => {
   background-color: var(--p-content-background, #ffffff);
   min-height: calc(100vh - 76px);
 }
+
+/* Responsive Media Queries */
+@media (max-width: 992px) {
+  .mobile-toggle-btn {
+    display: inline-flex;
+    margin-right: 0.5rem;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 76px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 950;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  .logo-wrapper {
+    width: auto;
+    min-width: unset;
+    padding: 0 0.85rem;
+  }
+
+  .logo-image {
+    max-height: 42px;
+  }
+
+  .header-toolbar {
+    padding: 0 1rem !important;
+  }
+
+  .search-container {
+    width: 100%;
+    max-width: 280px;
+  }
+
+  .app-sidebar {
+    top: 76px;
+    width: 250px;
+    max-width: 80vw;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    box-shadow: none;
+  }
+
+  .app-sidebar.sidebar-open {
+    transform: translateX(0);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 1.75rem 1.25rem;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    height: 70px;
+  }
+
+  .logo-wrapper {
+    height: 70px;
+    padding: 0 0.5rem;
+  }
+
+  .logo-image {
+    max-height: 36px;
+  }
+
+  .header-toolbar {
+    padding: 0 0.5rem !important;
+  }
+
+  .search-container {
+    max-width: 190px;
+    padding: 2px 4px;
+  }
+
+  .search-input {
+    font-size: 0.85rem !important;
+    padding: 0 6px !important;
+  }
+
+  .search-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .search-btn i {
+    font-size: 0.85rem;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  :deep(.user-avatar) {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+  }
+
+  .app-sidebar {
+    top: 70px;
+  }
+
+  .sidebar-backdrop {
+    top: 70px;
+  }
+
+  .main-content {
+    margin-top: 70px;
+    padding: 1.25rem 0.85rem;
+    min-height: calc(100vh - 70px);
+  }
+}
+
+@media (max-width: 420px) {
+  .search-container {
+    max-width: 140px;
+  }
+
+  .search-input::placeholder {
+    font-size: 0.78rem;
+  }
+}
 </style>
+

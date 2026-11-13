@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import { ParcelaUseCases, ParcelValidationError } from '@/fieldManagement/application/parcela-use-cases.js'
+import GeojsonPolygonHelper from '../components/geojson-polygon-helper.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -17,7 +18,8 @@ const form = ref({
   geometry: '',
   farmId: null,
   cropId: null,
-  image: ''
+  image: '',
+  phenologicalStage: ''
 })
 
 const errors = ref({})
@@ -35,28 +37,42 @@ const titleKey = computed(() =>
 )
 
 const farmOptions = computed(() =>
-  farms.value.map(farm => ({ id: farm.id, label: farm.name }))
+  farms.value.map(farm => ({ id: Number(farm.id), label: farm.name }))
 )
 
 const cropOptions = computed(() =>
-  crops.value.map(crop => ({ id: crop.id, label: crop.name }))
+  crops.value.map(crop => ({
+    id: Number(crop.id),
+    label: crop.variety ? `${crop.name} (${crop.variety})` : crop.name
+  }))
 )
+
+const stageOptions = [
+  { label: 'Vegetativo', value: 'Vegetativo' },
+  { label: 'Floración', value: 'Floración' },
+  { label: 'Fructificación', value: 'Fructificación' },
+  { label: 'Maduración', value: 'Maduración' }
+]
 
 const errorFor = (field) => (errors.value[field] ? t(errors.value[field]) : '')
 
 const applyForm = (parcel) => {
   form.value = {
-    name: parcel.name,
-    area: parcel.area,
-    geometry: parcel.geometry,
-    farmId: parcel.farmId,
-    cropId: parcel.cropId,
-    image: parcel.image ?? ''
+    name: parcel.name ?? '',
+    area: parcel.area != null ? String(parcel.area) : '',
+    geometry: typeof parcel.geometry === 'string'
+      ? parcel.geometry
+      : (parcel.geometry ? JSON.stringify(parcel.geometry) : ''),
+    farmId: parcel.farmId != null ? Number(parcel.farmId) : null,
+    cropId: parcel.cropId != null ? Number(parcel.cropId) : null,
+    image: parcel.image ?? '',
+    phenologicalStage: parcel.phenologicalStage ?? ''
   }
 }
 
 const load = async () => {
   loading.value = true
+  submitError.value = ''
 
   try {
     const [farmList, cropList] = await Promise.all([
@@ -150,13 +166,24 @@ onMounted(load)
 
       <div class="field">
         <label class="field-label" for="parcel-geometry">{{ t('parcel.form.geometry') }}</label>
-        <textarea
-          id="parcel-geometry"
+        <GeojsonPolygonHelper
           v-model="form.geometry"
-          rows="4"
-          :class="{ 'field-input': true, 'invalid': !!errors.geometry }"
-        ></textarea>
+          @update:area="(val) => { if (!form.area) form.area = String(val) }"
+        />
         <small v-if="errors.geometry" class="field-error">{{ errorFor('geometry') }}</small>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="parcel-stage">{{ t('parcel.form.phenologicalStage') }}</label>
+        <pv-select
+          id="parcel-stage"
+          v-model="form.phenologicalStage"
+          :options="stageOptions"
+          option-label="label"
+          option-value="value"
+          class="field-input"
+          :placeholder="t('parcel.form.stagePlaceholder')"
+        />
       </div>
 
       <div class="field">
@@ -240,57 +267,53 @@ onMounted(load)
 .form-skeleton {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .parcel-form {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  background: var(--p-content-background, #1e293b);
+  border: 1px solid var(--p-content-border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.75rem;
 }
 
 .field {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .field-label {
+  font-weight: 600;
   font-size: 0.9rem;
-  font-weight: 700;
   color: var(--p-text-color);
 }
 
 .field-hint {
-  font-weight: 400;
-  opacity: 0.6;
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: var(--p-text-muted-color, #94a3b8);
   margin-left: 0.35rem;
 }
 
 .field-input {
   width: 100%;
-  border: 1px solid var(--p-content-border-color, #cbd5e1);
-  border-radius: 6px;
-  padding: 0.6rem 0.75rem;
-  background: var(--p-form-field-background, #ffffff);
-  color: var(--p-text-color);
-  font-size: 0.95rem;
-}
-
-.field-input.invalid {
-  border-color: var(--p-red-500, #dc2626);
 }
 
 .field-error {
-  color: var(--p-red-500, #dc2626);
+  color: var(--p-red-500, #ef4444);
   font-size: 0.8rem;
-  font-weight: 600;
 }
 
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--p-content-border-color, rgba(255, 255, 255, 0.08));
 }
 </style>

@@ -3,32 +3,30 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import FincasList from '@/fieldManagement/presentation/views/fincas-list.vue'
-import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
+import ParcelaList from './parcela-list.vue'
+import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
 
 const { t } = useI18n()
 const router = useRouter()
 
-const useCases = new FincaUseCases()
+const useCases = new ParcelaUseCases()
 
-// FincasList only emits intents; this view owns the confirmation and the call.
 const showDeleteDialog = ref(false)
-const farmIdToDelete = ref(null)
+const parcelIdToDelete = ref(null)
 const deleting = ref(false)
 const deleteError = ref('')
 
-// Bumping the key re-creates FincasList, which re-runs its initial load.
 const listKey = ref(0)
 
 const onDelete = (id) => {
-  farmIdToDelete.value = id
+  parcelIdToDelete.value = id
   deleteError.value = ''
   showDeleteDialog.value = true
 }
 
 const cancelDelete = () => {
   showDeleteDialog.value = false
-  farmIdToDelete.value = null
+  parcelIdToDelete.value = null
   deleteError.value = ''
 }
 
@@ -37,7 +35,7 @@ const confirmDelete = async () => {
   deleteError.value = ''
 
   try {
-    await useCases.deleteFarm(farmIdToDelete.value)
+    await useCases.deleteParcel(parcelIdToDelete.value)
     cancelDelete()
     listKey.value++
   } catch (error) {
@@ -48,11 +46,15 @@ const confirmDelete = async () => {
 }
 
 const onCreate = () => {
-  router.push({ name: 'fincas-edit' })
+  router.push({ name: 'parcelas-edit' })
 }
 
 const onEdit = (id) => {
-  router.push({ name: 'fincas-edit', params: { id } })
+  router.push({ name: 'parcelas-edit', params: { id } })
+}
+
+const onSeeMore = (id) => {
+  router.push({ name: 'parcela-detail', params: { id } })
 }
 </script>
 
@@ -60,18 +62,23 @@ const onEdit = (id) => {
   <div class="view-container">
     <div class="header-section">
       <div>
-        <h1 class="view-title">{{ t('farm.title') }}</h1>
-        <p class="view-subtitle">{{ t('farm.subtitle') }}</p>
+        <h1 class="view-title">{{ t('parcel.title') }}</h1>
+        <p class="view-subtitle">{{ t('parcel.subtitle') }}</p>
       </div>
 
       <pv-button
-        :label="t('farm.newFarm')"
+        :label="t('parcel.newParcel')"
         icon="pi pi-plus-circle"
         @click="onCreate"
       />
     </div>
 
-    <FincasList :key="listKey" @edit="onEdit" @delete="onDelete" />
+    <ParcelaList
+      :key="listKey"
+      @see-more="onSeeMore"
+      @edit="onEdit"
+      @delete="onDelete"
+    />
 
     <pv-dialog
       v-model:visible="showDeleteDialog"
@@ -79,10 +86,10 @@ const onEdit = (id) => {
       :style="{ width: '26rem' }"
     >
       <template #header>
-        <span class="dialog-title">{{ t('farm.title') }}</span>
+        <span class="dialog-title">{{ t('parcel.title') }}</span>
       </template>
 
-      <p class="dialog-message">{{ t('farm.delete-confirm') }}</p>
+      <p class="dialog-message">{{ t('parcel.delete-confirm') }}</p>
 
       <pv-message
         v-if="deleteError"
@@ -94,13 +101,13 @@ const onEdit = (id) => {
 
       <template #footer>
         <pv-button
-          :label="t('farm.cancel')"
+          :label="t('parcel.cancel')"
           severity="secondary"
           text
           @click="cancelDelete"
         />
         <pv-button
-          :label="t('farm.button.delete')"
+          :label="t('parcel.button.delete')"
           icon="pi pi-trash"
           severity="danger"
           :loading="deleting"
@@ -125,7 +132,6 @@ const onEdit = (id) => {
   flex-wrap: wrap;
 }
 
-/* PrimeVue tokens keep these readable in light and dark mode. */
 .view-title {
   font-size: 1.85rem;
   font-weight: 800;
@@ -152,5 +158,17 @@ const onEdit = (id) => {
   color: var(--p-text-color);
   opacity: 0.75;
   line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .header-section {
+    margin-bottom: 1.25rem;
+  }
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .view-subtitle {
+    font-size: 0.95rem;
+  }
 }
 </style>

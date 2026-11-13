@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
+import FumigationAreaPanel from '../components/fumigation-area-panel.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -89,6 +90,11 @@ onMounted(load)
         <dt>{{ t('parcel.area') }}</dt>
         <dd>{{ parcel.area }} ha</dd>
 
+        <dt>{{ t('parcel.phenologicalStage') }}</dt>
+        <dd>
+          <span class="stage-tag">{{ parcel.phenologicalStage || t('parcel.noStage') }}</span>
+        </dd>
+
         <dt>{{ t('parcel.form.farm') }}</dt>
         <dd>
           <router-link
@@ -114,13 +120,19 @@ onMounted(load)
         <dt>{{ t('parcel.detail.geometry') }}</dt>
         <dd><code class="geometry">{{ parcel.geometry }}</code></dd>
       </dl>
+
+      <!-- Fumigation Areas Sub-Resource Panel -->
+      <FumigationAreaPanel
+        :parcel-id="parcel.id"
+        :parcel-geometry="parcel.geometry"
+      />
     </div>
 
     <pv-button
       :label="t('parcel.detail.back')"
       icon="pi pi-arrow-left"
       text
-      class="back-button"
+      class="back-button mt-4"
       @click="router.push('/parcelas')"
     />
   </div>
@@ -151,51 +163,58 @@ onMounted(load)
 
 .detail-image {
   width: 100%;
-  max-height: 16rem;
+  max-height: 18rem;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 .detail-list {
   display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: 0.5rem 1rem;
+  grid-template-columns: 12rem 1fr;
+  row-gap: 0.85rem;
+  column-gap: 1rem;
   margin: 0;
+  background: var(--p-content-background, #1e293b);
+  border: 1px solid var(--p-content-border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
 }
 
 .detail-list dt {
-  font-weight: 700;
-  color: var(--p-text-color);
+  font-weight: 600;
+  color: var(--p-text-muted-color, #94a3b8);
 }
 
 .detail-list dd {
   margin: 0;
   color: var(--p-text-color);
-  opacity: 0.8;
+}
+
+.stage-tag {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
 }
 
 .detail-link {
-  color: var(--p-primary-color);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.detail-link:hover {
+  color: var(--p-primary-color, #22c55e);
   text-decoration: underline;
 }
 
 .geometry {
-  display: block;
-  background: var(--p-form-field-background, #f1f5f9);
-  border: 1px solid var(--p-content-border-color, #cbd5e1);
-  border-radius: 6px;
-  padding: 0.6rem;
-  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 0.785rem;
   word-break: break-all;
-  color: var(--p-text-color);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  display: block;
 }
 
 .back-button {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
 }
 </style>

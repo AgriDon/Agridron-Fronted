@@ -55,7 +55,7 @@ load()
     </pv-message>
 
     <div v-else-if="crops.length === 0" class="cultivo-empty">
-      <i class="pi pi-seed"></i>
+      <i class="pi pi-inbox"></i>
       <p>{{ t('crop.empty') }}</p>
     </div>
 
@@ -72,7 +72,7 @@ load()
         <template #content>
           <p class="cultivo-card-detail">
             <i class="pi pi-info-circle"></i>
-            {{ t('crop.information') }}: {{ crop.name }}
+            {{ t('crop.variety') }}: {{ crop.variety || t('crop.noVariety') }}
           </p>
         </template>
 

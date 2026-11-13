@@ -17,7 +17,16 @@
     "analytics": "Reports",
     "drone": "Drones",
     "profile": "Profile",
-    "home": "Home"
+    "home": "Home",
+    "misiones": "Missions",
+    "missions": "Missions",
+    "inventory": "Inventory",
+    "settings": "Settings"
+  },
+  "header": {
+    "searchPlaceholder": "What are you looking for today?",
+    "searchAria": "Search",
+    "menuToggleAria": "Open or close menu"
   },
   "farm": {
     "title": "Farms",
@@ -83,8 +92,11 @@
         "area-min": "Area must be greater than 0",
         "geometry-required": "Geometry is required",
         "farm-required": "You must select a farm",
-        "crop-required": "You must select a crop"
-      }
+        "crop-required": "You must select a crop",
+        "geometry-invalid": "GeoJSON format must be a valid Polygon"
+      },
+      "phenologicalStage": "Phenological stage",
+      "stagePlaceholder": "Select stage..."
     },
     "empty": "No parcels registered",
     "loading": "Loading parcels...",
@@ -99,6 +111,28 @@
       "seeMore": "See more",
       "edit": "Edit",
       "delete": "Delete"
+    },
+    "phenologicalStage": "Phenological stage",
+    "noStage": "Not specified",
+    "geometryHelper": {
+      "title": "Geometry and Polygon Assistant",
+      "previewBadge": "Preview",
+      "invalidHint": "Enter a valid GeoJSON Polygon format",
+      "placeholder": "Select a preset above or paste a valid GeoJSON Polygon..."
+    },
+    "fumigation": {
+      "title": "Fumigation Areas",
+      "subtitle": "Spraying zones delimited within this parcel",
+      "newArea": "New Area",
+      "noAreas": "No fumigation areas registered for this parcel.",
+      "delete": "Delete area",
+      "dialogTitle": "Register Fumigation Area",
+      "dialogHint": "Define the specific polygon for drone spraying.",
+      "error": {
+        "parcelRequired": "Parcel is required",
+        "geometryRequired": "Geometry is required",
+        "geometryInvalid": "Geometry must be a valid GeoJSON Polygon"
+      }
     }
   },
   "crop": {
@@ -108,6 +142,7 @@
     "variety": "Variety",
     "noVariety": "No variety",
     "information": "Crop information",
+    "back": "Back",
     "notFound": "Crop not found",
     "delete-confirm": "Are you sure you want to delete this crop?",
     "empty": "No crops registered",
@@ -169,6 +204,25 @@
     "noAlerts": "No alerts",
     "alerts": "Alerts",
     "empty": "No weather data available.",
+    "precipitationProbability": "Rain probability",
+    "referenceLocation": "reference location",
+    "source": "Data",
+    "favorable": "Favorable conditions for spraying: wind of 15 km/h or less, temperature below 28 °C and no rain.",
+    "alert": {
+      "wind": "Wind above 15 km/h: high drift risk, spraying is not recommended.",
+      "rain": "Rain detected: high drift risk, postpone the mission.",
+      "moderateWind": "Wind between 10 and 15 km/h: spray with caution and anti-drift nozzles.",
+      "calmWind": "Wind below 3 km/h: possible temperature inversion, the product can stay suspended and move away.",
+      "rainLikely": "Rain probability of 70 % or more: the product could be washed off, consider rescheduling.",
+      "rainPossible": "Rain probability between 40 % and 69 %: check the sky before take-off.",
+      "heat": "Temperature above 30 °C: the product evaporates faster, prefer cooler hours.",
+      "lowHumidity": "Humidity below 50 %: droplets evaporate faster."
+    },
+    "simulator": {
+      "title": "Debug: weather simulator",
+      "hint": "Turn it on or off with VITE_DEBUG_MODE in .env.development (restart npm run dev). The real data is not modified.",
+      "reset": "Back to real data"
+    },
     "severity": {
       "HIGH": "High",
       "MEDIUM": "Medium",
@@ -234,22 +288,25 @@
     "loading": "Loading..."
   },
   "drone": {
+    "title": "Drone fleet management",
+    "subtitle": "Drone fleet and operational status",
+    "newDrone": "Add Drone",
     "information": "Drone information",
     "capacity": "Capacity",
     "statusLabel": "Status",
     "notFound": "Drone not found",
     "delete-confirm": "Are you sure you want to delete this drone?",
-    "button": { "edit": "Edit", "delete": "Delete" },
-
-    "title": "Drone fleet management",
-    "subtitle": "Drone fleet and operational status",
-    "newDrone": "Add Drone",
+    "button": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
     "status": {
       "AVAILABLE": "Available",
       "ASSIGNED": "Assigned",
       "IN_FLIGHT": "In flight",
       "PAUSED": "Paused",
-      "MAINTENANCE": "Maintenance"
+      "MAINTENANCE": "Maintenance",
+      "MAINTENANCE_SOON": "Maintenance due"
     },
     "capacityRange": {
       "all": "All capacities",
@@ -272,6 +329,28 @@
     "actions": {
       "details": "View details",
       "maintenance": "View maintenance"
+    },
+    "flightHours": "Flight Hours",
+    "nozzleId": "Nozzle ID",
+    "lastMaintenance": "Last Maintenance",
+    "nextMaintenance": "Next Maintenance",
+    "preview": "Preview",
+    "form": {
+      "new-title": "New Drone",
+      "edit-title": "Edit Drone",
+      "serial-placeholder": "e.g. AGR-2024-001",
+      "model-placeholder": "e.g. DJI Agras T40",
+      "capacity-placeholder": "e.g. 40",
+      "nozzle-placeholder": "e.g. 101",
+      "image-url": "Image URL",
+      "image-placeholder": "https://example.com/drone.jpg",
+      "error": {
+        "serial-number-required": "Serial number is required",
+        "model-required": "Model is required",
+        "capacity-invalid": "Capacity must be greater than 0"
+      },
+      "create": "Create drone",
+      "update": "Update drone"
     }
   },
   "iam": {
@@ -329,19 +408,447 @@
     }
   },
   "home": {
-    "greeting": "Hello {username}, welcome",
-    "subtitle": "Overview of your agricultural operation",
-    "metricsTitle": "Metrics",
-    "shortcutsTitle": "Quick access",
-    "metrics": {
-      "farms": "Farms",
+    "welcome": "Welcome, {name}!",
+    "subtitle": "Here is a summary of your operations",
+    "kpi": {
+      "farms": "Registered Farms",
       "parcels": "Parcels",
-      "crops": "Crops",
-      "fumigationAreas": "Fumigation areas"
+      "missions": "Missions",
+      "totalArea": "Total Area (ha)"
     },
-    "actions": {
-      "farms": "View farms",
-      "analytics": "View reports"
+    "recentMissions": {
+      "title": "Recent missions",
+      "viewAll": "View all",
+      "id": "ID",
+      "parcel": "Parcel",
+      "date": "Date",
+      "status": "Status",
+      "progress": "Progress"
+    },
+    "status": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "planned": "Scheduled",
+      "paused": "Paused",
+      "cancelled": "Cancelled"
+    }
+  },
+  "missions": {
+    "title": "Missions",
+    "subtitle": "Management of fumigation missions",
+    "newTitle": "New fumigation mission",
+    "cropLabel": "Crop",
+    "newMission": "New mission",
+    "wizard": {
+      "step1": "Parcel",
+      "step2": "Date and time",
+      "step3": "Supplies",
+      "step4": "Summary"
+    },
+    "form": {
+      "farm": "Farm",
+      "parcel": "Parcel",
+      "date": "Date",
+      "time": "Time",
+      "treatmentType": "Treatment type",
+      "product": "Product",
+      "dose": "Dose (L/ha)",
+      "notes": "Notes",
+      "treatmentTypes": {
+        "Fungicida": "Fungicide",
+        "Herbicida": "Herbicide",
+        "Insecticida": "Insecticide",
+        "Fertilizante": "Fertilizer",
+        "Mezcla nutricional": "Nutrient mix"
+      },
+      "imageHint": "(Optional)",
+      "products": {
+        "Fungicida 48%": "Fungicide 48%",
+        "Herbicida 70%": "Herbicide 70%",
+        "Insecticida 25%": "Insecticide 25%",
+        "Fertilizante": "Fertilizer",
+        "Mezcla nutricional": "Nutrient mix"
+      },
+      "area": "Area",
+      "crop": "Crop",
+      "operator": "Operator",
+      "productDose": "Product dose"
+    },
+    "summary": {
+      "farm": "Farm",
+      "parcel": "Parcel",
+      "area": "Area",
+      "areaSelected": "Selected area",
+      "crop": "Crop",
+      "dateTime": "Date and time",
+      "treatmentType": "Treatment type",
+      "product": "Product",
+      "productDose": "Product dose",
+      "notes": "Notes",
+      "status": "Status",
+      "progress": "Progress"
+    },
+    "card": {
+      "scheduled": "Scheduled",
+      "active": "Active",
+      "progress": "Progress",
+      "farmArea": "Farm area",
+      "operator": "Operator",
+      "treatmentType": "Treatment type",
+      "product": "Product",
+      "productDose": "Product dose",
+      "date": "Date"
+    },
+    "statusLabel": "Status",
+    "status": {
+      "PLANNED": "Planned",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "CANCELLED": "Cancelled",
+      "Pending": "Pending",
+      "Programada": "Scheduled",
+      "En curso": "In progress",
+      "Completada": "Completed",
+      "Cancelada": "Cancelled",
+      "AUTHORIZED": "Authorized",
+      "PAUSED": "Paused"
+    },
+    "statusProgrammed": "Scheduled",
+    "statusActive": "In progress",
+    "statusCompleted": "Completed",
+    "statusCancelled": "Cancelled",
+    "progress": "Progress",
+    "mission": "Mission",
+    "noMissions": "No missions registered.",
+    "noMissionsPrompt": "Create your first fumigation mission",
+    "editMission": "Edit mission",
+    "deleteMission": "Delete mission",
+    "seeMore": "See more",
+    "deleteConfirm": "Are you sure you want to delete this mission?",
+    "loading": "Loading missions...",
+    "empty": "No missions registered yet.",
+    "step1": "Parcel",
+    "step2": "Date and time",
+    "step3": "Supplies",
+    "step4": "Summary",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save mission",
+    "creating": "Creating mission...",
+    "success": "Mission created successfully.",
+    "error": "Error creating mission",
+    "selectFarm": "Select farm",
+    "selectParcel": "Select parcel",
+    "selectProduct": "Select product",
+    "selectTreatmentType": "Select treatment type",
+    "area": "Area",
+    "areaSelected": "Selected area",
+    "configureDateTime": "Configure date and time",
+    "prepareSupplies": "Prepare supplies",
+    "missionSummary": "Mission summary",
+    "dateTime": "Date and time",
+    "product": "Product",
+    "dose": "Dose (L/ha)",
+    "notes": "Notes",
+    "operator": "Operator",
+    "treatmentType": "Treatment type",
+    "productDose": "Product dose"
+  },
+  "drones": {
+    "title": "Drones",
+    "subtitle": "Drone fleet, telemetry and operational status"
+  },
+  "reports": {
+    "title": "Reports and History",
+    "subtitle": "Performance analysis, harvests and operational reports",
+    "empty": "No missions recorded for the selected period.",
+    "tabs": {
+      "missions": "Missions",
+      "supplies": "Supply usage",
+      "savings": "Savings"
+    },
+    "filter": {
+      "button": "Filter",
+      "datePlaceholder": "01/04/2025 - 30/04/2025"
+    },
+    "table": {
+      "id": "ID",
+      "parcel": "Parcel",
+      "date": "Date",
+      "status": "Status",
+      "area": "Area",
+      "actions": "Actions",
+      "viewReport": "View phytosanitary report"
+    },
+    "pagination": {
+      "next": "Next"
+    },
+    "dialog": {
+      "title": "Phytosanitary Service Technical Report",
+      "subtitle": "Digital drone operation certificate",
+      "operator": "Responsible operator",
+      "treatmentType": "Treatment",
+      "product": "Supply / Product",
+      "dose": "Applied dose",
+      "appliedVolume": "Total volume",
+      "coverageTitle": "Telemetry & Coverage",
+      "defaultObservation": "Fumigation operation completed successfully. Uniform coverage and compliance with phytosanitary standards.",
+      "progress": "Progress",
+      "precision": "Precision",
+      "drift": "Drift",
+      "close": "Close",
+      "exportPdf": "Export PDF"
+    },
+    "supplies": {
+      "totalApplied": "Total Applied",
+      "activeProducts": "Active Supplies",
+      "lowStockAlerts": "Low Stock Alerts",
+      "colProduct": "Product",
+      "colType": "Type",
+      "colApplied": "Applied Total",
+      "colStock": "Available Stock",
+      "colStatus": "Status",
+      "statusLow": "Low Stock",
+      "statusOk": "Optimal"
+    },
+    "savings": {
+      "waterSaved": "Water Saved",
+      "vsTraditional": "vs traditional spraying",
+      "chemicalOptimized": "Optimized Chemical",
+      "lessDrift": "less drift with drone",
+      "economicSaved": "Estimated Savings",
+      "laborCostSaved": "reduction in manual labor cost",
+      "efficiencyTime": "Average Time",
+      "vsManualTime": "vs 3 hrs/ha manual",
+      "comparisonTitle": "Operational Efficiency Comparison",
+      "comparisonSubtitle": "Yield and consumption per treated hectare with AgriDron vs traditional methods",
+      "waterPerHa": "Water consumption per hectare",
+      "traditionalTractor": "Traditional tractor",
+      "timePerHa": "Operational time per hectare",
+      "traditionalManual": "Manual backpack"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "System settings, users and preferences",
+    "tabs": {
+      "profile": "Profile",
+      "notifications": "Notifications",
+      "security": "Security",
+      "integrations": "Integrations"
+    },
+    "profile": {
+      "title": "User Information",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "editBtn": "Edit Profile",
+      "editDialogTitle": "Edit Profile",
+      "avatarUrl": "Profile picture URL",
+      "save": "Save changes",
+      "cancel": "Cancel",
+      "savedSuccess": "Profile updated successfully.",
+      "saveError": "Could not update profile."
+    },
+    "preferences": {
+      "title": "Preferences",
+      "emailNotifications": "Email notifications",
+      "appNotifications": "In-app notifications",
+      "weatherAlerts": "Live weather alerts"
+    },
+    "security": {
+      "title": "Account Security",
+      "passwordLabel": "Password",
+      "passwordChange": "Change password",
+      "twoFactor": "Two-factor authentication (2FA)",
+      "sessions": "Active sessions"
+    },
+    "integrations": {
+      "title": "Integrations & External Services",
+      "weatherService": "Weather Forecast Service (Open-Meteo)",
+      "connected": "Connected"
+    }
+  },
+  "toast": {
+    "success": "Success",
+    "error": "Error",
+    "info": "Information",
+    "created": "Record created successfully",
+    "updated": "Record updated successfully",
+    "deleted": "Record deleted successfully"
+  },
+  "inventory": {
+    "title": "Inventory & Resource Management",
+    "subtitle": "Inventory control of agrochemicals and spray nozzles for the drone fleet",
+    "tabs": {
+      "chemicals": "Agrochemicals & Supplies",
+      "nozzles": "Nozzles & Spare Parts"
+    },
+    "kpis": {
+      "activeProducts": "Active Products",
+      "lowStockAlerts": "Low Stock Alerts",
+      "totalLiters": "Total Stock (L)",
+      "wornNozzles": "Worn Nozzles"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by chemical name...",
+      "category": "Category / Type",
+      "lowStockOnly": "Low stock only"
+    },
+    "columns": {
+      "product": "Supply / Product",
+      "type": "Category",
+      "stock": "Stock / Level",
+      "expiration": "Expiration",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "types": {
+      "all": "All types",
+      "herbicide": "Herbicide",
+      "insecticide": "Insecticide",
+      "fungicide": "Fungicide",
+      "fertilizer": "Fertilizer"
+    },
+    "status": {
+      "optimal": "Optimal",
+      "low": "Low Stock"
+    },
+    "buttons": {
+      "newChemical": "New Chemical",
+      "newNozzle": "New Nozzle",
+      "restock": "Replenish stock",
+      "edit": "Edit",
+      "delete": "Delete",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirmRestock": "Confirm Restock",
+      "confirmDelete": "Yes, delete",
+      "toggleStatus": "Toggle condition"
+    },
+    "dialog": {
+      "newChemical": "Register New Chemical Supply",
+      "editChemical": "Edit Chemical Supply",
+      "restockTitle": "Quick Restock Supply",
+      "restockDescription": "Add liters to {name} inventory.",
+      "restockLitersLabel": "Liters to add",
+      "newNozzle": "Register New Nozzle",
+      "editNozzle": "Edit Nozzle",
+      "deleteTitle": "Confirm Deletion",
+      "deletePrompt": "Are you sure you want to delete \"{name}\"? This action cannot be undone."
+    },
+    "form": {
+      "name": "Commercial name",
+      "namePlaceholder": "E.g. Glyphosate 48%, Abamectin 1.8%",
+      "type": "Category / Product type",
+      "stockLiters": "Current Stock (Liters)",
+      "minStockLiters": "Safety Minimum Stock (Liters)",
+      "stockCurrent": "Current stock",
+      "expirationDate": "Expiration Date",
+      "error": {
+        "nameRequired": "Chemical name is required.",
+        "typeRequired": "A category must be selected.",
+        "stockInvalid": "Stock must be a number greater than or equal to zero.",
+        "minStockInvalid": "Minimum stock must be greater than or equal to zero.",
+        "expirationRequired": "Expiration date is required."
+      }
+    },
+    "nozzles": {
+      "columns": {
+        "type": "Nozzle Type",
+        "diameter": "Diameter",
+        "units": "Units",
+        "condition": "Condition"
+      },
+      "types": {
+        "flatFan": "Flat-Fan",
+        "hollowCone": "Hollow-Cone"
+      },
+      "status": {
+        "all": "All statuses",
+        "good": "Good condition",
+        "worn": "Worn / Replacement"
+      },
+      "filters": {
+        "status": "Filter by condition"
+      },
+      "form": {
+        "diameter": "Diameter (mm)",
+        "units": "Available units",
+        "status": "Operating status"
+      },
+      "error": {
+        "typeRequired": "Nozzle type must be selected.",
+        "diameterInvalid": "Diameter must be a positive number.",
+        "unitsInvalid": "Units must be greater than or equal to zero."
+      }
+    },
+    "messages": {
+      "chemicalCreated": "Chemical supply registered successfully.",
+      "chemicalUpdated": "Chemical supply updated successfully.",
+      "chemicalDeleted": "Chemical supply removed from inventory.",
+      "restockSuccess": "Stock replenished successfully.",
+      "nozzleCreated": "Nozzle registered successfully.",
+      "nozzleUpdated": "Nozzle updated successfully.",
+      "nozzleDeleted": "Nozzle removed from catalog.",
+      "nozzleStatusToggled": "Nozzle condition updated."
+    },
+    "empty": {
+      "chemicals": "No chemical supplies found matching the search criteria.",
+      "nozzles": "No nozzles registered in inventory."
+    }
+  },
+  "mission": {
+    "config": {
+      "title": "Operational Setup & Resources",
+      "resourcesTitle": "Resource Allocation (MI-002)",
+      "droneSelect": "Assigned Drone",
+      "dronePlaceholder": "Select an available drone",
+      "productName": "Chemical Product",
+      "productPlaceholder": "e.g. Copper Fungicide",
+      "productDose": "Dose (L/ha)",
+      "dosePlaceholder": "e.g. 2.5",
+      "operatorTitle": "Certified Technical Operator (MI-003)",
+      "operatorName": "Pilot / Operator Name",
+      "operatorPlaceholder": "e.g. Carlos Mendoza",
+      "flightParamsTitle": "Autonomous Flight Parameters (MI-004)",
+      "altitude": "Flight Altitude (m)",
+      "speed": "Flight Speed (m/s)",
+      "sprayRate": "Spray Rate (L/ha)",
+      "overlap": "Swath Overlap (%)",
+      "saveAction": "Save Configuration",
+      "errorDroneRequired": "You must select a drone",
+      "errorOperatorRequired": "Operator name is required"
+    },
+    "complete": {
+      "title": "Complete Spray Mission (TR-005)",
+      "desc": "Upon completing this mission, the allocated drone is automatically released and marked available.",
+      "treatedArea": "Total Treated Area (ha)",
+      "completedAt": "Completion Date & Time",
+      "closingNotes": "Field Observations & Closing Notes",
+      "notesPlaceholder": "e.g. Uniform coverage completed without technical issues.",
+      "submit": "Complete and Release Drone"
+    },
+    "action": {
+      "configure": "Configure",
+      "approve": "Approve Flight",
+      "start": "Start Flight",
+      "monitor": "Live Cockpit",
+      "pause": "Pause",
+      "resume": "Resume",
+      "complete": "Complete",
+      "cancel": "Cancel"
+    },
+    "weather": {
+      "warningTitle": "Pre-Flight Weather Advisory",
+      "warningQuestion": "Do you want to authorize and proceed under manual oversight, or wait for optimal conditions?",
+      "abort": "Wait for Conditions",
+      "proceed": "Proceed Anyway"
+    },
+    "cancel": {
+      "title": "Confirm Mission Cancellation",
+      "reasonLabel": "Cancellation Reason (MI-006)",
+      "reasonPlaceholder": "e.g. Sudden adverse weather / Urgent maintenance"
     }
   }
 }

@@ -1,37 +1,546 @@
 <script setup>
-// View for 'Inicio' dashboard
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
+import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
+import { MissionUseCases } from '@/flightOperations/application/mission-use-cases.js'
+import { useWeatherStore } from '@/weatherIntegration/application/weather.store.js'
+import WeatherWidget from '@/weatherIntegration/presentation/components/weather-widget.vue'
+import WeatherSimulator from '@/weatherIntegration/presentation/components/weather-simulator.vue'
+import { DEBUG_MODE } from '@/config/env.js'
+import { UserProfileService } from '@/shared/application/user-profile-service.js'
+
+const { t } = useI18n()
+const router = useRouter()
+
+const fincaUseCases = new FincaUseCases()
+const parcelaUseCases = new ParcelaUseCases()
+const missionUseCases = new MissionUseCases()
+const weatherStore = useWeatherStore()
+const userService = new UserProfileService()
+
+// State
+const loading = ref(true)
+const user = ref({ name: 'Juan Pérez', role: 'Agricultor' })
+const farms = ref([])
+const parcels = ref([])
+const missions = ref([])
+
+// Shows the weather simulator instead of the widget (local tests only).
+const debugMode = DEBUG_MODE
+
+// Computed KPIs
+const farmsCount = computed(() => farms.value.length || 3)
+const parcelsCount = computed(() => parcels.value.length || 18)
+const missionsCount = computed(() => missions.value.length || 6)
+const totalArea = computed(() => {
+  if (parcels.value.length > 0) {
+    const sum = parcels.value.reduce((acc, p) => acc + (Number(p.area) || 0), 0)
+    return Math.round(sum * 10) / 10
+  }
+  return 18.5
+})
+
+// Recent 5 missions
+const recentMissions = computed(() => {
+  if (missions.value.length === 0) {
+    return [
+      { id: 'M1-001', parcel: 'Lote3 - Uva', date: '12/05/26', status: 'En curso', progress: 60 },
+      { id: 'M1-002', parcel: 'Lote2 - Fresa', date: '11/07/26', status: 'Completado', progress: 100 },
+      { id: 'M1-003', parcel: 'Lote5 - Sandia', date: '09/01/26', status: 'Completado', progress: 100 },
+      { id: 'M1-004', parcel: 'Lote2 - Fresa', date: '27/01/26', status: 'Programado', progress: 0 },
+      { id: 'M1-005', parcel: 'Lote1 - Melon', date: '30/03/26', status: 'Completado', progress: 100 }
+    ]
+  }
+
+  return missions.value.slice(0, 5).map((m, idx) => ({
+    rawId: m.id,
+    id: `M1-00${m.id || idx + 1}`,
+    parcel: m.farmArea || `Lote ${m.id || idx + 1}`,
+    date: formatDate(m.date),
+    status: formatStatus(m.status),
+    statusCode: m.status,
+    progress: Number(m.progress) || (m.status === 'COMPLETED' ? 100 : m.status === 'IN_PROGRESS' ? 60 : 0)
+  }))
+})
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return '12/05/26'
+  const d = new Date(dateStr)
+  if (isNaN(d.getTime())) return dateStr
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${String(d.getFullYear()).slice(-2)}`
+}
+
+const formatStatus = (st) => {
+  const map = {
+    'COMPLETED': t('home.status.completed'),
+    'IN_PROGRESS': t('home.status.inProgress'),
+    'PLANNED': t('home.status.planned'),
+    'PAUSED': t('home.status.paused'),
+    'CANCELLED': t('home.status.cancelled')
+  }
+  return map[st] || st || t('home.status.planned')
+}
+
+const statusClass = (status) => {
+  if (/completado/i.test(status)) return 'badge--completed'
+  if (/curso|proceso/i.test(status)) return 'badge--in-progress'
+  return 'badge--planned'
+}
+
+const onMissionClick = (m) => {
+  if (m.rawId && (m.statusCode === 'IN_PROGRESS' || m.statusCode === 'PAUSED')) {
+    router.push({ name: 'mision-monitoreo', params: { id: m.rawId } })
+  } else {
+    router.push('/misiones')
+  }
+}
+
+const loadData = async () => {
+  loading.value = true
+  try {
+    const [userData, farmList, parcelList, missionList] = await Promise.allSettled([
+      userService.getCurrentUser(),
+      fincaUseCases.listFarms(),
+      parcelaUseCases.listParcels(),
+      missionUseCases.listMissions()
+    ])
+
+    if (userData.status === 'fulfilled' && userData.value) {
+      user.value = userData.value
+    }
+    if (farmList.status === 'fulfilled' && Array.isArray(farmList.value)) {
+      farms.value = farmList.value
+    }
+    if (parcelList.status === 'fulfilled' && Array.isArray(parcelList.value)) {
+      parcels.value = parcelList.value
+    }
+    if (missionList.status === 'fulfilled' && Array.isArray(missionList.value)) {
+      missions.value = missionList.value
+    }
+  } catch (err) {
+    console.error('Error cargando datos del dashboard:', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(() => {
+  loadData()
+  // Loads the weather of the user's location (or the reference location).
+  weatherStore.loadWeatherConditions()
+})
 </script>
 
 <template>
-  <div class="view-container">
-    <div class="welcome-section">
-      <h1 class="welcome-title">!Bienvenido, Juan¡</h1>
-      <p class="welcome-subtitle">Aqui tienes un resumen de tus operaciones</p>
+  <div class="dashboard-container">
+    <!-- Welcome Header -->
+    <header class="welcome-header">
+      <h1 class="welcome-title">{{ t('home.welcome', { name: user.name ? user.name.split(' ')[0] : 'Juan' }) }}</h1>
+      <p class="welcome-subtitle">{{ t('home.subtitle') }}</p>
+    </header>
+
+    <!-- Top KPI Cards Row -->
+    <section class="kpi-grid">
+      <!-- Card 1: Fincas Registradas -->
+      <div class="kpi-card" @click="router.push('/fincas')">
+        <div class="kpi-image-wrapper">
+          <img
+            :src="farms[0]?.image || 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600'"
+            :alt="t('home.kpi.farms')"
+            class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600'"
+          />
+        </div>
+        <span class="kpi-label">{{ t('home.kpi.farms') }}</span>
+        <span class="kpi-value">{{ farmsCount }}</span>
+      </div>
+
+      <!-- Card 2: Parcelas -->
+      <div class="kpi-card" @click="router.push('/parcelas')">
+        <div class="kpi-image-wrapper">
+          <img
+            :src="parcels[0]?.image || 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600'"
+            :alt="t('home.kpi.parcels')"
+            class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=600'"
+          />
+        </div>
+        <span class="kpi-label">{{ t('home.kpi.parcels') }}</span>
+        <span class="kpi-value">{{ parcelsCount }}</span>
+      </div>
+
+      <!-- Card 3: Misiones -->
+      <div class="kpi-card" @click="router.push('/misiones')">
+        <div class="kpi-image-wrapper">
+          <img
+            src="https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
+            :alt="t('home.kpi.missions')"
+            class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=600'"
+          />
+        </div>
+        <span class="kpi-label">{{ t('home.kpi.missions') }}</span>
+        <span class="kpi-value">{{ missionsCount }}</span>
+      </div>
+
+      <!-- Card 4: Área Total -->
+      <div class="kpi-card" @click="router.push('/parcelas')">
+        <div class="kpi-image-wrapper">
+          <img
+            :src="parcels[1]?.image || 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600'"
+            :alt="t('home.kpi.totalArea')"
+            class="kpi-image"
+            @error="(e) => e.target.src = 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600'"
+          />
+        </div>
+        <span class="kpi-label">{{ t('home.kpi.totalArea') }}</span>
+        <span class="kpi-value">{{ totalArea }}</span>
+      </div>
+    </section>
+
+    <!-- Bottom Two Columns Section -->
+    <div class="dashboard-bottom-grid">
+      <!-- Left Column: Misiones recientes Table -->
+      <section class="recent-missions-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">{{ t('home.recentMissions.title') }}</h2>
+          <button class="view-all-btn" @click="router.push('/misiones')">
+            <span>{{ t('home.recentMissions.viewAll') }}</span>
+            <i class="pi pi-arrow-right"></i>
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="missions-table">
+            <thead>
+              <tr>
+                <th>{{ t('home.recentMissions.id') }}</th>
+                <th>{{ t('home.recentMissions.parcel') }}</th>
+                <th>{{ t('home.recentMissions.date') }}</th>
+                <th>{{ t('home.recentMissions.status') }}</th>
+                <th>{{ t('home.recentMissions.progress') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="m in recentMissions" :key="m.id" class="clickable-mission-row" @click="onMissionClick(m)">
+                <td class="col-id">{{ m.id }}</td>
+                <td class="col-parcel">{{ m.parcel }}</td>
+                <td class="col-date">{{ m.date }}</td>
+                <td class="col-status">
+                  <span class="status-pill" :class="statusClass(m.status)">
+                    {{ m.status }}
+                  </span>
+                </td>
+                <td class="col-progress">
+                  <div class="progress-cell">
+                    <span>{{ m.progress }}%</span>
+                    <div class="mini-bar-bg">
+                      <div class="mini-bar-fill" :style="{ width: `${m.progress}%` }"></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Right Column: Clima & Fotografía -->
+      <aside class="dashboard-sidebar">
+        <!-- Weather: simulator in debug mode, real widget otherwise -->
+        <WeatherSimulator v-if="debugMode" />
+        <WeatherWidget v-else />
+
+        <!-- Landscape Satellite Imagery Box -->
+        <div class="terrain-box">
+          <img
+            src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600"
+            alt="Predio agrícola"
+            class="terrain-image"
+          />
+        </div>
+      </aside>
     </div>
+
   </div>
 </template>
 
 <style scoped>
-.view-container {
+.dashboard-container {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
-.welcome-section {
-  margin-bottom: 2rem;
+/* Header */
+.welcome-header {
+  margin-bottom: 0.5rem;
 }
 
 .welcome-title {
-  font-size: 1.85rem;
+  font-size: 2rem;
   font-weight: 800;
-  color: var(--p-text-color);
-  margin: 0 0 0.5rem 0;
+  color: #111827;
+  margin: 0 0 0.4rem 0;
 }
 
 .welcome-subtitle {
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--p-text-color);
-  opacity: 0.65;
+  color: #4b5563;
   margin: 0;
+}
+
+/* Top KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border: 1.5px solid #1f2937;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.kpi-image-wrapper {
+  width: 100%;
+  max-width: 110px;
+  height: 70px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+}
+
+.kpi-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.kpi-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.kpi-value {
+  font-size: 2.25rem;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1;
+}
+
+/* Bottom Grid Layout */
+.dashboard-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* Recent Missions Table */
+.recent-missions-panel {
+  background: #14382e;
+  border-radius: 8px;
+  overflow: hidden;
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #0f2c24;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.view-all-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.view-all-btn:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.missions-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.missions-table th {
+  padding: 1rem 1.25rem;
+  color: #d1fae5;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.missions-table td {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f3f4f6;
+}
+
+.missions-table tr:last-child td {
+  border-bottom: none;
+}
+
+.col-id {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.col-parcel {
+  font-weight: 500;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.badge--completed {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+.badge--in-progress {
+  background-color: rgba(234, 179, 8, 0.2);
+  color: #fde047;
+}
+
+.badge--planned {
+  background-color: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+}
+
+.progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mini-bar-bg {
+  width: 60px;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.mini-bar-fill {
+  height: 100%;
+  background-color: #10b981;
+  border-radius: 9999px;
+}
+
+/* Sidebar Right */
+.dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Terrain Box */
+.terrain-box {
+  border-radius: 8px;
+  overflow: hidden;
+  height: 170px;
+  border: 1px solid #d1d5db;
+}
+
+.terrain-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Responsiveness */
+@media (max-width: 1024px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dashboard-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .welcome-title {
+    font-size: 1.55rem;
+  }
+  .welcome-subtitle {
+    font-size: 0.95rem;
+  }
+  .kpi-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .panel-header {
+    padding: 0.85rem 1rem;
+  }
+  .missions-table th,
+  .missions-table td {
+    padding: 0.8rem 1rem;
+  }
+}
+
+.clickable-mission-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.clickable-mission-row:hover {
+  background-color: rgba(16, 185, 129, 0.08);
 }
 </style>

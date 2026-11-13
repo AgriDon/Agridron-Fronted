@@ -155,7 +155,7 @@ onMounted(load)
     </pv-dialog>
 
     <pv-button
-      :label="t('parcel.detail.back')"
+      :label="t('crop.back')"
       icon="pi pi-arrow-left"
       text
       class="back-button"
@@ -236,13 +236,16 @@ onMounted(load)
   margin-top: 1.5rem;
 }
 
-.detail-link {
-  color: var(--p-primary-color);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.detail-link:hover {
-  text-decoration: underline;
+@media (max-width: 560px) {
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .detail-list {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+  .detail-list dt {
+    margin-top: 0.65rem;
+  }
 }
 </style>

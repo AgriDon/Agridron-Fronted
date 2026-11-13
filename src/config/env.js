@@ -22,28 +22,27 @@ const variables = {
   VITE_FARMS_ENDPOINT_PATH: import.meta.env.VITE_FARMS_ENDPOINT_PATH,
   VITE_PARCELS_ENDPOINT_PATH: import.meta.env.VITE_PARCELS_ENDPOINT_PATH,
   VITE_CROPS_ENDPOINT_PATH: import.meta.env.VITE_CROPS_ENDPOINT_PATH,
+  VITE_MISSIONS_ENDPOINT_PATH: import.meta.env.VITE_MISSIONS_ENDPOINT_PATH,
   VITE_FUMIGATION_AREAS_ENDPOINT_PATH: import.meta.env.VITE_FUMIGATION_AREAS_ENDPOINT_PATH,
 
   VITE_MISSION_REPORTS_ENDPOINT_PATH: import.meta.env.VITE_MISSION_REPORTS_ENDPOINT_PATH,
   VITE_MISSION_HISTORIES_ENDPOINT_PATH: import.meta.env.VITE_MISSION_HISTORIES_ENDPOINT_PATH,
 
-
-
-//////////////LO ACABO DE AGREGAR POR EL BC DE FLIGHToperations
   VITE_DRONES_METRICS_ENDPOINT_PATH: import.meta.env.VITE_DRONES_METRICS_ENDPOINT_PATH,
-
-  VITE_MISSIONS_METRICS_ENDPOINT_PATH: import.meta.env.VITE_MISSIONS_METRICS_ENDPOINT_PATH,
-
   VITE_INCIDENTS_METRICS_ENDPOINT_PATH: import.meta.env.VITE_INCIDENTS_METRICS_ENDPOINT_PATH,
-
   VITE_OPERATIONSTATUS_METRICS_ENDPOINT_PATH: import.meta.env.VITE_OPERATIONSTATUS_METRICS_ENDPOINT_PATH,
-/////////////////////////////
+  VITE_CHEMICALS_ENDPOINT_PATH: import.meta.env.VITE_CHEMICALS_ENDPOINT_PATH,
+  VITE_NOZZLES_ENDPOINT_PATH: import.meta.env.VITE_NOZZLES_ENDPOINT_PATH,
+  VITE_MAINTENANCE_RECORDS_ENDPOINT_PATH: import.meta.env.VITE_MAINTENANCE_RECORDS_ENDPOINT_PATH,
 
-
-VITE_OPERATIONAL_METRICS_ENDPOINT_PATH: import.meta.env.VITE_OPERATIONAL_METRICS_ENDPOINT_PATH,
+  VITE_OPERATIONAL_METRICS_ENDPOINT_PATH: import.meta.env.VITE_OPERATIONAL_METRICS_ENDPOINT_PATH,
   VITE_PERFORMANCE_INDICATORS_ENDPOINT_PATH: import.meta.env.VITE_PERFORMANCE_INDICATORS_ENDPOINT_PATH,
 
-  VITE_WEATHER_ENDPOINT_PATH: import.meta.env.VITE_WEATHER_ENDPOINT_PATH
+  VITE_WEATHER_API_BASE_URL: import.meta.env.VITE_WEATHER_API_BASE_URL,
+  VITE_WEATHER_ENDPOINT_PATH: import.meta.env.VITE_WEATHER_ENDPOINT_PATH,
+  VITE_REVERSE_GEOCODING_URL: import.meta.env.VITE_REVERSE_GEOCODING_URL,
+
+  VITE_DEBUG_MODE: import.meta.env.VITE_DEBUG_MODE
 }
 
 // Report every missing variable at once: failing on the first one hides the rest.
@@ -62,6 +61,15 @@ if (missing.length > 0) {
 
 export const API_BASE_URL = variables.VITE_API_BASE_URL
 
+/** Base URL of the external weather provider (Open-Meteo). Not part of API_BASE_URL. */
+export const WEATHER_API_BASE_URL = variables.VITE_WEATHER_API_BASE_URL
+
+/** Full URL of the reverse geocoding provider (BigDataCloud). */
+export const REVERSE_GEOCODING_URL = variables.VITE_REVERSE_GEOCODING_URL
+
+/** Shows the weather simulator (debug panel) on Home instead of the weather widget. */
+export const DEBUG_MODE = variables.VITE_DEBUG_MODE === 'true'
+
 /** Relative paths, combined with API_BASE_URL via buildUrl(). */
 export const ENDPOINTS = {
   // Authentication
@@ -73,24 +81,26 @@ export const ENDPOINTS = {
   farms: variables.VITE_FARMS_ENDPOINT_PATH,
   parcels: variables.VITE_PARCELS_ENDPOINT_PATH,
   crops: variables.VITE_CROPS_ENDPOINT_PATH,
+  missions: variables.VITE_MISSIONS_ENDPOINT_PATH,
   fumigationAreas: variables.VITE_FUMIGATION_AREAS_ENDPOINT_PATH,
 
   // Missions
   missionReports: variables.VITE_MISSION_REPORTS_ENDPOINT_PATH,
   missionHistories: variables.VITE_MISSION_HISTORIES_ENDPOINT_PATH,
 
-  // Drones & others
+  // Drones & equipment
   drones: variables.VITE_DRONES_METRICS_ENDPOINT_PATH,
-  missions:variables.VITE_MISSIONS_METRICS_ENDPOINT_PATH,
   incidents: variables.VITE_INCIDENTS_METRICS_ENDPOINT_PATH,
   operationStatus: variables.VITE_OPERATIONSTATUS_METRICS_ENDPOINT_PATH,
-  //////////////////////
+  chemicals: variables.VITE_CHEMICALS_ENDPOINT_PATH,
+  nozzles: variables.VITE_NOZZLES_ENDPOINT_PATH,
+  maintenanceRecords: variables.VITE_MAINTENANCE_RECORDS_ENDPOINT_PATH,
 
   // Metrics
   operationalMetrics: variables.VITE_OPERATIONAL_METRICS_ENDPOINT_PATH,
   performanceIndicators: variables.VITE_PERFORMANCE_INDICATORS_ENDPOINT_PATH,
 
-  // Weather
+  // Weather (joined with WEATHER_API_BASE_URL, not with API_BASE_URL)
   weather: variables.VITE_WEATHER_ENDPOINT_PATH
 }
 

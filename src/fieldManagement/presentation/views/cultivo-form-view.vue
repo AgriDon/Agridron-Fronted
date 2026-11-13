@@ -198,4 +198,16 @@ onMounted(load)
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
+
+@media (max-width: 540px) {
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  .form-actions :deep(.p-button) {
+    width: 100%;
+  }
+}
 </style>

@@ -3,30 +3,32 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
-import ParcelaList from '@/fieldManagement/presentation/views/parcela-list.vue'
-import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
+import FincasList from './fincas-list.vue'
+import { FincaUseCases } from '@/fieldManagement/application/finca-use-cases.js'
 
 const { t } = useI18n()
 const router = useRouter()
 
-const useCases = new ParcelaUseCases()
+const useCases = new FincaUseCases()
 
+// FincasList only emits intents; this view owns the confirmation and the call.
 const showDeleteDialog = ref(false)
-const parcelIdToDelete = ref(null)
+const farmIdToDelete = ref(null)
 const deleting = ref(false)
 const deleteError = ref('')
 
+// Bumping the key re-creates FincasList, which re-runs its initial load.
 const listKey = ref(0)
 
 const onDelete = (id) => {
-  parcelIdToDelete.value = id
+  farmIdToDelete.value = id
   deleteError.value = ''
   showDeleteDialog.value = true
 }
 
 const cancelDelete = () => {
   showDeleteDialog.value = false
-  parcelIdToDelete.value = null
+  farmIdToDelete.value = null
   deleteError.value = ''
 }
 
@@ -35,7 +37,7 @@ const confirmDelete = async () => {
   deleteError.value = ''
 
   try {
-    await useCases.deleteParcel(parcelIdToDelete.value)
+    await useCases.deleteFarm(farmIdToDelete.value)
     cancelDelete()
     listKey.value++
   } catch (error) {
@@ -46,15 +48,11 @@ const confirmDelete = async () => {
 }
 
 const onCreate = () => {
-  router.push({ name: 'parcelas-edit' })
+  router.push({ name: 'fincas-edit' })
 }
 
 const onEdit = (id) => {
-  router.push({ name: 'parcelas-edit', params: { id } })
-}
-
-const onSeeMore = (id) => {
-  router.push({ name: 'parcela-detail', params: { id } })
+  router.push({ name: 'fincas-edit', params: { id } })
 }
 </script>
 
@@ -62,23 +60,18 @@ const onSeeMore = (id) => {
   <div class="view-container">
     <div class="header-section">
       <div>
-        <h1 class="view-title">{{ t('parcel.title') }}</h1>
-        <p class="view-subtitle">{{ t('parcel.subtitle') }}</p>
+        <h1 class="view-title">{{ t('farm.title') }}</h1>
+        <p class="view-subtitle">{{ t('farm.subtitle') }}</p>
       </div>
 
       <pv-button
-        :label="t('parcel.newParcel')"
+        :label="t('farm.newFarm')"
         icon="pi pi-plus-circle"
         @click="onCreate"
       />
     </div>
 
-    <ParcelaList
-      :key="listKey"
-      @seeMore="onSeeMore"
-      @edit="onEdit"
-      @delete="onDelete"
-    />
+    <FincasList :key="listKey" @edit="onEdit" @delete="onDelete" />
 
     <pv-dialog
       v-model:visible="showDeleteDialog"
@@ -86,10 +79,10 @@ const onSeeMore = (id) => {
       :style="{ width: '26rem' }"
     >
       <template #header>
-        <span class="dialog-title">{{ t('parcel.title') }}</span>
+        <span class="dialog-title">{{ t('farm.title') }}</span>
       </template>
 
-      <p class="dialog-message">{{ t('parcel.delete-confirm') }}</p>
+      <p class="dialog-message">{{ t('farm.delete-confirm') }}</p>
 
       <pv-message
         v-if="deleteError"
@@ -107,7 +100,7 @@ const onSeeMore = (id) => {
           @click="cancelDelete"
         />
         <pv-button
-          :label="t('parcel.button.delete')"
+          :label="t('farm.button.delete')"
           icon="pi pi-trash"
           severity="danger"
           :loading="deleting"
@@ -158,5 +151,17 @@ const onSeeMore = (id) => {
   color: var(--p-text-color);
   opacity: 0.75;
   line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .header-section {
+    margin-bottom: 1.25rem;
+  }
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .view-subtitle {
+    font-size: 0.95rem;
+  }
 }
 </style>

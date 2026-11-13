@@ -37,13 +37,13 @@ const titleKey = computed(() =>
 // change its owner.
 const ownerOptions = computed(() => {
   const options = users.value.map(user => ({
-    id: user.id,
+    id: Number(user.id),
     label: `${user.username} (${user.email})`
   }))
 
   const current = form.value.ownerId
 
-  if (current !== null && !options.some(option => option.id === Number(current))) {
+  if (current !== null && current !== '' && !options.some(option => option.id === Number(current))) {
     options.unshift({ id: Number(current), label: t('farm.form.unknownOwner', { id: current }) })
   }
 
@@ -56,16 +56,21 @@ const applyForm = (farm) => {
   form.value = {
     name: farm.name,
     location: farm.location,
-    ownerId: farm.ownerId,
+    ownerId: Number(farm.ownerId),
     image: farm.image ?? ''
   }
 }
 
 const load = async () => {
   loading.value = true
+  submitError.value = ''
 
   try {
-    users.value = await useCases.listUsers()
+    try {
+      users.value = await useCases.listUsers()
+    } catch {
+      users.value = []
+    }
 
     if (isEditing.value) {
       applyForm(await useCases.getFarm(farmId.value))
@@ -254,5 +259,17 @@ onMounted(load)
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 0.5rem;
+}
+
+@media (max-width: 540px) {
+  .view-title {
+    font-size: 1.5rem;
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  .form-actions :deep(.p-button) {
+    width: 100%;
+  }
 }
 </style>

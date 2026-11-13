@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "sh server/start.sh",
+    "server": "json-server --watch server/db.json --routes server/routes.json --port 3000",
+    "server:sh": "sh server/start.sh",
     "dev:full": "npm run server & npm run dev",
     "dev:staging": "vite --mode staging",
     "build": "vite build",
