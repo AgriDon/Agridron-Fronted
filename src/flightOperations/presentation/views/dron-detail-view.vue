@@ -175,6 +175,17 @@ const onMaintenanceSubmit = async () => {
   }
 }
 
+/** Tag color for each drone status. */
+const STATUS_SEVERITY = {
+  [DroneStatus.AVAILABLE]: 'success',
+  [DroneStatus.ASSIGNED]: 'info',
+  [DroneStatus.IN_FLIGHT]: 'contrast',
+  [DroneStatus.PAUSED]: 'warn',
+  [DroneStatus.MAINTENANCE]: 'warn',
+  [DroneStatus.OUT_OF_SERVICE]: 'danger'
+}
+
+const getStatusSeverity = (status) => STATUS_SEVERITY[status] || 'secondary'
 
 const getBatterySeverity = (level) => {
   if (level > 60) return 'success'
@@ -243,7 +254,7 @@ onMounted(load)
 
           <dt>{{ t('drone.statusLabel') }}</dt>
           <dd>
-            <pv-tag :value="t(`drone.status.${drone.status}`)" :severity="drone.status === 'AVAILABLE' ? 'success' : 'info'" />
+            <pv-tag :value="t(`drone.status.${drone.status}`)" :severity="getStatusSeverity(drone.status)" />
           </dd>
 
           <dt>{{ t('drone.capacity') }}</dt>

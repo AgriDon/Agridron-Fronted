@@ -249,6 +249,10 @@ load()
   color: #fff;
 }
 
+.drone-badge--out-of-service {
+  background: #dc2626;
+}
+
 .drone-image {
   width: 100%;
   height: 100%;

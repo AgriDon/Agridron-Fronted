@@ -306,7 +306,8 @@
       "IN_FLIGHT": "En vuelo",
       "PAUSED": "En pausa",
       "MAINTENANCE": "Mantenimiento",
-      "MAINTENANCE_SOON": "Mantenimiento próx."
+      "MAINTENANCE_SOON": "Mantenimiento próx.",
+      "OUT_OF_SERVICE": "Fuera de servicio"
     },
     "capacityRange": {
       "all": "Todas las capacidades",
