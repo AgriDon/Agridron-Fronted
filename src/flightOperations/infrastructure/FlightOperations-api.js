@@ -7,7 +7,7 @@ import { DronApiEndpoint } from './dron-api-endpoint.js';
 import { IncidentApiEndpoint } from './incident-api-endpoint.js';
 import { MissionApiEndpoint } from './mission-api-endpoint.js';
 import { OperationStatusApiEndpoint } from './operationStatus-api-endpoint.js';
-
+import { MaintenanceRecordApiEndpoint } from './maintenance-record-api-endpoint.js'
 /**
  * Infrastructure facade for drone, incident, mission and operation status endpoint operations.
  * FlightOperationsApi class get http from base-api using super() of base-api
@@ -26,6 +26,9 @@ export class FlightOperationsApi extends BaseApi {
     /** @type {OperationStatusApiEndpoint} */
     #operationStatusEndpoint;
 
+    /** @type {MaintenanceRecordApiEndpoint} */
+    #maintenanceEndpoint
+
     constructor() {
         super();
 
@@ -35,7 +38,7 @@ export class FlightOperationsApi extends BaseApi {
         this.#incidentEndpoint = new IncidentApiEndpoint(http);
         this.#missionEndpoint = new MissionApiEndpoint(http);
         this.#operationStatusEndpoint = new OperationStatusApiEndpoint(http);
-        this.#maintenanceEndpoint = new MaintenanceRecordApiEndpoint(http);
+        this.#maintenanceEndpoint = new MaintenanceRecordApiEndpoint(this.http)
     }
 
     // ---- Drones ----
@@ -67,37 +70,9 @@ export class FlightOperationsApi extends BaseApi {
      */
     deleteDrone = (id) => this.#droneEndpoint.delete(id);
 
-    // -----Maintenance
-    /**
-     * @returns {Promise<MaintenanceRecord[]>}
-     */
-    getAllMaintenanceRecords(params = {}) {
-        return this.#maintenanceEndpoint.getAll(params)
-    }
-
-    /**
-     * @param {number} id
-     * @returns {Promise<MaintenanceRecord>}
-     */
-    getMaintenanceRecord(id) {
-        return this.#maintenanceEndpoint.getById(id)
-    }
-
-    /**
-     * @param {number} droneId
-     * @returns {Promise<MaintenanceRecord[]>}
-     */
-    getMaintenanceRecordsByDroneId(droneId) {
-        return this.#maintenanceEndpoint.getAllByDroneId(droneId)
-    }
-
-    /**
-     * @param {MaintenanceRecord} record
-     * @returns {Promise<MaintenanceRecord>}
-     */
-    createMaintenanceRecord(record) {
-        return this.#maintenanceEndpoint.create(record)
-    }
+    // ---- Maintenance ----
+    getMaintenanceRecordsByDroneId = (droneId) => this.#maintenanceEndpoint.getAllByDroneId(droneId)
+    createMaintenanceRecord = (record) => this.#maintenanceEndpoint.create(record)
 
     // ---- Incidents ----
 

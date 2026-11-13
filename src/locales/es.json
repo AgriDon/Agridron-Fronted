@@ -365,6 +365,7 @@
       "registerButton": "Registrar Mantenimiento",
       "registerDialog": {
         "title": "Registrar Mantenimiento",
+        "save": "Registrar",
         "form": {
           "date": "Fecha",
           "type": "Tipo",
@@ -376,6 +377,13 @@
       "type": {
         "preventive": "Preventivo",
         "corrective": "Correctivo"
+      },
+      "error": {
+        "date-required": "La fecha es obligatoria.",
+        "type-required": "Selecciona el tipo.",
+        "technician-required": "El técnico es obligatorio.",
+        "next-date-required": "La fecha del próximo mantenimiento es obligatoria.",
+        "next-date-after": "Debe ser posterior a la fecha del mantenimiento."
       }
     }
   },
