@@ -351,6 +351,32 @@
       },
       "create": "Create drone",
       "update": "Update drone"
+    },
+    "maintenance": {
+      "title": "Maintenance History",
+      "description": "List of maintenance records for this drone.",
+      "record": {
+        "date": "Date",
+        "type": "Type",
+        "description": "Description",
+        "technician": "Technician"
+      },
+      "emptyState": "No maintenance records found.",
+      "registerButton": "Register Maintenance",
+      "registerDialog": {
+        "title": "Register Maintenance",
+        "form": {
+          "date": "Date",
+          "type": "Type",
+          "description": "Description",
+          "technician": "Technician",
+          "nextMaintenanceDate": "Next Maintenance Date"
+        }
+      },
+      "type": {
+        "preventive": "Preventive",
+        "corrective": "Corrective"
+      }
     }
   },
   "iam": {

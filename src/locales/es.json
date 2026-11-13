@@ -351,6 +351,32 @@
       },
       "create": "Crear dron",
       "update": "Actualizar dron"
+    },
+    "maintenance": {
+      "title": "Historial de Mantenimiento",
+      "description": "Lista de registros de mantenimiento para este dron.",
+      "record": {
+        "date": "Fecha",
+        "type": "Tipo",
+        "description": "Descripción",
+        "technician": "Técnico"
+      },
+      "emptyState": "No se encontraron registros de mantenimiento.",
+      "registerButton": "Registrar Mantenimiento",
+      "registerDialog": {
+        "title": "Registrar Mantenimiento",
+        "form": {
+          "date": "Fecha",
+          "type": "Tipo",
+          "description": "Descripción",
+          "technician": "Técnico",
+          "nextMaintenanceDate": "Próxima Fecha de Mantenimiento"
+        }
+      },
+      "type": {
+        "preventive": "Preventivo",
+        "corrective": "Correctivo"
+      }
     }
   },
   "iam": {
