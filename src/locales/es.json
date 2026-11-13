@@ -363,6 +363,12 @@
       },
       "emptyState": "No se encontraron registros de mantenimiento.",
       "registerButton": "Registrar Mantenimiento",
+      "sendButton": "Enviar a mantenimiento",
+      "sendDialog": {
+        "title": "Enviar a mantenimiento",
+        "message": "El dron quedará en estado Mantenimiento y no se le podrán asignar misiones hasta que registres el mantenimiento. ¿Continuar?",
+        "confirm": "Enviar"
+      },
       "registerDialog": {
         "title": "Registrar Mantenimiento",
         "save": "Registrar",
@@ -383,7 +389,8 @@
         "type-required": "Selecciona el tipo.",
         "technician-required": "El técnico es obligatorio.",
         "next-date-required": "La fecha del próximo mantenimiento es obligatoria.",
-        "next-date-after": "Debe ser posterior a la fecha del mantenimiento."
+        "next-date-after": "Debe ser posterior a la fecha del mantenimiento.",
+        "send-not-available": "Solo un dron disponible puede enviarse a mantenimiento."
       }
     }
   },

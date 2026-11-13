@@ -143,4 +143,29 @@ export class DroneUseCases {
    * @returns {Promise<void>}
    */
   deleteDrone = (id) => this.#api.deleteDrone(id)
+
+
+  /**
+   * Only changes the status; the maintenance record is created later
+   * with MaintenanceRecordUseCases.registerMaintenance.
+   *
+   * @param {Drone} drone
+   * @returns {Promise<Drone>}
+   * @throws {Error} when the drone is not AVAILABLE.
+   */
+
+  sendToMaintenance = (drone) => {
+    if (drone.status !== DroneStatus.AVAILABLE) {
+      throw new Error('drone.maintenance.error.send-not-available')
+    }
+
+    // Copy of the drone with the new status (the entity is markRaw, so we never mutate it).
+    const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, {
+      status: DroneStatus.MAINTENANCE
+    })
+
+    return this.#api.updateDrone(updated)
+  }
+
+
 }

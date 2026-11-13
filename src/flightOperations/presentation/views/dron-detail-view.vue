@@ -18,6 +18,7 @@ const router = useRouter()
 const useCases = new DroneUseCases()
 const maintenanceUseCases = new MaintenanceRecordUseCases()
 
+
 const drone = ref(null)
 const loading = ref(true)
 const notFound = ref(false)
@@ -39,6 +40,31 @@ const loadMaintenanceRecords = async () => {
   }
 }
 
+const showSendDialog = ref(false)
+const sending = ref(false)
+const sendError = ref('')
+
+const canSendToMaintenance = computed(() => drone.value?.status === DroneStatus.AVAILABLE)
+
+const openSendDialog = () => {
+  sendError.value = ''
+  showSendDialog.value = true
+}
+
+const confirmSendToMaintenance = async () => {
+  sending.value = true
+  sendError.value = ''
+
+  try {
+    drone.value = await useCases.sendToMaintenance(drone.value)
+    showSendDialog.value = false
+  } catch (error) {
+    sendError.value = error.message.startsWith('drone.') ? t(error.message) : error.message
+  } finally {
+    sending.value = false
+  }
+}
+
 const load = async () => {
   loading.value = true
   errorMessage.value = ''
@@ -46,6 +72,7 @@ const load = async () => {
 
   try {
     drone.value = await useCases.getDrone(droneId.value)
+    await loadMaintenanceRecords()
   } catch (error) {
     if (/not found/i.test(error.message)) {
       notFound.value = true
@@ -155,14 +182,20 @@ const getBatterySeverity = (level) => {
   return 'danger'
 }
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return '-'
-  try {
-    const d = new Date(dateStr)
-    return isNaN(d.getTime()) ? '-' : d.toLocaleDateString()
-  } catch {
-    return '-'
+/**
+ * Formats a date-only value ("YYYY-MM-DD" or ISO) in local time.
+ * Avoids new Date("YYYY-MM-DD"), which is parsed as UTC and shows the previous day in Lima.
+ * @param {string|Date|null} value
+ * @returns {string}
+ */
+const formatDate = (value) => {
+  if (!value) return '-'
+  if (value instanceof Date) {
+    return isNaN(value.getTime()) ? '-' : value.toLocaleDateString()
   }
+  const [y, m, d] = String(value).slice(0, 10).split('-').map(Number)
+  if (!y || !m || !d) return '-'
+  return new Date(y, m - 1, d).toLocaleDateString()
 }
 
 onMounted(load)
@@ -255,6 +288,14 @@ onMounted(load)
               @click="onDelete"
           />
           <pv-button
+              v-if="canSendToMaintenance"
+              :label="t('drone.maintenance.sendButton')"
+              icon="pi pi-cog"
+              severity="warn"
+              outlined
+              @click="openSendDialog"
+          />
+          <pv-button
               v-if="canRegisterMaintenance"
               :label="t('drone.maintenance.registerButton')"
               icon="pi pi-wrench"
@@ -329,6 +370,33 @@ onMounted(load)
         class="back-button"
         @click="router.push('/drones')"
     />
+    <pv-dialog v-model:visible="showSendDialog" modal :style="{ width: '26rem' }">
+      <template #header>
+        <span class="dialog-title">{{ t('drone.maintenance.sendDialog.title') }}</span>
+      </template>
+
+      <p class="dialog-message">{{ t('drone.maintenance.sendDialog.message') }}</p>
+
+      <pv-message v-if="sendError" severity="error" :closable="false">
+        {{ sendError }}
+      </pv-message>
+
+      <template #footer>
+        <pv-button
+            :label="t('farm.cancel')"
+            severity="secondary"
+            text
+            @click="showSendDialog = false"
+        />
+        <pv-button
+            :label="t('drone.maintenance.sendDialog.confirm')"
+            icon="pi pi-cog"
+            severity="warn"
+            :loading="sending"
+            @click="confirmSendToMaintenance"
+        />
+      </template>
+    </pv-dialog>
     <pv-dialog v-model:visible="showMaintenanceDialog" modal :style="{ width: '30rem' }">
       <template #header>
         <span class="dialog-title">{{ t('drone.maintenance.registerDialog.title') }}</span>
