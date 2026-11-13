@@ -3,7 +3,7 @@ import { DronApiEndpoint } from './dron-api-endpoint.js'
 import { IncidentApiEndpoint } from './incident-api-endpoint.js'
 import { MissionApiEndpoint } from './mission-api-endpoint.js'
 import { OperationStatusApiEndpoint } from './operation-status-api-endpoint.js'
-
+import { MaintenanceRecordApiEndpoint } from './maintenance-record-api-endpoint.js'
 /**
  * Infrastructure facade for flight operations, drones, incidents and missions endpoints.
  */
@@ -20,12 +20,16 @@ export class FlightOperationsApi extends BaseApi {
   /** @type {OperationStatusApiEndpoint} */
   #operationStatusEndpoint
 
+  /** @Type {MaintenanceRecordApiEndpoint}*/
+  #maintenanceEndpoint
+
   constructor() {
     super()
     this.#droneEndpoint = new DronApiEndpoint(this.http)
     this.#incidentEndpoint = new IncidentApiEndpoint(this.http)
     this.#missionEndpoint = new MissionApiEndpoint(this.http)
     this.#operationStatusEndpoint = new OperationStatusApiEndpoint(this.http)
+    this.#maintenanceEndpoint = new MaintenanceRecordApiEndpoint(this.http)
   }
 
   // ---- Drones ----
@@ -34,6 +38,10 @@ export class FlightOperationsApi extends BaseApi {
   createDrone = (drone) => this.#droneEndpoint.create(drone)
   updateDrone = (drone) => this.#droneEndpoint.update(drone, drone.id)
   deleteDrone = (id) => this.#droneEndpoint.delete(id)
+
+  // ---- Maintenance ----
+  getMaintenanceRecordsByDroneId = (droneId) => this.#maintenanceEndpoint.getAllByDroneId(droneId)
+  createMaintenanceRecord = (record) => this.#maintenanceEndpoint.create(record)
 
   // ---- Incidents ----
   getAllIncidents = (params) => this.#incidentEndpoint.getAll(params)

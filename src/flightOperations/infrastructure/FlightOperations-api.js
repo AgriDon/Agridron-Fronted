@@ -7,7 +7,7 @@ import { DronApiEndpoint } from './dron-api-endpoint.js';
 import { IncidentApiEndpoint } from './incident-api-endpoint.js';
 import { MissionApiEndpoint } from './mission-api-endpoint.js';
 import { OperationStatusApiEndpoint } from './operationStatus-api-endpoint.js';
-import { MaintenanceRecordApiEndpoint } from './maintenance-record-api-endpoint.js'
+
 /**
  * Infrastructure facade for drone, incident, mission and operation status endpoint operations.
  * FlightOperationsApi class get http from base-api using super() of base-api
@@ -26,9 +26,6 @@ export class FlightOperationsApi extends BaseApi {
     /** @type {OperationStatusApiEndpoint} */
     #operationStatusEndpoint;
 
-    /** @type {MaintenanceRecordApiEndpoint} */
-    #maintenanceEndpoint
-
     constructor() {
         super();
 
@@ -38,7 +35,6 @@ export class FlightOperationsApi extends BaseApi {
         this.#incidentEndpoint = new IncidentApiEndpoint(http);
         this.#missionEndpoint = new MissionApiEndpoint(http);
         this.#operationStatusEndpoint = new OperationStatusApiEndpoint(http);
-        this.#maintenanceEndpoint = new MaintenanceRecordApiEndpoint(this.http)
     }
 
     // ---- Drones ----
@@ -69,10 +65,6 @@ export class FlightOperationsApi extends BaseApi {
      * @returns {Promise<void>}
      */
     deleteDrone = (id) => this.#droneEndpoint.delete(id);
-
-    // ---- Maintenance ----
-    getMaintenanceRecordsByDroneId = (droneId) => this.#maintenanceEndpoint.getAllByDroneId(droneId)
-    createMaintenanceRecord = (record) => this.#maintenanceEndpoint.create(record)
 
     // ---- Incidents ----
 

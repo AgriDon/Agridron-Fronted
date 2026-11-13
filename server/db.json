@@ -265,6 +265,31 @@
       "progress": 10,
       "date": "2026-10-08T13:00:00.000Z",
       "id": 11
+    },
+    {
+      "farmArea": "Parcela Este",
+      "cropType": "Maiz",
+      "status": "PLANNED",
+      "operator": "Juan Perez",
+      "operatorName": "Juan Perez",
+      "date": "2026-11-13T13:00:00.000Z",
+      "scheduledAt": "2026-11-13T13:00:00.000Z",
+      "farmId": 2,
+      "parcelId": 3,
+      "droneId": null,
+      "treatmentType": "Insecticida",
+      "product": "Fungicida 48%",
+      "productName": "Fungicida 48%",
+      "productDose": 2,
+      "notes": "Ultima fumigación del mes",
+      "plannedAreaHectares": 20,
+      "treatedAreaHectares": 0,
+      "progress": 10,
+      "flightParameters": null,
+      "lastPausePoint": null,
+      "startedAt": null,
+      "completedAt": null,
+      "id": 12
     }
   ],
   "weather": [
@@ -474,8 +499,8 @@
       "serialNumber": "AGRI-DRN-001-A",
       "model": "DJI Agras T40",
       "modelName": "DJI Agras T40",
-      "capacity": 40,
-      "capacityLiters": 40,
+      "capacity": 50,
+      "capacityLiters": 50,
       "status": "AVAILABLE",
       "battery": 100,
       "batteryLevel": 100,
@@ -483,8 +508,8 @@
       "nozzleId": 1,
       "urlimg": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600",
       "imageUrl": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600",
-      "lastMaintenanceDate": "2026-08-10T00:00:00.000Z",
-      "nextMaintenanceDate": "2026-11-10T00:00:00.000Z",
+      "lastMaintenanceDate": "2026-11-13T00:00:00.000Z",
+      "nextMaintenanceDate": "2027-01-20T00:00:00.000Z",
       "isActive": true
     },
     {
@@ -538,6 +563,24 @@
       "lastMaintenanceDate": "2026-08-25",
       "nextMaintenanceDate": "2026-11-25",
       "image": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+    },
+    {
+      "id": 6,
+      "serialNumber": "DRN-2026-000",
+      "model": "EXTRAIL Suv 300",
+      "modelName": "EXTRAIL Suv 300",
+      "capacity": 25,
+      "capacityLiters": 25,
+      "status": "AVAILABLE",
+      "battery": 100,
+      "batteryLevel": 100,
+      "flightHours": 0,
+      "nozzleId": 3,
+      "urlimg": "https://plus.unsplash.com/premium_photo-1714618849685-89cad85746b1?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+      "imageUrl": "https://plus.unsplash.com/premium_photo-1714618849685-89cad85746b1?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+      "lastMaintenanceDate": "2026-11-13T00:00:00.000Z",
+      "nextMaintenanceDate": "2027-01-25T00:00:00.000Z",
+      "isActive": true
     }
   ],
   "chemicals": [
@@ -682,6 +725,22 @@
       "type": "corrective",
       "description": "Falla en motor trasero izquierdo, pendiente de repuesto",
       "technician": "Mario Vega"
+    },
+    {
+      "droneId": 1,
+      "date": "2026-11-13",
+      "type": "preventive",
+      "description": "Lubricación de Helices",
+      "technician": "Federico Valverde",
+      "id": 7
+    },
+    {
+      "droneId": 6,
+      "date": "2026-11-13",
+      "type": "corrective",
+      "description": "Cambio de bateria",
+      "technician": "Federico Valverde",
+      "id": 8
     }
   ],
   "users": [

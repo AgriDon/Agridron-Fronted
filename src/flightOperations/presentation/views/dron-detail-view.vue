@@ -8,6 +8,9 @@ import {
   MaintenanceValidationError
 } from '@/flightOperations/application/maintenance-record-use-cases.js'
 
+import { MaintenanceType } from '@/flightOperations/domain/model/maintenance-type.enum.js'
+import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.js'
+
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
