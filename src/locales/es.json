@@ -897,7 +897,8 @@
       "warningTitle": "Advertencia Meteorológica Pre-Vuelo",
       "warningQuestion": "¿Desea autorizar e iniciar la operación bajo supervisión manual o prefiere esperar a condiciones óptimas?",
       "abort": "Esperar Condiciones",
-      "proceed": "Continuar de Todos Modos"
+      "proceed": "Continuar de Todos Modos",
+      "warningText": "Alerta climática activa: Viento {wind} km/h, Lluvia: {rain} mm. Supera los límites recomendados para aspersión (máx 15 km/h y sin lluvia)."
     },
     "cancel": {
       "title": "Confirmar Cancelación de Misión",

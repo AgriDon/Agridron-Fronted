@@ -897,7 +897,8 @@
       "warningTitle": "Pre-Flight Weather Advisory",
       "warningQuestion": "Do you want to authorize and proceed under manual oversight, or wait for optimal conditions?",
       "abort": "Wait for Conditions",
-      "proceed": "Proceed Anyway"
+      "proceed": "Proceed Anyway",
+      "warningText": "Active weather alert: Wind {wind} km/h, Rain: {rain} mm. It exceeds the recommended spraying limits (max 15 km/h and no rain)."
     },
     "cancel": {
       "title": "Confirm Mission Cancellation",
