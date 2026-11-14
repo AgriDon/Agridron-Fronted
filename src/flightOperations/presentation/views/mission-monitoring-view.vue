@@ -194,6 +194,7 @@ const onMissionCompleted = async () => {
 
 onMounted(() => {
   loadCockpitData()
+  weatherStore.loadWeatherConditions()
 })
 
 onUnmounted(() => {
@@ -306,15 +307,15 @@ onUnmounted(() => {
           <div class="weather-hud-body">
             <div class="weather-metric">
               <span class="w-label">Viento</span>
-              <span class="w-value">{{ weatherStore.currentWeather?.windSpeed ?? 8 }} km/h</span>
+              <span class="w-value">{{ weatherStore.weatherConditions[0]?.windSpeed ?? 8 }} km/h</span>
             </div>
             <div class="weather-metric">
               <span class="w-label">Temp</span>
-              <span class="w-value">{{ weatherStore.currentWeather?.temperature ?? 24 }}°C</span>
+              <span class="w-value">{{ weatherStore.weatherConditions[0]?.temperature ?? 24 }}°C</span>
             </div>
             <div class="weather-metric">
               <span class="w-label">Humedad</span>
-              <span class="w-value">{{ weatherStore.currentWeather?.humidity ?? 65 }}%</span>
+              <span class="w-value">{{ weatherStore.weatherConditions[0]?.humidity ?? 65 }}%</span>
             </div>
           </div>
         </div>

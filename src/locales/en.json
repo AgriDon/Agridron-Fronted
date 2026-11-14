@@ -220,11 +220,6 @@
       "heat": "Temperature above 30 °C: the product evaporates faster, prefer cooler hours.",
       "lowHumidity": "Humidity below 50 %: droplets evaporate faster."
     },
-    "simulator": {
-      "title": "Debug: weather simulator",
-      "hint": "Turn it on or off with VITE_DEBUG_MODE in .env.development (restart npm run dev). The real data is not modified.",
-      "reset": "Back to real data"
-    },
     "severity": {
       "HIGH": "High",
       "MEDIUM": "Medium",
@@ -904,7 +899,8 @@
       "warningTitle": "Pre-Flight Weather Advisory",
       "warningQuestion": "Do you want to authorize and proceed under manual oversight, or wait for optimal conditions?",
       "abort": "Wait for Conditions",
-      "proceed": "Proceed Anyway"
+      "proceed": "Proceed Anyway",
+      "warningText": "Active weather alert: Wind {wind} km/h, Rain: {rain} mm. It exceeds the recommended spraying limits (max 15 km/h and no rain)."
     },
     "cancel": {
       "title": "Confirm Mission Cancellation",
