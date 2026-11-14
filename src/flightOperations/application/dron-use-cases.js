@@ -1,6 +1,9 @@
 import { Drone } from '@/flightOperations/domain/model/dron.entity.js'
 import { FlightOperationsApi } from '../infrastructure/flight-operations-api.js'
 import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.js'
+import { Incident } from '@/flightOperations/domain/model/incident.entity.js'
+import { IncidentType } from '@/flightOperations/domain/model/incident-type.enum.js'
+import { IncidentSeverity } from '@/flightOperations/domain/model/incident-severity.enum.js'
 
 /**
  * Raised when a drone payload does not pass validation.

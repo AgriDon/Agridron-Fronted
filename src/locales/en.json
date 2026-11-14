@@ -369,7 +369,7 @@
       "sendButton": "Send to maintenance",
       "sendDialog": {
         "title": "Send to maintenance",
-        "message": "The drone will be set to Maintenance and cannot be assigned to missions until you register the maintenance. Continue?",
+        "message": "The drone will be set to Maintenance and cannot be assigned to missions until maintenance is registered. Continue?",
         "confirm": "Send"
       },
       "registerDialog": {
