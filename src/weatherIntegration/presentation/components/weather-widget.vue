@@ -4,46 +4,32 @@ import { useI18n } from 'vue-i18n'
 
 import { useWeatherStore } from '@/weatherIntegration/application/weather.store.js'
 
-/**
- * Weather card. It shows the first loaded condition, or the one received
- * in the "condition" prop (used by the weather simulator).
- * The data is loaded by the view that hosts it (store.loadWeatherConditions()).
- */
-const props = defineProps({
-  /** Optional condition shown instead of the loaded one. */
-  condition: { type: Object, default: null }
-})
+const { t } = useI18n();
+const weatherStore = useWeatherStore();
 
-const { t } = useI18n()
-const weatherStore = useWeatherStore()
+const shownCondition = computed(() => weatherStore.weatherConditions[0] ?? null);
 
-const shownCondition = computed(() => props.condition ?? weatherStore.weatherConditions[0] ?? null)
-
-// vue-i18n has no datetimeFormats configured, so the "dd/MM/yyyy · HH:mm"
-// format of the original widget is built by hand.
 const formatObservedAt = (value) => {
   const date = new Date(value)
 
-  if (Number.isNaN(date.getTime())) return value
+  if (Number.isNaN(date.getTime())) return value;
 
-  const pad = (number) => String(number).padStart(2, '0')
+  const pad = (number) => String(number).padStart(2, '0');
 
-  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} · ${pad(date.getHours())}:${pad(date.getMinutes())}`
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 </script>
 
 <template>
   <div class="weather-widget">
-    <!-- Loading state (only for the real data, the simulator always has a condition) -->
-    <pv-skeleton v-if="!props.condition && weatherStore.loading" class="weather-skeleton" aria-busy="true" />
+    <pv-skeleton v-if="weatherStore.loading" class="weather-skeleton" aria-busy="true" />
 
-    <!-- Weather card -->
     <article v-else-if="shownCondition" class="weather-box">
       <h3 class="weather-title">{{ t('weather.title') }}</h3>
 
       <p class="weather-location">
         {{ shownCondition.location }}
-        <small v-if="!props.condition && weatherStore.usingDefaultLocation">({{ t('weather.referenceLocation') }})</small>
+        <small v-if="weatherStore.usingDefaultLocation">({{ t('weather.referenceLocation') }})</small>
       </p>
       <small class="weather-observed">{{ t('weather.observed') }}: {{ formatObservedAt(shownCondition.observedAt) }}</small>
 
@@ -77,7 +63,6 @@ const formatObservedAt = (value) => {
       </small>
     </article>
 
-    <!-- Empty state (no data or the API failed) -->
     <div v-else class="weather-box weather-empty">
       <i class="pi pi-cloud"></i>
       <p>{{ t('weather.empty') }}</p>
@@ -86,7 +71,6 @@ const formatObservedAt = (value) => {
 </template>
 
 <style scoped>
-/* Same look as the weather box of the Home mockup. */
 .weather-widget {
   width: 100%;
 }
@@ -155,7 +139,6 @@ const formatObservedAt = (value) => {
   font-size: 0.9rem;
 }
 
-/* Favorable message and alerts: light boxes so the text stays readable on the green card. */
 .weather-note {
   margin-bottom: 0.5rem;
   padding: 0.6rem;

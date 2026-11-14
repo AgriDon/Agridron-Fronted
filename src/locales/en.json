@@ -218,11 +218,6 @@
       "heat": "Temperature above 30 °C: the product evaporates faster, prefer cooler hours.",
       "lowHumidity": "Humidity below 50 %: droplets evaporate faster."
     },
-    "simulator": {
-      "title": "Debug: weather simulator",
-      "hint": "Turn it on or off with VITE_DEBUG_MODE in .env.development (restart npm run dev). The real data is not modified.",
-      "reset": "Back to real data"
-    },
     "severity": {
       "HIGH": "High",
       "MEDIUM": "Medium",

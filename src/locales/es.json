@@ -218,11 +218,6 @@
       "heat": "Temperatura superior a 30 °C: el producto se evapora más rápido, prefiere horas más frescas.",
       "lowHumidity": "Humedad menor a 50 %: las gotas se evaporan más rápido."
     },
-    "simulator": {
-      "title": "Debug: simulador del clima",
-      "hint": "Se activa y desactiva con VITE_DEBUG_MODE en .env.development (reinicia npm run dev). No modifica los datos reales.",
-      "reset": "Volver a los datos reales"
-    },
     "severity": {
       "HIGH": "Alto",
       "MEDIUM": "Medio",

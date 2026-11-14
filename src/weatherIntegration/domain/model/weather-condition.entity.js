@@ -1,47 +1,14 @@
-/**
- * The weather observed at a location, with the alerts raised for it.
- */
 export class WeatherCondition {
-
-    /** @type {number} */
     #id;
-
-    /** @type {string} */
     #location;
-
-    /** @type {number} */
     #temperature;
-
-    /** @type {number} */
     #humidity;
-
-    /** @type {number} */
     #windSpeed;
-
-    /** @type {number} */
     #precipitation;
-
-    /** @type {number} */
     #precipitationProbability;
-
-    /** @type {string} */
     #observedAt;
-
-    /** @type {import('./weather-alert.entity.js').WeatherAlert[]} */
     #alerts;
 
-
-    /**
-     * @param {number} id
-     * @param {string} location
-     * @param {number} temperature - Degrees Celsius.
-     * @param {number} humidity - Percentage.
-     * @param {number} windSpeed - Kilometers per hour.
-     * @param {number} precipitation - Millimeters.
-     * @param {number} precipitationProbability - Rain probability of the next hour, as a percentage.
-     * @param {string} observedAt - ISO date string.
-     * @param {import('./weather-alert.entity.js').WeatherAlert[]} [alerts]
-     */
     constructor(id, location, temperature, humidity, windSpeed, precipitation, precipitationProbability, observedAt, alerts = []) {
         this.#id = id;
         this.#location = location;
@@ -54,8 +21,6 @@ export class WeatherCondition {
         this.#alerts = alerts;
     }
 
-
-    /** @returns {number} */
     get id() {
         return this.#id;
     }
@@ -64,7 +29,6 @@ export class WeatherCondition {
         this.#id = value;
     }
 
-    /** @returns {string} */
     get location() {
         return this.#location;
     }
@@ -73,7 +37,6 @@ export class WeatherCondition {
         this.#location = value;
     }
 
-    /** @returns {number} */
     get temperature() {
         return this.#temperature;
     }
@@ -82,7 +45,6 @@ export class WeatherCondition {
         this.#temperature = value;
     }
 
-    /** @returns {number} */
     get humidity() {
         return this.#humidity;
     }
@@ -91,7 +53,6 @@ export class WeatherCondition {
         this.#humidity = value;
     }
 
-    /** @returns {number} */
     get windSpeed() {
         return this.#windSpeed;
     }
@@ -100,7 +61,6 @@ export class WeatherCondition {
         this.#windSpeed = value;
     }
 
-    /** @returns {number} */
     get precipitation() {
         return this.#precipitation;
     }
@@ -109,7 +69,6 @@ export class WeatherCondition {
         this.#precipitation = value;
     }
 
-    /** @returns {number} */
     get precipitationProbability() {
         return this.#precipitationProbability;
     }
@@ -118,7 +77,6 @@ export class WeatherCondition {
         this.#precipitationProbability = value;
     }
 
-    /** @returns {string} */
     get observedAt() {
         return this.#observedAt;
     }
@@ -127,7 +85,6 @@ export class WeatherCondition {
         this.#observedAt = value;
     }
 
-    /** @returns {import('./weather-alert.entity.js').WeatherAlert[]} */
     get alerts() {
         return this.#alerts;
     }
