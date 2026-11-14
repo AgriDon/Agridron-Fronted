@@ -143,4 +143,69 @@ export class DroneUseCases {
    * @returns {Promise<void>}
    */
   deleteDrone = (id) => this.#api.deleteDrone(id)
+
+
+  /**
+   * Only changes the status; the maintenance record is created later
+   * with MaintenanceRecordUseCases.registerMaintenance.
+   *
+   * @param {Drone} drone
+   * @returns {Promise<Drone>}
+   * @throws {Error} when the drone is not AVAILABLE.
+   */
+
+  sendToMaintenance = (drone) => {
+    if (drone.status !== DroneStatus.AVAILABLE) {
+      throw new Error('drone.maintenance.error.send-not-available')
+    }
+
+    // Copy of the drone with the new status (the entity is markRaw, so we never mutate it).
+    const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, {
+      status: DroneStatus.MAINTENANCE
+    })
+
+    return this.#api.updateDrone(updated)
+  }
+
+
+
+  reportFailure = async (drone, description) => {
+    if (!DroneUseCases.canReportFailure(drone)) {
+      throw new Error('drone.failure.error.not-allowed')
+    }
+    if (!description?.trim()) {
+      throw new Error('drone.failure.error.description-required')
+    }
+
+    await this.#api.createIncident(new Incident(
+        null,
+        IncidentType.EQUIPMENT_FAILURE,
+        description.trim(),
+        new Date().toISOString(),
+        null,
+        drone.id,
+        IncidentSeverity.HIGH
+    ))
+
+    const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, {
+      status: DroneStatus.OUT_OF_SERVICE
+    })
+
+    return this.#api.updateDrone(updated)
+  }
+
+  /**
+   * A failure can be reported unless the drone is flying or already out of service.
+   * @param {Drone|null} drone
+   * @returns {boolean}
+   */
+  static canReportFailure(drone) {
+    return [
+      DroneStatus.AVAILABLE,
+      DroneStatus.ASSIGNED,
+      DroneStatus.PAUSED,
+      DroneStatus.MAINTENANCE
+    ].includes(drone?.status)
+  }
+
 }
