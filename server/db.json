@@ -89,6 +89,18 @@
       "farmId": 3,
       "cropId": 3,
       "image": "https://previews.123rf.com/images/golf609/golf6091807/golf609180700046/105479724-cassava-field-plantation.jpg"
+    },
+    {
+      "id": 6,
+      "name": "Parcela San Benito",
+      "area": 50,
+      "areaHectares": 50,
+      "geometry": "{\"type\":\"Polygon\",\"coordinates\":[[[-76.395,-13.075],[-76.385,-13.075],[-76.385,-13.085],[-76.395,-13.085],[-76.395,-13.075]]]}",
+      "farmId": 6,
+      "cropId": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjUtpoA_Rv81wg-c7O4TdAxkyIz8TbtMGcKqewpBi84J6cX8vnP1j7zK__&s=10",
+      "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjUtpoA_Rv81wg-c7O4TdAxkyIz8TbtMGcKqewpBi84J6cX8vnP1j7zK__&s=10",
+      "phenologicalStage": "Floración"
     }
   ],
   "fumigation-areas": [
@@ -265,6 +277,56 @@
       "progress": 10,
       "date": "2026-10-08T13:00:00.000Z",
       "id": 11
+    },
+    {
+      "farmArea": "Parcela Este",
+      "cropType": "Maiz",
+      "status": "PLANNED",
+      "operator": "Juan Perez",
+      "operatorName": "Juan Perez",
+      "date": "2026-11-13T13:00:00.000Z",
+      "scheduledAt": "2026-11-13T13:00:00.000Z",
+      "farmId": 2,
+      "parcelId": 3,
+      "droneId": null,
+      "treatmentType": "Insecticida",
+      "product": "Fungicida 48%",
+      "productName": "Fungicida 48%",
+      "productDose": 2,
+      "notes": "Ultima fumigación del mes",
+      "plannedAreaHectares": 20,
+      "treatedAreaHectares": 0,
+      "progress": 10,
+      "flightParameters": null,
+      "lastPausePoint": null,
+      "startedAt": null,
+      "completedAt": null,
+      "id": 12
+    },
+    {
+      "farmArea": "Parcela San Benito",
+      "cropType": "camote",
+      "status": "PLANNED",
+      "operator": "Juan Perez",
+      "operatorName": "Juan Perez",
+      "date": "2026-11-13T13:00:00.000Z",
+      "scheduledAt": "2026-11-13T13:00:00.000Z",
+      "farmId": 6,
+      "parcelId": 6,
+      "droneId": null,
+      "treatmentType": "Fertilizante",
+      "product": "Fungicida 48%",
+      "productName": "Fungicida 48%",
+      "productDose": 2,
+      "notes": "",
+      "plannedAreaHectares": 50,
+      "treatedAreaHectares": 0,
+      "progress": 10,
+      "flightParameters": null,
+      "lastPausePoint": null,
+      "startedAt": null,
+      "completedAt": null,
+      "id": 13
     }
   ],
   "weather": [
@@ -473,14 +535,19 @@
       "id": 1,
       "serialNumber": "AGRI-DRN-001-A",
       "model": "DJI Agras T40",
-      "capacity": 40,
-      "status": "AVAILABLE",
-      "urlimg": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600",
-      "batteryLevel": 80,
+      "modelName": "DJI Agras T40",
+      "capacity": 50,
+      "capacityLiters": 50,
+      "status": "MAINTENANCE",
+      "battery": 100,
+      "batteryLevel": 100,
+      "flightHours": 0,
       "nozzleId": 1,
-      "lastMaintenanceDate": "2026-08-10",
-      "nextMaintenanceDate": "2026-11-10",
-      "image": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600"
+      "urlimg": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600",
+      "imageUrl": "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?w=600",
+      "lastMaintenanceDate": "2026-11-13T00:00:00.000Z",
+      "nextMaintenanceDate": "2026-11-27T00:00:00.000Z",
+      "isActive": true
     },
     {
       "id": 2,
@@ -533,6 +600,42 @@
       "lastMaintenanceDate": "2026-08-25",
       "nextMaintenanceDate": "2026-11-25",
       "image": "https://images.unsplash.com/photo-1713952160141-8364b2fca485?w=600"
+    },
+    {
+      "id": 6,
+      "serialNumber": "DRN-2026-000",
+      "model": "EXTRAIL Suv 300",
+      "modelName": "EXTRAIL Suv 300",
+      "capacity": 25,
+      "capacityLiters": 25,
+      "status": "MAINTENANCE",
+      "battery": 100,
+      "batteryLevel": 100,
+      "flightHours": 0,
+      "nozzleId": 3,
+      "urlimg": "https://plus.unsplash.com/premium_photo-1714618849685-89cad85746b1?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+      "imageUrl": "https://plus.unsplash.com/premium_photo-1714618849685-89cad85746b1?q=80&w=988&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+      "lastMaintenanceDate": "2026-11-13T00:00:00.000Z",
+      "nextMaintenanceDate": "2027-04-08T00:00:00.000Z",
+      "isActive": true
+    },
+    {
+      "id": 7,
+      "serialNumber": "KRN-5050",
+      "model": "TYTRUT-20",
+      "modelName": "TYTRUT-20",
+      "capacity": 60,
+      "capacityLiters": 60,
+      "status": "AVAILABLE",
+      "battery": 100,
+      "batteryLevel": 100,
+      "flightHours": 0,
+      "nozzleId": 5,
+      "urlimg": "https://images.unsplash.com/photo-1782840766902-dbcbdd7e0d77?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+      "imageUrl": "https://images.unsplash.com/photo-1782840766902-dbcbdd7e0d77?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D",
+      "lastMaintenanceDate": "2026-11-01T00:00:00.000Z",
+      "nextMaintenanceDate": "2027-02-20T00:00:00.000Z",
+      "isActive": true
     }
   ],
   "chemicals": [
@@ -677,6 +780,38 @@
       "type": "corrective",
       "description": "Falla en motor trasero izquierdo, pendiente de repuesto",
       "technician": "Mario Vega"
+    },
+    {
+      "droneId": 1,
+      "date": "2026-11-13",
+      "type": "preventive",
+      "description": "Lubricación de Helices",
+      "technician": "Federico Valverde",
+      "id": 7
+    },
+    {
+      "droneId": 6,
+      "date": "2026-11-13",
+      "type": "corrective",
+      "description": "Cambio de bateria",
+      "technician": "Federico Valverde",
+      "id": 8
+    },
+    {
+      "droneId": 6,
+      "date": "2026-11-13",
+      "type": "preventive",
+      "description": "Limpieza de cabezal",
+      "technician": "Pedro Bueno",
+      "id": 9
+    },
+    {
+      "droneId": 1,
+      "date": "2026-11-13",
+      "type": "preventive",
+      "description": "Reparación de motor",
+      "technician": "Federico Valverde",
+      "id": 10
     }
   ],
   "users": [
