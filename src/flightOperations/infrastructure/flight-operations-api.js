@@ -39,6 +39,11 @@ export class FlightOperationsApi extends BaseApi {
   updateDrone = (drone) => this.#droneEndpoint.update(drone, drone.id)
   deleteDrone = (id) => this.#droneEndpoint.delete(id)
 
+  // ---- Drone maintenance & failures ----
+  sendDroneToMaintenance = (id) => this.#droneEndpoint.sendToMaintenance(id)
+  completeDroneMaintenance = (id, payload) => this.#droneEndpoint.completeMaintenance(id, payload)
+  reportDroneFailure = (id, payload) => this.#droneEndpoint.reportFailure(id, payload)
+
   // ---- Maintenance ----
   getMaintenanceRecordsByDroneId = (droneId) => this.#maintenanceEndpoint.getAllByDroneId(droneId)
   createMaintenanceRecord = (record) => this.#maintenanceEndpoint.create(record)
