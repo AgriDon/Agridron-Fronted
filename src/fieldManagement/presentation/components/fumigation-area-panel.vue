@@ -158,13 +158,13 @@ onMounted(load);
 
       <template #footer>
         <pv-button
-          :label="t('farm.cancel')"
+          :label="t('parcel.fumigation.cancel')"
           severity="secondary"
           text
           @click="closeDialog"
         />
         <pv-button
-          :label="t('farm.save')"
+          :label="t('parcel.fumigation.save')"
           icon="pi pi-check"
           :loading="saving"
           @click="onSave"

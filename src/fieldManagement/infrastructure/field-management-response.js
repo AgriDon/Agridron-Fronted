@@ -19,12 +19,6 @@
  */
 
 /**
- * Resource representation of a dron
- * @typedef {import('')}
- */
-
-
-/**
  * Resource representation of a parcel.
  *
  * @typedef {object} ParcelResource
@@ -44,9 +38,6 @@
  * @property {ParcelResource[]} parcels Array of parcel resources included in the response.
  */
 
-
-
-
 /**
  * Resource representation of a fumigation area.
  *
@@ -64,10 +55,6 @@
  * @property {FumigationAreaResource[]} fumigationAreas Array of fumigation area resources included in the response.
  */
 
-
-
-
-
 /**
  * Resource representation of a crop.
  *
@@ -83,9 +70,6 @@
  * @typedef {object} CropResponse
  * @property {CropResource[]} crops Array of crop resources included in the response.
  */
-
-
-
 
 /**
  * Resource representation of a user.
