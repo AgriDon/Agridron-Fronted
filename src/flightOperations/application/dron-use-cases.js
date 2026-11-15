@@ -2,6 +2,10 @@ import { Drone } from '@/flightOperations/domain/model/dron.entity.js'
 import { FlightOperationsApi } from '../infrastructure/flight-operations-api.js'
 import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.js'
 
+import { Incident } from '@/flightOperations/domain/model/incident.entity.js'
+import { IncidentType } from '@/flightOperations/domain/model/incident-type.enum.js'
+import { IncidentSeverity } from '@/flightOperations/domain/model/incident-severity.enum.js'
+
 /**
  * Raised when a drone payload does not pass validation.
  */
@@ -159,16 +163,13 @@ export class DroneUseCases {
       throw new Error('drone.maintenance.error.send-not-available')
     }
 
-    // Copy of the drone with the new status (the entity is markRaw, so we never mutate it).
-    const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, {
-      status: DroneStatus.MAINTENANCE
-    })
-
-    return this.#api.updateDrone(updated)
+    return this.#api.sendDroneToMaintenance(drone.id)
   }
 
-
-
+  /**
+   * Reports a mechanical failure (DR-006). The backend sets the drone OUT_OF_SERVICE
+   * and records the FALLA_TECNICA incident, so the front does not create it.
+   */
   reportFailure = async (drone, description) => {
     if (!DroneUseCases.canReportFailure(drone)) {
       throw new Error('drone.failure.error.not-allowed')
@@ -177,22 +178,9 @@ export class DroneUseCases {
       throw new Error('drone.failure.error.description-required')
     }
 
-    await this.#api.createIncident(new Incident(
-        null,
-        IncidentType.EQUIPMENT_FAILURE,
-        description.trim(),
-        new Date().toISOString(),
-        null,
-        drone.id,
-        IncidentSeverity.HIGH
-    ))
-
-    const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, {
-      status: DroneStatus.OUT_OF_SERVICE
-    })
-
-    return this.#api.updateDrone(updated)
+    return this.#api.reportDroneFailure(drone.id, { description: description.trim() })
   }
+
 
   /**
    * A failure can be reported unless the drone is flying or already out of service.
