@@ -732,6 +732,15 @@
       "type": "ALERTA_CLIMA",
       "description": "Precipitación ligera imprevista que supera el umbral operativo del sensor.",
       "occurredAt": "2026-10-07T16:30:00.000Z"
+    },
+    {
+      "id": 106,
+      "type": "FALLA_TECNICA",
+      "description": "Control remoto no funciona",
+      "occurredAt": "2026-11-13T23:46:56.712Z",
+      "missionId": null,
+      "droneId": 7,
+      "severity": "HIGH"
     }
   ],
   "operations": [

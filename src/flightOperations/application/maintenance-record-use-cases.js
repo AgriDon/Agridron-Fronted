@@ -92,27 +92,17 @@ export class MaintenanceRecordUseCases {
             throw new MaintenanceValidationError(errors)
         }
 
-        const record = await this.#api.createMaintenanceRecord(
-            new MaintenanceRecord({
-                droneId: drone.id,
-                date: toIsoDate(data.date),
-                type: data.type,
-                description: data.description?.trim() || '',
-                technician: data.technician.trim()
-            })
-        )
-
-        // Copy of the drone with the new dates (the entity is markRaw, so we never mutate it).
-        const changes = {
-            lastMaintenanceDate: record.date,
+        // One call: the backend saves the record in the history, updates the maintenance dates
+        // and returns the drone (MAINTENANCE / OUT_OF_SERVICE -> AVAILABLE).
+        const savedDrone = await this.#api.completeDroneMaintenance(drone.id, {
+            maintenanceDate: toIsoDate(data.date),
             nextMaintenanceDate: toIsoDate(data.nextMaintenanceDate),
-            status: [DroneStatus.MAINTENANCE, DroneStatus.OUT_OF_SERVICE].includes(drone.status)
-                ? DroneStatus.AVAILABLE
-                : drone.status
-        }
-        const updated = Object.assign(Object.create(Object.getPrototypeOf(drone)), drone, changes)
+            technician: data.technician.trim(),
+            type: data.type,
+            description: data.description?.trim() || null
+        })
 
-        const savedDrone = await this.#api.updateDrone(updated)
-        return { record, drone: savedDrone }
+        return { drone: savedDrone }
+
     }
 }
