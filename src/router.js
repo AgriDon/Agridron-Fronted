@@ -31,6 +31,16 @@ const routes = [
     meta: { title: 'Configuración' }
   },
   {
+    path: '/terms',
+    name: 'terms',
+    component: () => import('./shared/presentation/views/terms-view.vue'),
+    meta: { title: 'Terms and Conditions' }
+  },
+  {
+    path: '/terminos',
+    redirect: '/terms'
+  },
+  {
     path: '/',
     redirect: '/inicio'
   },

@@ -5,9 +5,66 @@
     "go-home": "Go Home"
   },
   "footer": {
-    "rights": "Copyright © 2026 AgriDron, All rights reserved",
+    "rights": "Copyright © 2026 AgriDron Solutions. All rights reserved.",
     "intro": "Developed ",
-    "author": "by AgriDron Solutions Team"
+    "author": "by AgriDron Solutions Team",
+    "termsLink": "Terms and Conditions",
+    "ethicsBadge": "ACM/IEEE & CIP Ethics Compliant"
+  },
+  "terms": {
+    "back": "Back to Home",
+    "title": "Terms and Conditions of Service",
+    "versionLabel": "Version:",
+    "versionValue": "1.2 (2026-20)",
+    "updatedLabel": "Last updated:",
+    "updatedValue": "November 2026",
+    "orgLabel": "Organization:",
+    "orgValue": "AgriDron Solutions",
+    "sections": {
+      "ethics": {
+        "title": "1. Deontological Framework & Professional Ethical Commitment",
+        "intro": "AgriDron Solutions designs, develops, deploys, and operates its software platform in strict compliance with:",
+        "acmTitle": "ACM / IEEE-CS Software Engineering Code of Ethics and Professional Practice:",
+        "acmDesc": "Primary commitment to the public interest, ensuring technical decisions prioritize human safety, data reliability, and environmental preservation in agriculture.",
+        "cipTitle": "Code of Ethics of the Colegio de Ingenieros del Perú (CIP):",
+        "cipDesc": "Honest, transparent, and impartial engineering practice promoting sustainable technological development and responsible stewardship of agricultural community resources.",
+        "callout": "All development team members, supervisors, and operators explicitly commit to technical transparency, accurate engineering estimates, and accountability for any operational incident."
+      },
+      "scope": {
+        "title": "2. Service Purpose & Operational Scope",
+        "p1": "AgriDron Solutions is a comprehensive platform comprising a web application, a RESTful backend service, and a product landing page designed for planning, simulating, and monitoring agricultural spraying operations using unmanned aerial vehicles (drones).",
+        "p2": "This service does not replace official aeronautical licenses or civil aviation regulations (such as DGAC in Peru); certified field operators remain responsible for holding valid flight authorizations."
+      },
+      "privacy": {
+        "title": "3. Confidentiality & Agricultural Data Privacy",
+        "intro": "Farm cartography, parcel polygons, mission logs, crop yields, and agrochemical formulas belong exclusively to the registered farm owner or agricultural enterprise:",
+        "item1": "Farm and operational data will never be sold or shared with third parties without explicit authorization.",
+        "item2": "Stored data is protected through role-based access controls.",
+        "item3": "Third-party weather integrations query only geographic coordinates solely to forecast wind and precipitation conditions."
+      },
+      "safety": {
+        "title": "4. Autonomous Operations Safety & Geofencing",
+        "intro": "To mitigate chemical drift or collision risks, the platform enforces mandatory operational safeguards:",
+        "windTitle": "Weather limits:",
+        "windDesc": "When wind speed exceeds 15 km/h or imminent precipitation is detected, the system triggers preventive alerts recommending mission postponement.",
+        "geoTitle": "Exclusion zones (Geofencing):",
+        "geoDesc": "Scheduling spraying flights over drinking water sources, adjacent residential areas, or unauthorized parcels is strictly prohibited.",
+        "stopTitle": "Emergency stop control:",
+        "stopDesc": "In the event of in-flight anomalies, the field operator retains direct authority to pause or abort the spraying mission immediately."
+      },
+      "traceability": {
+        "title": "5. Report Traceability & Integrity",
+        "body": "Platform-generated reports serve as agronomic audit records. Deliberate alteration of flight logs, service hours, or applied chemical dosages is strictly prohibited to preserve technical certainty for farmers."
+      },
+      "contact": {
+        "title": "6. Contact & Ethical Inquiries",
+        "intro": "For questions about these terms, data removal requests, or operational ethics and safety reports, contact our team directly:",
+        "emailLabel": "Email:",
+        "phoneLabel": "Support phone:",
+        "locationLabel": "Location:",
+        "locationValue": "Lima, Peru"
+      }
+    }
   },
   "option": {
     "farm": "Farms",

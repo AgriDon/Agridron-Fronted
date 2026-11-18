@@ -5,9 +5,66 @@
     "go-home": "Ir a Inicio"
   },
   "footer": {
-    "rights": "Derechos de autor © 2026 AgriDron, Todos los derechos reservados",
+    "rights": "Copyright © 2026 AgriDron Solutions. Todos los derechos reservados.",
     "intro": "Desarrollado ",
-    "author": "por el Equipo AgriDron Solutions"
+    "author": "por el Equipo AgriDron Solutions",
+    "termsLink": "Términos y Condiciones",
+    "ethicsBadge": "Conforme a Ética ACM/IEEE y CIP"
+  },
+  "terms": {
+    "back": "Volver al Inicio",
+    "title": "Términos y Condiciones de Servicio",
+    "versionLabel": "Versión:",
+    "versionValue": "1.2 (2026-20)",
+    "updatedLabel": "Última actualización:",
+    "updatedValue": "Noviembre 2026",
+    "orgLabel": "Organización:",
+    "orgValue": "AgriDron Solutions",
+    "sections": {
+      "ethics": {
+        "title": "1. Marco Deontológico y Compromiso Ético Profesional",
+        "intro": "AgriDron Solutions fundamenta el diseño, desarrollo, despliegue y operación de su plataforma de software en estricta conformidad con:",
+        "acmTitle": "Código de Ética y Práctica Profesional de Ingeniería de Software de ACM / IEEE-CS:",
+        "acmDesc": "Compromiso primordial con el interés público, asegurando que las decisiones técnicas prioricen la seguridad física de las personas, la confiabilidad de los datos y la preservación ambiental en el agro.",
+        "cipTitle": "Código de Ética del Colegio de Ingenieros del Perú (CIP):",
+        "cipDesc": "Ejercicio honesto, transparente e imparcial de la ingeniería, promoviendo el desarrollo tecnológico sostenible y la custodia rigurosa de los recursos de las comunidades agrícolas.",
+        "callout": "Todos los miembros del equipo de desarrollo, supervisores y operadores asumen el compromiso explícito de actuar con transparencia técnica, rigor en las estimaciones y responsabilidad ante cualquier incidente operativo."
+      },
+      "scope": {
+        "title": "2. Propósito del Servicio y Alcance Operativo",
+        "p1": "AgriDron Solutions es una solución integral compuesta por una aplicación web, un servicio RESTful de backend y un portal informativo (Landing Page), concebida para la planificación, simulación y monitoreo de operaciones de aspersión agrícola mediante drones.",
+        "p2": "El servicio no sustituye las licencias aeronáuticas oficiales ni las regulaciones de aviación civil (como la DGAC en Perú), siendo responsabilidad del operador técnico contar con las certificaciones vigentes para vuelos en campo."
+      },
+      "privacy": {
+        "title": "3. Confidencialidad y Privacidad de Datos Agrícolas",
+        "intro": "Los datos cartográficos de predios, polígonos de parcelas, historial de misiones, rendimientos de cultivo y fórmulas de agroquímicos pertenecen en su totalidad al titular de la finca o empresa agrícola registrada:",
+        "item1": "No se comercializarán ni compartirán datos de predios con terceros sin autorización explícita.",
+        "item2": "El almacenamiento de datos cuenta con controles de acceso basados en roles.",
+        "item3": "Las integraciones meteorológicas consultan únicamente coordenadas geográficas con el fin exclusivo de prever vientos y precipitaciones."
+      },
+      "safety": {
+        "title": "4. Seguridad en Operaciones Autónomas y Geocercas",
+        "intro": "Para mitigar cualquier riesgo de deriva química o colisión, la plataforma exige el cumplimiento de las siguientes normas operativas:",
+        "windTitle": "Límites meteorológicos:",
+        "windDesc": "Si la velocidad del viento excede los 15 km/h o existe probabilidad inminente de precipitación, el sistema emitirá alertas preventivas recomendando la postergación de la misión.",
+        "geoTitle": "Zonas de exclusión (Geofencing):",
+        "geoDesc": "Está estrictamente prohibido programar vuelos de aspersión sobre fuentes de agua potable, áreas de vivienda adyacentes o predios no autorizados.",
+        "stopTitle": "Control de parada de emergencia:",
+        "stopDesc": "Ante anomalías en vuelo, el operador técnico en campo conserva siempre la potestad directa de pausar o abortar la misión de fumigación."
+      },
+      "traceability": {
+        "title": "5. Trazabilidad e Integridad de Reportes",
+        "body": "Los reportes generados por la plataforma constituyen registros de auditoría agronómica. Está prohibida la alteración deliberada de bitácoras de vuelo, horas de servicio o dosis aplicadas para garantizar certidumbre técnica al agricultor."
+      },
+      "contact": {
+        "title": "6. Contacto y Consultas Deontológicas",
+        "intro": "Para consultas sobre estos términos, solicitudes de retiro de datos o reportes sobre ética y seguridad operacional, puede comunicarse directamente con nuestro equipo:",
+        "emailLabel": "Correo electrónico:",
+        "phoneLabel": "Teléfono de soporte:",
+        "locationLabel": "Sede:",
+        "locationValue": "Lima, Perú"
+      }
+    }
   },
   "option": {
     "farm": "Fincas",
