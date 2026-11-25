@@ -540,8 +540,8 @@
       "id": 1,
       "name": "Glifosato 48%",
       "type": "herbicide",
-      "stockLiters": 120,
-      "minimumStockLiters": 40,
+      "stockLiters": 170,
+      "minimumStockLiters": 20,
       "expirationDate": "2027-08-30"
     },
     {

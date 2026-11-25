@@ -120,7 +120,7 @@ export class InventoryUseCases {
   }
 
   /**
-   * Replenishes stock for a chemical product.
+   * Restock for a chemical product.
    * @param {number|string} id
    * @param {number} additionalLiters
    * @returns {Promise<Chemical>}
@@ -131,14 +131,9 @@ export class InventoryUseCases {
       throw new Error('La cantidad de reabastecimiento debe ser mayor a 0 litros.')
     }
 
-    const chemical = await this.#api.getChemicalById(id)
-    if (!chemical) {
-      throw new Error('Insumo no encontrado')
-    }
-
-    chemical.stockLiters = (chemical.stockLiters || 0) + litersToAdd
-    return await this.#api.updateChemical(chemical)
+    return await this.#api.restockChemical(id, litersToAdd)
   }
+
 
   // ==========================================
   // Nozzle Validations & Operations
@@ -217,11 +212,6 @@ export class InventoryUseCases {
    * @returns {Promise<Nozzle>}
    */
   async toggleNozzleStatus(id) {
-    const nozzle = await this.#api.getNozzleById(id)
-    if (!nozzle) {
-      throw new Error('Boquilla no encontrada')
-    }
-    nozzle.status = nozzle.status === 'worn' ? 'good' : 'worn'
-    return await this.#api.updateNozzle(nozzle)
+    return await this.#api.toggleNozzleStatus(id)
   }
 }
