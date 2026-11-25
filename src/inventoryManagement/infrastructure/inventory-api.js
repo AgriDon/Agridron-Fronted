@@ -24,6 +24,7 @@ export class InventoryApi extends BaseApi {
   createChemical = (chemical) => this.#chemicalEndpoint.create(chemical)
   updateChemical = (chemical) => this.#chemicalEndpoint.update(chemical, chemical.id)
   deleteChemical = (id) => this.#chemicalEndpoint.delete(id)
+  restockChemical = (id, liters) => this.#chemicalEndpoint.restock(id, liters)
 
   // ---- Nozzles ----
   getAllNozzles = () => this.#nozzleEndpoint.getAll()
@@ -31,4 +32,7 @@ export class InventoryApi extends BaseApi {
   createNozzle = (nozzle) => this.#nozzleEndpoint.create(nozzle)
   updateNozzle = (nozzle) => this.#nozzleEndpoint.update(nozzle, nozzle.id)
   deleteNozzle = (id) => this.#nozzleEndpoint.delete(id)
+  toggleNozzleStatus = (id) => this.#nozzleEndpoint.toggleStatus(id)
+
+
 }
