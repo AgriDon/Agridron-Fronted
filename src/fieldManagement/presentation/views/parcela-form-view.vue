@@ -19,7 +19,8 @@ const form = ref({
   farmId: null,
   cropId: null,
   image: '',
-  phenologicalStage: ''
+  phenologicalStage: '',
+  obstacleNotes: ''
 })
 
 const errors = ref({})
@@ -66,7 +67,8 @@ const applyForm = (parcel) => {
     farmId: parcel.farmId != null ? Number(parcel.farmId) : null,
     cropId: parcel.cropId != null ? Number(parcel.cropId) : null,
     image: parcel.image ?? '',
-    phenologicalStage: parcel.phenologicalStage ?? ''
+    phenologicalStage: parcel.phenologicalStage ?? '',
+    obstacleNotes: parcel.obstacleNotes ?? ''
   }
 }
 
@@ -232,6 +234,26 @@ onMounted(load)
         />
       </div>
 
+      <div class="field">
+        <label class="field-label" for="parcel-obstacle-notes">
+          {{ t('parcel.form.obstacleNotes') }}
+          <span class="field-hint">{{ t('parcel.form.imageHint') }}</span>
+        </label>
+        <textarea
+          id="parcel-obstacle-notes"
+          v-model="form.obstacleNotes"
+          rows="3"
+          maxlength="500"
+          class="field-input obstacle-textarea"
+          :placeholder="t('parcel.form.obstacleNotesPlaceholder')"
+        ></textarea>
+        <div class="field-meta-row">
+          <small v-if="errors.obstacleNotes" class="field-error">{{ errorFor('obstacleNotes') }}</small>
+          <span v-else></span>
+          <small class="field-counter">{{ (form.obstacleNotes || '').length }} / 500</small>
+        </div>
+      </div>
+
       <div class="form-actions">
         <pv-button
           :label="t('farm.cancel')"
@@ -305,6 +327,29 @@ onMounted(load)
 
 .field-input {
   width: 100%;
+}
+
+.obstacle-textarea {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--p-form-field-border-color, rgba(148, 163, 184, 0.35));
+  background: var(--p-form-field-background, rgba(15, 23, 42, 0.45));
+  color: var(--p-text-color);
+  resize: vertical;
+}
+
+.field-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.field-counter {
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color, #94a3b8);
 }
 
 .field-error {
