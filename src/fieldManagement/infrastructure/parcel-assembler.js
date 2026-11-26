@@ -33,7 +33,8 @@ export class ParcelAssembler {
             resource.image ?? resource.imageUrl ?? null,
             null,
             resource.phenologicalStage ?? null,
-            resource.isActive ?? true
+            resource.isActive ?? true,
+            resource.obstacleNotes ?? resource.obstacle_notes ?? null
         ));
 
     /**
@@ -50,6 +51,7 @@ export class ParcelAssembler {
         cropId: entity.cropId,
         image: entity.image ?? undefined,
         imageUrl: entity.image ?? undefined,
-        phenologicalStage: entity.phenologicalStage ?? undefined
+        phenologicalStage: entity.phenologicalStage ?? undefined,
+        obstacleNotes: entity.obstacleNotes ?? undefined
     });
 }

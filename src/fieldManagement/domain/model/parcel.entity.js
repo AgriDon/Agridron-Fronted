@@ -3,6 +3,9 @@
  */
 export class Parcel {
 
+    /** Maximum length of parcel obstacle notes. */
+    static MAX_OBSTACLE_NOTES_LENGTH = 500;
+
     /** @type {number} */
     #id;
 
@@ -33,6 +36,9 @@ export class Parcel {
     /** @type {boolean} */
     #isActive;
 
+    /** @type {string | null} */
+    #obstacleNotes;
+
     /**
      * @param {number} id
      * @param {string} name
@@ -44,8 +50,21 @@ export class Parcel {
      * @param {import('./crop.entity.js').Crop | null} [crop] Resolved crop, when the parcel was loaded with it.
      * @param {string | null} [phenologicalStage]
      * @param {boolean} [isActive=true]
+     * @param {string | null} [obstacleNotes=null]
      */
-    constructor(id, name, area, geometry, farmId, cropId, image = null, crop = null, phenologicalStage = null, isActive = true) {
+    constructor(
+        id,
+        name,
+        area,
+        geometry,
+        farmId,
+        cropId,
+        image = null,
+        crop = null,
+        phenologicalStage = null,
+        isActive = true,
+        obstacleNotes = null
+    ) {
         this.#id = id;
         this.#name = name;
         this.#area = area;
@@ -56,6 +75,7 @@ export class Parcel {
         this.#crop = crop;
         this.#phenologicalStage = phenologicalStage;
         this.#isActive = isActive;
+        this.#obstacleNotes = obstacleNotes;
     }
 
     /** @returns {number} */
@@ -146,5 +166,14 @@ export class Parcel {
 
     set isActive(value) {
         this.#isActive = value;
+    }
+
+    /** @returns {string | null} */
+    get obstacleNotes() {
+        return this.#obstacleNotes;
+    }
+
+    set obstacleNotes(value) {
+        this.#obstacleNotes = value;
     }
 }
