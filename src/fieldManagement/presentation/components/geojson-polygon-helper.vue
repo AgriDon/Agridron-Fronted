@@ -1,164 +1,268 @@
 <script setup>
-import { ref, computed, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, nextTick, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import LeafletMapCanvas from '@/shared/presentation/components/leaflet-map-canvas.vue'
+import {
+  buildGeoJsonPolygon,
+  calculateGeodesicAreaHectares,
+  parsePolygonVertices
+} from '@/fieldManagement/domain/services/parcel-geometry.service.js'
 
-const { t } = useI18n();
+const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {
     type: String,
     default: ''
+  },
+  referenceGeometry: {
+    type: String,
+    default: ''
+  },
+  height: {
+    type: String,
+    default: '360px'
   }
-});
+})
 
-const emit = defineEmits(['update:modelValue', 'update:area']);
+const emit = defineEmits(['update:modelValue', 'update:area'])
 
-// Default preset coordinates (e.g. Cañete / Ica)
 const PRESETS = [
   {
-    name: 'Valle de Cañete (Polígono 12.5 ha)',
+    name: 'Valle de Cañete',
     coords: [
       [-76.395, -13.075],
       [-76.385, -13.075],
       [-76.385, -13.085],
-      [-76.395, -13.085],
-      [-76.395, -13.075]
-    ],
-    area: 12.5
+      [-76.395, -13.085]
+    ]
   },
   {
-    name: 'Ica - San Rafael (Polígono 8.3 ha)',
+    name: 'Ica - San Rafael',
     coords: [
       [-76.140, -14.070],
       [-76.130, -14.070],
       [-76.130, -14.078],
-      [-76.140, -14.078],
-      [-76.140, -14.070]
-    ],
-    area: 8.3
+      [-76.140, -14.078]
+    ]
   },
   {
-    name: 'Mendoza - Uva (Polígono 20.0 ha)',
+    name: 'Mendoza - Uva',
     coords: [
       [-68.840, -32.890],
       [-68.825, -32.890],
       [-68.825, -32.902],
-      [-68.840, -32.902],
-      [-68.840, -32.890]
-    ],
-    area: 20.0
+      [-68.840, -32.902]
+    ]
   }
-];
+]
 
-const selectedPreset = ref(null);
-const rawJson = ref(props.modelValue || '');
+const mapRef = ref(null)
+const showAdvanced = ref(false)
+const rawJson = ref(props.modelValue || '')
+const vertices = ref(parsePolygonVertices(props.modelValue).vertices)
+const hasInvalidRawInput = ref(false)
 
-watch(() => props.modelValue, (newVal) => {
-  if (newVal !== rawJson.value) {
-    rawJson.value = newVal || '';
-  }
-});
-
-const parsedCoordinates = computed(() => {
-  try {
-    if (!rawJson.value) return [];
-    const parsed = JSON.parse(rawJson.value);
-    if (parsed.type === 'Polygon' && Array.isArray(parsed.coordinates) && parsed.coordinates[0]) {
-      return parsed.coordinates[0];
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    const normalized = newVal || ''
+    if (normalized !== rawJson.value) {
+      rawJson.value = normalized
+      const parsed = parsePolygonVertices(normalized)
+      if (parsed.valid) {
+        vertices.value = parsed.vertices
+        hasInvalidRawInput.value = false
+      } else if (!normalized.trim()) {
+        vertices.value = []
+        hasInvalidRawInput.value = false
+      }
     }
-  } catch {
-    return [];
   }
-  return [];
-});
+)
 
-const isValidGeoJson = computed(() => parsedCoordinates.value.length >= 3);
+const referenceVertices = computed(
+  () => parsePolygonVertices(props.referenceGeometry).vertices
+)
 
-// Converts longitude/latitude points to normalized 2D SVG points [0..200]
-const svgPoints = computed(() => {
-  const coords = parsedCoordinates.value;
-  if (!coords || coords.length < 3) return '';
+const liveAreaHectares = computed(() =>
+  vertices.value.length >= 3 ? calculateGeodesicAreaHectares(vertices.value) : 0
+)
 
-  const lngs = coords.map(c => Number(c[0]));
-  const lats = coords.map(c => Number(c[1]));
+const isValidPolygon = computed(
+  () => vertices.value.length >= 3 && liveAreaHectares.value > 0
+)
 
-  const minLng = Math.min(...lngs);
-  const maxLng = Math.max(...lngs);
-  const minLat = Math.min(...lats);
-  const maxLat = Math.max(...lats);
+const commitVertices = (nextVertices) => {
+  vertices.value = nextVertices
+  hasInvalidRawInput.value = false
 
-  const spanLng = (maxLng - minLng) || 0.0001;
-  const spanLat = (maxLat - minLat) || 0.0001;
+  if (nextVertices.length >= 3) {
+    const geoJson = buildGeoJsonPolygon(nextVertices)
+    const area = calculateGeodesicAreaHectares(nextVertices)
+    rawJson.value = geoJson
+    emit('update:modelValue', geoJson)
+    emit('update:area', area)
+  } else {
+    rawJson.value = ''
+    emit('update:modelValue', '')
+    emit('update:area', 0)
+  }
+}
 
-  const padding = 20;
-  const width = 200 - padding * 2;
-  const height = 140 - padding * 2;
+const onVerticesChange = (nextVertices) => {
+  commitVertices(nextVertices)
+}
 
-  return coords.map(([lng, lat]) => {
-    const x = padding + ((Number(lng) - minLng) / spanLng) * width;
-    const y = padding + (1 - (Number(lat) - minLat) / spanLat) * height;
-    return `${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-});
+const undoLastVertex = () => {
+  if (vertices.value.length === 0) return
+  commitVertices(vertices.value.slice(0, -1))
+}
 
-const applyPreset = (preset) => {
-  if (!preset) return;
-  const geojson = {
-    type: 'Polygon',
-    coordinates: [preset.coords]
-  };
-  const jsonStr = JSON.stringify(geojson);
-  rawJson.value = jsonStr;
-  emit('update:modelValue', jsonStr);
-  emit('update:area', preset.area);
-};
+const clearPolygon = () => {
+  commitVertices([])
+}
 
-const onRawInput = (e) => {
-  const val = e.target.value;
-  rawJson.value = val;
-  emit('update:modelValue', val);
-};
+const fitMap = () => {
+  mapRef.value?.fitToGeometry()
+}
+
+const applyPreset = async (preset) => {
+  if (!preset) return
+  commitVertices(preset.coords.map(([lng, lat]) => [lng, lat]))
+  await nextTick()
+  mapRef.value?.fitToGeometry()
+}
+
+const onRawInput = async (event) => {
+  const val = event.target.value
+  rawJson.value = val
+
+  if (!val.trim()) {
+    vertices.value = []
+    hasInvalidRawInput.value = false
+    emit('update:modelValue', '')
+    emit('update:area', 0)
+    return
+  }
+
+  const parsed = parsePolygonVertices(val)
+  if (parsed.valid && parsed.vertices.length >= 3) {
+    vertices.value = parsed.vertices
+    hasInvalidRawInput.value = false
+    emit('update:modelValue', val)
+    emit('update:area', calculateGeodesicAreaHectares(parsed.vertices))
+    await nextTick()
+    mapRef.value?.fitToGeometry()
+  } else {
+    hasInvalidRawInput.value = true
+    emit('update:modelValue', val)
+  }
+}
 </script>
 
 <template>
   <div class="geojson-helper">
-    <div class="helper-header">
-      <span class="helper-title">{{ t('parcel.geometryHelper.title') }}</span>
-      <div class="presets-row">
+    <div class="helper-toolbar">
+      <div class="toolbar-info">
+        <span class="helper-title">{{ t('parcel.geometryHelper.title') }}</span>
+        <span class="helper-subtitle">{{ t('parcel.geometryHelper.drawHint') }}</span>
+      </div>
+
+      <div class="toolbar-actions">
         <pv-button
-          v-for="(p, i) in PRESETS"
-          :key="i"
-          :label="p.name"
+          type="button"
+          :label="t('parcel.geometryHelper.undo')"
+          icon="pi pi-undo"
           size="small"
           severity="secondary"
           outlined
+          :disabled="vertices.length === 0"
+          @click="undoLastVertex"
+        />
+        <pv-button
           type="button"
-          class="preset-btn"
-          @click="applyPreset(p)"
+          :label="t('parcel.geometryHelper.clear')"
+          icon="pi pi-trash"
+          size="small"
+          severity="danger"
+          outlined
+          :disabled="vertices.length === 0"
+          @click="clearPolygon"
+        />
+        <pv-button
+          type="button"
+          :label="t('map.controls.recenter')"
+          icon="pi pi-compass"
+          size="small"
+          severity="secondary"
+          outlined
+          @click="fitMap"
         />
       </div>
     </div>
 
-    <!-- Live SVG Silhouette Preview -->
-    <div v-if="isValidGeoJson" class="preview-box">
-      <div class="preview-badge">{{ t('parcel.geometryHelper.previewBadge') }} ({{ parsedCoordinates.length }} vértices)</div>
-      <svg class="polygon-svg" viewBox="0 0 200 140">
-        <polygon :points="svgPoints" class="polygon-shape" />
-        <circle
-          v-for="(pt, idx) in svgPoints.split(' ')"
-          :key="idx"
-          :cx="pt.split(',')[0]"
-          :cy="pt.split(',')[1]"
-          r="3"
-          class="polygon-vertex"
+    <div class="presets-bar">
+      <span class="presets-label">{{ t('parcel.geometryHelper.presetsLabel') }}</span>
+      <div class="presets-row">
+        <pv-button
+          v-for="(preset, index) in PRESETS"
+          :key="index"
+          :label="preset.name"
+          size="small"
+          severity="secondary"
+          text
+          type="button"
+          class="preset-btn"
+          @click="applyPreset(preset)"
         />
-      </svg>
+      </div>
     </div>
-    <div v-else-if="rawJson" class="invalid-hint">
+
+    <LeafletMapCanvas
+      ref="mapRef"
+      :vertices="vertices"
+      :reference-vertices="referenceVertices"
+      :editable="true"
+      :height="height"
+      @update:vertices="onVerticesChange"
+    />
+
+    <div class="metrics-bar">
+      <div class="metrics-left">
+        <span class="metric-pill">
+          <i class="pi pi-map-marker"></i>
+          {{ t('parcel.geometryHelper.verticesCount', { count: vertices.length }) }}
+        </span>
+        <span class="metric-pill metric-area">
+          <i class="pi pi-chart-bar"></i>
+          {{ t('parcel.geometryHelper.calculatedArea') }}:
+          <strong>{{ liveAreaHectares.toFixed(2) }} ha</strong>
+        </span>
+      </div>
+
+      <div class="metrics-right">
+        <pv-tag
+          :value="isValidPolygon ? t('parcel.geometryHelper.validPolygon') : t('parcel.geometryHelper.needMoreVertices')"
+          :severity="isValidPolygon ? 'success' : 'warn'"
+        />
+        <pv-button
+          type="button"
+          :label="showAdvanced ? t('parcel.geometryHelper.hideAdvanced') : t('parcel.geometryHelper.showAdvanced')"
+          :icon="showAdvanced ? 'pi pi-chevron-up' : 'pi pi-code'"
+          size="small"
+          text
+          @click="showAdvanced = !showAdvanced"
+        />
+      </div>
+    </div>
+
+    <div v-if="hasInvalidRawInput" class="invalid-hint">
       {{ t('parcel.geometryHelper.invalidHint') }}
     </div>
 
     <textarea
+      v-if="showAdvanced"
       id="parcel-geometry"
       :value="rawJson"
       rows="3"
@@ -177,14 +281,46 @@ const onRawInput = (e) => {
   margin-top: 0.25rem;
 }
 
-.helper-header {
+.helper-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.toolbar-info {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.15rem;
 }
 
 .helper-title {
-  font-size: 0.825rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--p-text-color);
+}
+
+.helper-subtitle {
+  font-size: 0.78rem;
+  color: var(--p-text-muted-color, #94a3b8);
+}
+
+.toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.presets-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.presets-label {
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--p-text-muted-color, #94a3b8);
 }
@@ -192,60 +328,56 @@ const onRawInput = (e) => {
 .presets-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .preset-btn {
   font-size: 0.75rem !important;
-  padding: 0.3rem 0.6rem !important;
+  padding: 0.2rem 0.55rem !important;
 }
 
-.preview-box {
-  position: relative;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  border-radius: 8px;
-  padding: 0.75rem;
+.metrics-bar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  min-height: 140px;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
-.preview-badge {
-  position: absolute;
-  top: 6px;
-  right: 8px;
-  font-size: 0.7rem;
-  color: #22c55e;
-  background: rgba(34, 197, 94, 0.1);
-  padding: 2px 6px;
-  border-radius: 4px;
+.metrics-left,
+.metrics-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
 }
 
-.polygon-svg {
-  width: 100%;
-  max-width: 220px;
-  height: 120px;
+.metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--p-text-muted-color, #94a3b8);
 }
 
-.polygon-shape {
-  fill: rgba(34, 197, 94, 0.2);
-  stroke: #22c55e;
-  stroke-width: 2;
-  stroke-linejoin: round;
-}
-
-.polygon-vertex {
-  fill: #4ade80;
-  stroke: #0f172a;
-  stroke-width: 1;
+.metric-area {
+  color: #4ade80;
 }
 
 .geojson-textarea {
+  width: 100%;
   font-family: monospace;
   font-size: 0.785rem;
   resize: vertical;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: rgba(15, 23, 42, 0.65);
+  color: var(--p-text-color);
 }
 
 .invalid-hint {

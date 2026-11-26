@@ -152,25 +152,29 @@ onMounted(load)
       </div>
 
       <div class="field">
-        <label class="field-label" for="parcel-area">{{ t('parcel.form.area') }}</label>
+        <label class="field-label" for="parcel-geometry">{{ t('parcel.form.geometry') }}</label>
+        <GeojsonPolygonHelper
+          v-model="form.geometry"
+          height="380px"
+          @update:area="(val) => form.area = String(val)"
+        />
+        <small v-if="errors.geometry" class="field-error">{{ errorFor('geometry') }}</small>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="parcel-area">
+          {{ t('parcel.form.area') }}
+          <span class="field-hint">{{ t('parcel.form.areaAutoHint') }}</span>
+        </label>
         <pv-input-text
           id="parcel-area"
           v-model="form.area"
           type="number"
-          step="0.1"
+          step="0.01"
           :invalid="!!errors.area"
           class="field-input"
         />
         <small v-if="errors.area" class="field-error">{{ errorFor('area') }}</small>
-      </div>
-
-      <div class="field">
-        <label class="field-label" for="parcel-geometry">{{ t('parcel.form.geometry') }}</label>
-        <GeojsonPolygonHelper
-          v-model="form.geometry"
-          @update:area="(val) => form.area = String(val)"
-        />
-        <small v-if="errors.geometry" class="field-error">{{ errorFor('geometry') }}</small>
       </div>
 
       <div class="field">
@@ -250,7 +254,7 @@ onMounted(load)
 <style scoped>
 .view-container {
   width: 100%;
-  max-width: 40rem;
+  max-width: 56rem;
 }
 
 .header-section {

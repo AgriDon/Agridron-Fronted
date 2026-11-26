@@ -2,6 +2,10 @@
 import { ref, onMounted, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { FumigationAreaUseCases } from '@/fieldManagement/application/fumigation-area-use-cases.js';
+import {
+  calculateGeodesicAreaHectares,
+  parsePolygonVertices
+} from '@/fieldManagement/domain/services/parcel-geometry.service.js';
 import GeojsonPolygonHelper from './geojson-polygon-helper.vue';
 
 const { t } = useI18n();
@@ -46,10 +50,12 @@ const load = async () => {
 
 const openCreateDialog = () => {
   saveError.value = '';
-  // Suggest a sub-polygon if parcel geometry exists
+  const initialGeometry = props.parcelGeometry || '';
+  const parsed = parsePolygonVertices(initialGeometry);
+  const initialArea = parsed.valid ? calculateGeodesicAreaHectares(parsed.vertices) : 0;
   form.value = {
-    geometry: props.parcelGeometry || '',
-    area: 0
+    geometry: initialGeometry,
+    area: initialArea
   };
   showDialog.value = true;
 };
@@ -142,7 +148,7 @@ onMounted(load);
       v-model:visible="showDialog"
       modal
       :header="t('parcel.fumigation.dialogTitle')"
-      :style="{ width: '30rem' }"
+      :style="{ width: '44rem' }"
     >
       <pv-message v-if="saveError" severity="error" :closable="false">
         {{ saveError }}
@@ -152,6 +158,8 @@ onMounted(load);
         <p class="dialog-hint">{{ t('parcel.fumigation.dialogHint') }}</p>
         <GeojsonPolygonHelper
           v-model="form.geometry"
+          :reference-geometry="parcelGeometry"
+          height="320px"
           @update:area="(val) => form.area = val"
         />
       </div>

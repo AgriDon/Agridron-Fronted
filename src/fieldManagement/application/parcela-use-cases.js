@@ -1,4 +1,5 @@
 import { Parcel } from '../domain/model/parcel.entity.js';
+import { validateGeoJsonPolygon } from '../domain/services/parcel-geometry.service.js';
 import { FieldManagementApi } from '../infrastructure/field-management-api.js';
 
 /**
@@ -50,15 +51,8 @@ export class ParcelaUseCases {
 
         if (!data.geometry?.trim()) {
             errors.geometry = 'parcel.form.error.geometry-required';
-        } else {
-            try {
-                const parsed = JSON.parse(data.geometry);
-                if (parsed.type !== 'Polygon' || !Array.isArray(parsed.coordinates) || parsed.coordinates.length === 0) {
-                    errors.geometry = 'parcel.form.error.geometry-invalid';
-                }
-            } catch {
-                errors.geometry = 'parcel.form.error.geometry-invalid';
-            }
+        } else if (!validateGeoJsonPolygon(data.geometry)) {
+            errors.geometry = 'parcel.form.error.geometry-invalid';
         }
 
         const farmId = Number(data.farmId);

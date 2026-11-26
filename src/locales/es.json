@@ -4,6 +4,19 @@
     "content": "La ruta <strong>{invalidPath}</strong> es inválida.",
     "go-home": "Ir a Inicio"
   },
+  "map": {
+    "layers": {
+      "satellite": "Satélite",
+      "topographic": "Topográfico",
+      "hybrid": "Híbrido"
+    },
+    "controls": {
+      "zoomIn": "Acercar zoom",
+      "zoomOut": "Alejar zoom",
+      "recenter": "Centrar mapa",
+      "layerSwitcherAria": "Capas base del mapa"
+    }
+  },
   "footer": {
     "rights": "Copyright © 2026 AgriDron Solutions. Todos los derechos reservados.",
     "intro": "Desarrollado ",
@@ -143,6 +156,7 @@
       "edit-title": "Editar parcela",
       "name": "Nombre",
       "area": "Área (ha)",
+      "areaAutoHint": "(Calculada automáticamente desde el polígono)",
       "geometry": "Geometría (GeoJSON)",
       "farm": "Finca",
       "crop": "Cultivo",
@@ -166,16 +180,28 @@
       "title": "Detalle de parcela",
       "name": "Nombre",
       "geometry": "Geometría",
+      "mapTitle": "Mapa de Delimitación de Parcela",
+      "rawGeoJson": "Ver coordenadas GeoJSON",
       "notFound": "Parcela no encontrada",
       "back": "Volver"
     },
     "phenologicalStage": "Etapa fenológica",
     "noStage": "No especificada",
     "geometryHelper": {
-      "title": "Asistente de Geometría y Polígono",
+      "title": "Editor Interactivo de Polígono en Mapa",
+      "drawHint": "Haz clic en el mapa para marcar vértices del lindero, o arrastra los marcadores para ajustarlos.",
+      "undo": "Deshacer punto",
+      "clear": "Limpiar",
+      "presetsLabel": "Campos de ejemplo:",
+      "verticesCount": "{count} vértices",
+      "calculatedArea": "Área calculada",
+      "validPolygon": "Polígono válido",
+      "needMoreVertices": "Marca al menos 3 vértices",
+      "showAdvanced": "GeoJSON",
+      "hideAdvanced": "Ocultar GeoJSON",
       "previewBadge": "Vista previa",
       "invalidHint": "Ingrese un formato GeoJSON Polygon válido",
-      "placeholder": "Seleccione una plantilla arriba o pegue un GeoJSON Polygon válido..."
+      "placeholder": "Seleccione un ejemplo arriba, marque vértices en el mapa o pegue un GeoJSON Polygon..."
     },
     "fumigation": {
       "title": "Áreas de Fumigación",

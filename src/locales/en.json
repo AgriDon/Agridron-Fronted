@@ -4,6 +4,19 @@
     "content": "The path <strong>{invalidPath}</strong> is not valid.",
     "go-home": "Go Home"
   },
+  "map": {
+    "layers": {
+      "satellite": "Satellite",
+      "topographic": "Topographic",
+      "hybrid": "Hybrid"
+    },
+    "controls": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "recenter": "Center map",
+      "layerSwitcherAria": "Map base layers"
+    }
+  },
   "footer": {
     "rights": "Copyright © 2026 AgriDron Solutions. All rights reserved.",
     "intro": "Developed ",
@@ -136,6 +149,7 @@
       "edit-title": "Edit parcel",
       "name": "Name",
       "area": "Area (ha)",
+      "areaAutoHint": "(Calculated automatically from polygon)",
       "geometry": "Geometry (GeoJSON)",
       "farm": "Farm",
       "crop": "Crop",
@@ -161,6 +175,8 @@
       "title": "Parcel detail",
       "name": "Name",
       "geometry": "Geometry",
+      "mapTitle": "Delimited Parcel Map",
+      "rawGeoJson": "View GeoJSON coordinates",
       "notFound": "Parcel not found",
       "back": "Back"
     },
@@ -172,10 +188,20 @@
     "phenologicalStage": "Phenological stage",
     "noStage": "Not specified",
     "geometryHelper": {
-      "title": "Geometry and Polygon Assistant",
+      "title": "Interactive Polygon Map Editor",
+      "drawHint": "Click on the map to add boundary vertices, or drag markers to adjust them.",
+      "undo": "Undo point",
+      "clear": "Clear",
+      "presetsLabel": "Sample fields:",
+      "verticesCount": "{count} vertices",
+      "calculatedArea": "Calculated area",
+      "validPolygon": "Valid polygon",
+      "needMoreVertices": "Add at least 3 vertices",
+      "showAdvanced": "GeoJSON",
+      "hideAdvanced": "Hide GeoJSON",
       "previewBadge": "Preview",
       "invalidHint": "Enter a valid GeoJSON Polygon format",
-      "placeholder": "Select a preset above or paste a valid GeoJSON Polygon..."
+      "placeholder": "Select a sample field above, click points on the map, or paste a GeoJSON Polygon..."
     },
     "fumigation": {
       "title": "Fumigation Areas",
