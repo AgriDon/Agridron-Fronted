@@ -1,4 +1,5 @@
 import { Parcel } from '../domain/model/parcel.entity.js';
+import { validateGeoJsonPolygon } from '../domain/services/parcel-geometry.service.js';
 import { FieldManagementApi } from '../infrastructure/field-management-api.js';
 
 /**
@@ -50,15 +51,8 @@ export class ParcelaUseCases {
 
         if (!data.geometry?.trim()) {
             errors.geometry = 'parcel.form.error.geometry-required';
-        } else {
-            try {
-                const parsed = JSON.parse(data.geometry);
-                if (parsed.type !== 'Polygon' || !Array.isArray(parsed.coordinates) || parsed.coordinates.length === 0) {
-                    errors.geometry = 'parcel.form.error.geometry-invalid';
-                }
-            } catch {
-                errors.geometry = 'parcel.form.error.geometry-invalid';
-            }
+        } else if (!validateGeoJsonPolygon(data.geometry)) {
+            errors.geometry = 'parcel.form.error.geometry-invalid';
         }
 
         const farmId = Number(data.farmId);
@@ -77,13 +71,17 @@ export class ParcelaUseCases {
             errors.cropId = 'parcel.form.error.crop-required';
         }
 
+        if (data.obstacleNotes && data.obstacleNotes.trim().length > Parcel.MAX_OBSTACLE_NOTES_LENGTH) {
+            errors.obstacleNotes = 'parcel.form.error.obstacleNotes-max';
+        }
+
         return errors;
     }
 
     /**
      * Builds the domain entity out of the validated payload.
      *
-     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string, phenologicalStage?: string }} data
+     * @param {{ name?: string, area?: number|string, geometry?: string, farmId?: number|string, cropId?: number|string, image?: string, phenologicalStage?: string, obstacleNotes?: string }} data
      * @param {number} id
      * @returns {Parcel}
      */
@@ -98,20 +96,23 @@ export class ParcelaUseCases {
             data.image?.trim() ? data.image.trim() : null,
             null,
             data.phenologicalStage?.trim() ? data.phenologicalStage.trim() : null,
-            data.isActive ?? true
+            data.isActive ?? true,
+            data.obstacleNotes?.trim() ? data.obstacleNotes.trim() : null
         );
     }
 
     /**
+     * @param {{ includeInactive?: boolean, farmId?: number | string }} [options]
      * @returns {Promise<import('../domain/model/parcel.entity.js').Parcel[]>}
      */
-    listParcels = () => this.#api.getAllParcels();
+    listParcels = (options = {}) => this.#api.getAllParcels(options);
 
     /**
      * @param {number|string} id
+     * @param {{ includeInactive?: boolean }} [options]
      * @returns {Promise<import('../domain/model/parcel.entity.js').Parcel>}
      */
-    getParcel = (id) => this.#api.getParcelById(id);
+    getParcel = (id, options = {}) => this.#api.getParcelById(id, options);
 
     /**
      * @returns {Promise<import('../domain/model/crop.entity.js').Crop[]>}
@@ -157,8 +158,26 @@ export class ParcelaUseCases {
     };
 
     /**
+     * Deactivates (soft-deletes) a parcel, preserving historical mission records.
+     *
      * @param {number|string} id
      * @returns {Promise<void>}
      */
-    deleteParcel = (id) => this.#api.deleteParcel(id);
+    deactivateParcel = (id) => this.#api.deleteParcel(id);
+
+    /**
+     * Alias kept for backwards compatibility.
+     *
+     * @param {number|string} id
+     * @returns {Promise<void>}
+     */
+    deleteParcel = (id) => this.deactivateParcel(id);
+
+    /**
+     * Reactivates an inactive parcel.
+     *
+     * @param {number|string} id
+     * @returns {Promise<import('../domain/model/parcel.entity.js').Parcel>}
+     */
+    activateParcel = (id) => this.#api.activateParcel(id);
 }

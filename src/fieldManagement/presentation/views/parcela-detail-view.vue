@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
+import { parsePolygonVertices } from '@/fieldManagement/domain/services/parcel-geometry.service.js'
+import LeafletMapCanvas from '@/shared/presentation/components/leaflet-map-canvas.vue'
 import FumigationAreaPanel from '../components/fumigation-area-panel.vue'
 
 const { t } = useI18n()
@@ -20,12 +22,15 @@ const notFound = ref(false)
 const errorMessage = ref('')
 
 const parcelId = computed(() => route.params.id)
+const parcelVertices = computed(() =>
+  parcel.value ? parsePolygonVertices(parcel.value.geometry).vertices : []
+)
 
 const load = async () => {
   loading.value = true
 
   try {
-    const found = await useCases.getParcel(parcelId.value)
+    const found = await useCases.getParcel(parcelId.value, { includeInactive: true })
 
     parcel.value = found
 
@@ -87,6 +92,14 @@ onMounted(load)
         <dt>{{ t('parcel.detail.name') }}</dt>
         <dd>{{ parcel.name }}</dd>
 
+        <dt>{{ t('parcel.detail.status') }}</dt>
+        <dd>
+          <pv-tag
+            :value="parcel.isActive ? t('parcel.status.active') : t('parcel.status.inactive')"
+            :severity="parcel.isActive ? 'success' : 'secondary'"
+          />
+        </dd>
+
         <dt>{{ t('parcel.area') }}</dt>
         <dd>{{ parcel.area }} ha</dd>
 
@@ -117,9 +130,32 @@ onMounted(load)
           <span v-else>{{ t('parcel.noCrop') }}</span>
         </dd>
 
+        <dt>{{ t('parcel.obstacleNotes') }}</dt>
+        <dd>
+          <span v-if="parcel.obstacleNotes" class="obstacle-warning">
+            <i class="pi pi-exclamation-triangle"></i>
+            {{ parcel.obstacleNotes }}
+          </span>
+          <span v-else class="text-muted">{{ t('parcel.noObstacleNotes') }}</span>
+        </dd>
+
         <dt>{{ t('parcel.detail.geometry') }}</dt>
-        <dd><code class="geometry">{{ parcel.geometry }}</code></dd>
+        <dd>
+          <details class="geometry-details">
+            <summary>{{ t('parcel.detail.rawGeoJson') }}</summary>
+            <code class="geometry">{{ parcel.geometry }}</code>
+          </details>
+        </dd>
       </dl>
+
+      <div v-if="parcelVertices.length >= 3" class="map-section">
+        <h3 class="map-section-title">{{ t('parcel.detail.mapTitle') }}</h3>
+        <LeafletMapCanvas
+          :vertices="parcelVertices"
+          :editable="false"
+          height="320px"
+        />
+      </div>
 
       <!-- Fumigation Areas Sub-Resource Panel -->
       <FumigationAreaPanel
@@ -141,7 +177,7 @@ onMounted(load)
 <style scoped>
 .view-container {
   width: 100%;
-  max-width: 44rem;
+  max-width: 56rem;
 }
 
 .header-section {
@@ -204,6 +240,26 @@ onMounted(load)
   text-decoration: underline;
 }
 
+.obstacle-warning {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.14);
+  color: #fbbf24;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.obstacle-warning i {
+  margin-top: 0.15rem;
+}
+
+.text-muted {
+  color: var(--p-text-muted-color, #94a3b8);
+}
+
 .geometry {
   font-family: monospace;
   font-size: 0.785rem;
@@ -212,6 +268,28 @@ onMounted(load)
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
   display: block;
+  margin-top: 0.5rem;
+}
+
+.geometry-details summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--p-primary-color, #22c55e);
+}
+
+.map-section {
+  background: var(--p-content-background, #1e293b);
+  border: 1px solid var(--p-content-border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.map-section-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--p-text-color);
 }
 
 .back-button {

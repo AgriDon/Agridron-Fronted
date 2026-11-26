@@ -4,6 +4,19 @@
     "content": "The path <strong>{invalidPath}</strong> is not valid.",
     "go-home": "Go Home"
   },
+  "map": {
+    "layers": {
+      "satellite": "Satellite",
+      "topographic": "Topographic",
+      "hybrid": "Hybrid"
+    },
+    "controls": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "recenter": "Center map",
+      "layerSwitcherAria": "Map base layers"
+    }
+  },
   "footer": {
     "rights": "Copyright © 2026 AgriDron Solutions. All rights reserved.",
     "intro": "Developed ",
@@ -130,17 +143,36 @@
     "newParcel": "New parcel",
     "selectFarm": "Select farm",
     "selectFarmPrompt": "Select a farm to see its parcels",
+    "cancel": "Cancel",
     "delete-confirm": "Are you sure you want to delete this parcel?",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "filter": {
+      "active": "Active",
+      "all": "All",
+      "inactive": "Inactive"
+    },
+    "obstacleNotes": "Obstacle notes",
+    "noObstacleNotes": "No obstacles reported",
+    "deactivate": {
+      "title": "Deactivate parcel",
+      "confirm": "This parcel will be retired from active operations while preserving all historical flight mission records. Parcels with active fumigation areas cannot be deactivated."
+    },
     "form": {
       "new-title": "New parcel",
       "edit-title": "Edit parcel",
       "name": "Name",
       "area": "Area (ha)",
+      "areaAutoHint": "(Calculated automatically from polygon)",
       "geometry": "Geometry (GeoJSON)",
       "farm": "Farm",
       "crop": "Crop",
       "image": "Image URL",
       "imageHint": "Optional",
+      "obstacleNotes": "Obstacle notes",
+      "obstacleNotesPlaceholder": "e.g. Power lines on north edge, tall trees, irrigation tower...",
       "create": "Create",
       "update": "Update",
       "error": {
@@ -150,7 +182,8 @@
         "geometry-required": "Geometry is required",
         "farm-required": "You must select a farm",
         "crop-required": "You must select a crop",
-        "geometry-invalid": "GeoJSON format must be a valid Polygon"
+        "geometry-invalid": "GeoJSON format must be a valid Polygon",
+        "obstacleNotes-max": "Obstacle notes cannot exceed 500 characters"
       },
       "phenologicalStage": "Phenological stage",
       "stagePlaceholder": "Select stage..."
@@ -160,22 +193,37 @@
     "detail": {
       "title": "Parcel detail",
       "name": "Name",
+      "status": "Status",
       "geometry": "Geometry",
+      "mapTitle": "Delimited Parcel Map",
+      "rawGeoJson": "View GeoJSON coordinates",
       "notFound": "Parcel not found",
       "back": "Back"
     },
     "button": {
       "seeMore": "See more",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "deactivate": "Deactivate",
+      "activate": "Activate"
     },
     "phenologicalStage": "Phenological stage",
     "noStage": "Not specified",
     "geometryHelper": {
-      "title": "Geometry and Polygon Assistant",
+      "title": "Interactive Polygon Map Editor",
+      "drawHint": "Click on the map to add boundary vertices, or drag markers to adjust them.",
+      "undo": "Undo point",
+      "clear": "Clear",
+      "presetsLabel": "Sample fields:",
+      "verticesCount": "{count} vertices",
+      "calculatedArea": "Calculated area",
+      "validPolygon": "Valid polygon",
+      "needMoreVertices": "Add at least 3 vertices",
+      "showAdvanced": "GeoJSON",
+      "hideAdvanced": "Hide GeoJSON",
       "previewBadge": "Preview",
       "invalidHint": "Enter a valid GeoJSON Polygon format",
-      "placeholder": "Select a preset above or paste a valid GeoJSON Polygon..."
+      "placeholder": "Select a sample field above, click points on the map, or paste a GeoJSON Polygon..."
     },
     "fumigation": {
       "title": "Fumigation Areas",

@@ -4,6 +4,19 @@
     "content": "La ruta <strong>{invalidPath}</strong> es inválida.",
     "go-home": "Ir a Inicio"
   },
+  "map": {
+    "layers": {
+      "satellite": "Satélite",
+      "topographic": "Topográfico",
+      "hybrid": "Híbrido"
+    },
+    "controls": {
+      "zoomIn": "Acercar zoom",
+      "zoomOut": "Alejar zoom",
+      "recenter": "Centrar mapa",
+      "layerSwitcherAria": "Capas base del mapa"
+    }
+  },
   "footer": {
     "rights": "Copyright © 2026 AgriDron Solutions. Todos los derechos reservados.",
     "intro": "Desarrollado ",
@@ -130,24 +143,45 @@
     "newParcel": "Nueva parcela",
     "selectFarm": "Seleccionar finca",
     "selectFarmPrompt": "Seleccione una finca para ver sus parcelas",
+    "cancel": "Cancelar",
     "delete-confirm": "¿Estás seguro de que deseas eliminar esta parcela?",
+    "status": {
+      "active": "Activa",
+      "inactive": "Inactiva"
+    },
+    "filter": {
+      "active": "Activas",
+      "all": "Todas",
+      "inactive": "Inactivas"
+    },
+    "obstacleNotes": "Notas de obstáculos",
+    "noObstacleNotes": "Sin obstáculos registrados",
+    "deactivate": {
+      "title": "Deshabilitar parcela",
+      "confirm": "Esta parcela se retirará de las operaciones activas conservando todo el historial de misiones de vuelo. Las parcelas con áreas de fumigación activas no pueden deshabilitarse."
+    },
     "empty": "No hay parcelas registradas",
     "loading": "Cargando parcelas...",
     "button": {
       "seeMore": "Ver más",
       "edit": "Editar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "deactivate": "Deshabilitar",
+      "activate": "Reactivar"
     },
     "form": {
       "new-title": "Nueva parcela",
       "edit-title": "Editar parcela",
       "name": "Nombre",
       "area": "Área (ha)",
+      "areaAutoHint": "(Calculada automáticamente desde el polígono)",
       "geometry": "Geometría (GeoJSON)",
       "farm": "Finca",
       "crop": "Cultivo",
       "image": "URL de imagen",
       "imageHint": "Opcional",
+      "obstacleNotes": "Notas de obstáculos",
+      "obstacleNotesPlaceholder": "Ej. Cables eléctricos en el borde norte, árboles altos, torre de riego...",
       "create": "Crear",
       "update": "Actualizar",
       "error": {
@@ -157,7 +191,8 @@
         "geometry-required": "La geometría es obligatoria",
         "farm-required": "Debe seleccionar una finca",
         "crop-required": "Debe seleccionar un cultivo",
-        "geometry-invalid": "El formato GeoJSON debe ser un Polygon válido"
+        "geometry-invalid": "El formato GeoJSON debe ser un Polygon válido",
+        "obstacleNotes-max": "Las notas de obstáculos no pueden superar los 500 caracteres"
       },
       "phenologicalStage": "Etapa fenológica",
       "stagePlaceholder": "Seleccionar etapa..."
@@ -165,17 +200,30 @@
     "detail": {
       "title": "Detalle de parcela",
       "name": "Nombre",
+      "status": "Estado",
       "geometry": "Geometría",
+      "mapTitle": "Mapa de Delimitación de Parcela",
+      "rawGeoJson": "Ver coordenadas GeoJSON",
       "notFound": "Parcela no encontrada",
       "back": "Volver"
     },
     "phenologicalStage": "Etapa fenológica",
     "noStage": "No especificada",
     "geometryHelper": {
-      "title": "Asistente de Geometría y Polígono",
+      "title": "Editor Interactivo de Polígono en Mapa",
+      "drawHint": "Haz clic en el mapa para marcar vértices del lindero, o arrastra los marcadores para ajustarlos.",
+      "undo": "Deshacer punto",
+      "clear": "Limpiar",
+      "presetsLabel": "Campos de ejemplo:",
+      "verticesCount": "{count} vértices",
+      "calculatedArea": "Área calculada",
+      "validPolygon": "Polígono válido",
+      "needMoreVertices": "Marca al menos 3 vértices",
+      "showAdvanced": "GeoJSON",
+      "hideAdvanced": "Ocultar GeoJSON",
       "previewBadge": "Vista previa",
       "invalidHint": "Ingrese un formato GeoJSON Polygon válido",
-      "placeholder": "Seleccione una plantilla arriba o pegue un GeoJSON Polygon válido..."
+      "placeholder": "Seleccione un ejemplo arriba, marque vértices en el mapa o pegue un GeoJSON Polygon..."
     },
     "fumigation": {
       "title": "Áreas de Fumigación",

@@ -1,12 +1,20 @@
 <script setup>
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
 
 const { t } = useI18n()
 
-const emit = defineEmits(['seeMore', 'edit', 'delete'])
+const props = defineProps({
+  statusFilter: {
+    type: String,
+    default: 'active',
+    validator: (value) => ['active', 'all', 'inactive'].includes(value)
+  }
+})
+
+const emit = defineEmits(['seeMore', 'edit', 'deactivate', 'activate'])
 
 const parcels = ref([])
 const crops = ref([])
@@ -14,6 +22,16 @@ const loading = ref(true)
 const errorMessage = ref('')
 
 const useCases = new ParcelaUseCases()
+
+const visibleParcels = computed(() => {
+  if (props.statusFilter === 'inactive') {
+    return parcels.value.filter(parcel => !parcel.isActive)
+  }
+  if (props.statusFilter === 'active') {
+    return parcels.value.filter(parcel => parcel.isActive)
+  }
+  return parcels.value
+})
 
 // The assembler does not resolve the crop entity on each parcel, so the card
 // label comes from the crops collection, matched by cropId.
@@ -46,7 +64,7 @@ const load = async () => {
 
   try {
     const [parcelList, cropList] = await Promise.all([
-      useCases.listParcels(),
+      useCases.listParcels({ includeInactive: props.statusFilter !== 'active' }),
       useCases.listCrops()
     ])
 
@@ -65,6 +83,8 @@ const load = async () => {
   }
 }
 
+watch(() => props.statusFilter, load)
+
 load()
 </script>
 
@@ -78,15 +98,26 @@ load()
       {{ errorMessage }}
     </pv-message>
 
-    <div v-else-if="parcels.length === 0" class="parcel-empty">
+    <div v-else-if="visibleParcels.length === 0" class="parcel-empty">
       <i class="pi pi-inbox"></i>
       <p>{{ t('parcel.empty') }}</p>
     </div>
 
     <div v-else class="parcel-grid">
-      <pv-card v-for="parcel in parcels" :key="parcel.id" class="parcel-card">
+      <pv-card
+        v-for="parcel in visibleParcels"
+        :key="parcel.id"
+        class="parcel-card"
+        :class="{ 'parcel-card-inactive': !parcel.isActive }"
+      >
         <template #title>
-          <span class="parcel-card-name">{{ parcel.name }}</span>
+          <div class="parcel-card-header-row">
+            <span class="parcel-card-name">{{ parcel.name }}</span>
+            <pv-tag
+              :value="parcel.isActive ? t('parcel.status.active') : t('parcel.status.inactive')"
+              :severity="parcel.isActive ? 'success' : 'secondary'"
+            />
+          </div>
         </template>
 
         <template #subtitle>
@@ -112,6 +143,10 @@ load()
             <i class="pi pi-home"></i>
             {{ t('parcel.farm') }}: #{{ parcel.farmId }}
           </p>
+          <p v-if="parcel.obstacleNotes" class="parcel-card-obstacle">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>{{ parcel.obstacleNotes }}</span>
+          </p>
         </template>
 
         <template #footer>
@@ -123,17 +158,27 @@ load()
               @click="emit('seeMore', parcel.id)"
             />
             <pv-button
+              v-if="parcel.isActive"
               :label="t('parcel.button.edit')"
               icon="pi pi-pencil"
               text
               @click="emit('edit', parcel.id)"
             />
             <pv-button
-              :label="t('parcel.button.delete')"
-              icon="pi pi-trash"
+              v-if="parcel.isActive"
+              :label="t('parcel.button.deactivate')"
+              icon="pi pi-ban"
               text
-              severity="danger"
-              @click="emit('delete', parcel.id)"
+              severity="warn"
+              @click="emit('deactivate', parcel.id)"
+            />
+            <pv-button
+              v-else
+              :label="t('parcel.button.activate')"
+              icon="pi pi-replay"
+              text
+              severity="success"
+              @click="emit('activate', parcel.id)"
             />
           </div>
         </template>
@@ -169,12 +214,24 @@ load()
   height: 15rem;
 }
 
+.parcel-card-inactive {
+  opacity: 0.78;
+}
+
 .parcel-card :deep(.p-card-body) {
   padding-top: 0;
 }
 
 :deep(.p-card-title) {
   margin-top: 21px;
+}
+
+.parcel-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .parcel-card-image {
@@ -206,6 +263,24 @@ load()
 
 .parcel-card-detail i {
   color: var(--p-primary-color);
+}
+
+.parcel-card-obstacle {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin: 0.5rem 0 0;
+  padding: 0.4rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.12);
+  color: #fbbf24;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.parcel-card-obstacle i {
+  margin-top: 0.1rem;
+  flex-shrink: 0;
 }
 
 .parcel-card-actions {

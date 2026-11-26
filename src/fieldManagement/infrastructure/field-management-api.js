@@ -78,16 +78,18 @@ export class FieldManagementApi extends BaseApi {
 
     /**
      * Retrieves all parcels.
+     * @param {{ includeInactive?: boolean, farmId?: number | string }} [options]
      * @returns {Promise<Parcel[]>} Promise with the parcel collection.
      */
-    getAllParcels = () => this.#parcelEndpoint.getAll();
+    getAllParcels = (options) => this.#parcelEndpoint.getAll(options);
 
     /**
      * Retrieves a single parcel by ID.
      * @param {number|string} id - The ID of the parcel.
+     * @param {{ includeInactive?: boolean }} [options]
      * @returns {Promise<Parcel>} Promise with the parcel.
      */
-    getParcelById = (id) => this.#parcelEndpoint.getById(id);
+    getParcelById = (id, options) => this.#parcelEndpoint.getById(id, options);
 
     /**
      * Creates a new parcel.
@@ -104,11 +106,18 @@ export class FieldManagementApi extends BaseApi {
     updateParcel = (parcel) => this.#parcelEndpoint.update(parcel, parcel.id);
 
     /**
-     * Deletes a parcel by ID.
-     * @param {number|string} id - The ID of the parcel to delete.
-     * @returns {Promise<void>} Promise for the delete operation.
+     * Deactivates (soft-deletes) a parcel by ID.
+     * @param {number|string} id - The ID of the parcel to deactivate.
+     * @returns {Promise<void>} Promise for the deactivate operation.
      */
     deleteParcel = (id) => this.#parcelEndpoint.delete(id);
+
+    /**
+     * Reactivates an inactive parcel by ID.
+     * @param {number|string} id - The ID of the parcel to reactivate.
+     * @returns {Promise<Parcel>} Promise with the reactivated parcel.
+     */
+    activateParcel = (id) => this.#parcelEndpoint.activate(id);
 
     /**
      * Retrieves all fumigation areas.

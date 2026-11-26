@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -11,37 +11,56 @@ const router = useRouter()
 
 const useCases = new ParcelaUseCases()
 
-const showDeleteDialog = ref(false)
-const parcelIdToDelete = ref(null)
-const deleting = ref(false)
-const deleteError = ref('')
+const statusFilter = ref('active')
+const filterOptions = computed(() => [
+  { label: t('parcel.filter.active'), value: 'active' },
+  { label: t('parcel.filter.all'), value: 'all' },
+  { label: t('parcel.filter.inactive'), value: 'inactive' }
+])
+
+const showDeactivateDialog = ref(false)
+const parcelIdToDeactivate = ref(null)
+const deactivating = ref(false)
+const deactivateError = ref('')
+const actionError = ref('')
 
 const listKey = ref(0)
 
-const onDelete = (id) => {
-  parcelIdToDelete.value = id
-  deleteError.value = ''
-  showDeleteDialog.value = true
+const onDeactivate = (id) => {
+  parcelIdToDeactivate.value = id
+  deactivateError.value = ''
+  actionError.value = ''
+  showDeactivateDialog.value = true
 }
 
-const cancelDelete = () => {
-  showDeleteDialog.value = false
-  parcelIdToDelete.value = null
-  deleteError.value = ''
+const cancelDeactivate = () => {
+  showDeactivateDialog.value = false
+  parcelIdToDeactivate.value = null
+  deactivateError.value = ''
 }
 
-const confirmDelete = async () => {
-  deleting.value = true
-  deleteError.value = ''
+const confirmDeactivate = async () => {
+  deactivating.value = true
+  deactivateError.value = ''
 
   try {
-    await useCases.deleteParcel(parcelIdToDelete.value)
-    cancelDelete()
+    await useCases.deactivateParcel(parcelIdToDeactivate.value)
+    cancelDeactivate()
     listKey.value++
   } catch (error) {
-    deleteError.value = error.message
+    deactivateError.value = error.message
   } finally {
-    deleting.value = false
+    deactivating.value = false
+  }
+}
+
+const onActivate = async (id) => {
+  actionError.value = ''
+  try {
+    await useCases.activateParcel(id)
+    listKey.value++
+  } catch (error) {
+    actionError.value = error.message
   }
 }
 
@@ -73,30 +92,53 @@ const onSeeMore = (id) => {
       />
     </div>
 
+    <div class="filter-bar">
+      <pv-select-button
+        v-model="statusFilter"
+        :options="filterOptions"
+        option-label="label"
+        option-value="value"
+        :allow-empty="false"
+      />
+    </div>
+
+    <pv-message
+      v-if="actionError"
+      severity="error"
+      :closable="true"
+      class="mb-3"
+      @close="actionError = ''"
+    >
+      {{ actionError }}
+    </pv-message>
+
     <ParcelaList
       :key="listKey"
+      :status-filter="statusFilter"
       @see-more="onSeeMore"
       @edit="onEdit"
-      @delete="onDelete"
+      @deactivate="onDeactivate"
+      @activate="onActivate"
     />
 
     <pv-dialog
-      v-model:visible="showDeleteDialog"
+      v-model:visible="showDeactivateDialog"
       modal
-      :style="{ width: '26rem' }"
+      :style="{ width: '28rem' }"
     >
       <template #header>
-        <span class="dialog-title">{{ t('parcel.title') }}</span>
+        <span class="dialog-title">{{ t('parcel.deactivate.title') }}</span>
       </template>
 
-      <p class="dialog-message">{{ t('parcel.delete-confirm') }}</p>
+      <p class="dialog-message">{{ t('parcel.deactivate.confirm') }}</p>
 
       <pv-message
-        v-if="deleteError"
+        v-if="deactivateError"
         severity="error"
         :closable="false"
+        class="mt-3"
       >
-        {{ deleteError }}
+        {{ deactivateError }}
       </pv-message>
 
       <template #footer>
@@ -104,14 +146,14 @@ const onSeeMore = (id) => {
           :label="t('parcel.cancel')"
           severity="secondary"
           text
-          @click="cancelDelete"
+          @click="cancelDeactivate"
         />
         <pv-button
-          :label="t('parcel.button.delete')"
-          icon="pi pi-trash"
-          severity="danger"
-          :loading="deleting"
-          @click="confirmDelete"
+          :label="t('parcel.button.deactivate')"
+          icon="pi pi-ban"
+          severity="warn"
+          :loading="deactivating"
+          @click="confirmDeactivate"
         />
       </template>
     </pv-dialog>
@@ -124,12 +166,21 @@ const onSeeMore = (id) => {
 }
 
 .header-section {
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.filter-bar {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .view-title {
@@ -156,13 +207,13 @@ const onSeeMore = (id) => {
 .dialog-message {
   margin: 0;
   color: var(--p-text-color);
-  opacity: 0.75;
+  opacity: 0.85;
   line-height: 1.5;
 }
 
 @media (max-width: 640px) {
   .header-section {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
   }
   .view-title {
     font-size: 1.5rem;
