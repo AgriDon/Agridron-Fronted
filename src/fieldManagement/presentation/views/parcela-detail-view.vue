@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
 import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases.js'
+import { parsePolygonVertices } from '@/fieldManagement/domain/services/parcel-geometry.service.js'
+import LeafletMapCanvas from '@/shared/presentation/components/leaflet-map-canvas.vue'
 import FumigationAreaPanel from '../components/fumigation-area-panel.vue'
 
 const { t } = useI18n()
@@ -20,6 +22,9 @@ const notFound = ref(false)
 const errorMessage = ref('')
 
 const parcelId = computed(() => route.params.id)
+const parcelVertices = computed(() =>
+  parcel.value ? parsePolygonVertices(parcel.value.geometry).vertices : []
+)
 
 const load = async () => {
   loading.value = true
@@ -118,8 +123,22 @@ onMounted(load)
         </dd>
 
         <dt>{{ t('parcel.detail.geometry') }}</dt>
-        <dd><code class="geometry">{{ parcel.geometry }}</code></dd>
+        <dd>
+          <details class="geometry-details">
+            <summary>{{ t('parcel.detail.rawGeoJson') }}</summary>
+            <code class="geometry">{{ parcel.geometry }}</code>
+          </details>
+        </dd>
       </dl>
+
+      <div v-if="parcelVertices.length >= 3" class="map-section">
+        <h3 class="map-section-title">{{ t('parcel.detail.mapTitle') }}</h3>
+        <LeafletMapCanvas
+          :vertices="parcelVertices"
+          :editable="false"
+          height="320px"
+        />
+      </div>
 
       <!-- Fumigation Areas Sub-Resource Panel -->
       <FumigationAreaPanel
@@ -141,7 +160,7 @@ onMounted(load)
 <style scoped>
 .view-container {
   width: 100%;
-  max-width: 44rem;
+  max-width: 56rem;
 }
 
 .header-section {
@@ -212,6 +231,28 @@ onMounted(load)
   padding: 0.35rem 0.6rem;
   border-radius: 6px;
   display: block;
+  margin-top: 0.5rem;
+}
+
+.geometry-details summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--p-primary-color, #22c55e);
+}
+
+.map-section {
+  background: var(--p-content-background, #1e293b);
+  border: 1px solid var(--p-content-border-color, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.map-section-title {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--p-text-color);
 }
 
 .back-button {
