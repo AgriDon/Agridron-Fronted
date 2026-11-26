@@ -30,7 +30,7 @@ const load = async () => {
   loading.value = true
 
   try {
-    const found = await useCases.getParcel(parcelId.value)
+    const found = await useCases.getParcel(parcelId.value, { includeInactive: true })
 
     parcel.value = found
 
@@ -92,6 +92,14 @@ onMounted(load)
         <dt>{{ t('parcel.detail.name') }}</dt>
         <dd>{{ parcel.name }}</dd>
 
+        <dt>{{ t('parcel.detail.status') }}</dt>
+        <dd>
+          <pv-tag
+            :value="parcel.isActive ? t('parcel.status.active') : t('parcel.status.inactive')"
+            :severity="parcel.isActive ? 'success' : 'secondary'"
+          />
+        </dd>
+
         <dt>{{ t('parcel.area') }}</dt>
         <dd>{{ parcel.area }} ha</dd>
 
@@ -120,6 +128,15 @@ onMounted(load)
             {{ cropName }}
           </router-link>
           <span v-else>{{ t('parcel.noCrop') }}</span>
+        </dd>
+
+        <dt>{{ t('parcel.obstacleNotes') }}</dt>
+        <dd>
+          <span v-if="parcel.obstacleNotes" class="obstacle-warning">
+            <i class="pi pi-exclamation-triangle"></i>
+            {{ parcel.obstacleNotes }}
+          </span>
+          <span v-else class="text-muted">{{ t('parcel.noObstacleNotes') }}</span>
         </dd>
 
         <dt>{{ t('parcel.detail.geometry') }}</dt>
@@ -221,6 +238,26 @@ onMounted(load)
 .detail-link {
   color: var(--p-primary-color, #22c55e);
   text-decoration: underline;
+}
+
+.obstacle-warning {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.14);
+  color: #fbbf24;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.obstacle-warning i {
+  margin-top: 0.15rem;
+}
+
+.text-muted {
+  color: var(--p-text-muted-color, #94a3b8);
 }
 
 .geometry {
