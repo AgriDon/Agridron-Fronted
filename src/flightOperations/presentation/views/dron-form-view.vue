@@ -4,18 +4,20 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { DroneUseCases, DroneValidationError } from '@/flightOperations/application/dron-use-cases.js'
 import { DroneStatus } from '@/flightOperations/domain/model/dron-status.enum.js'
+import { InventoryUseCases } from '@/inventoryManagement/application/inventory-use-cases.js'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
 const useCases = new DroneUseCases()
+const inventoryUseCases = new InventoryUseCases()
 
 const form = ref({
   serialNumber: '',
   model: '',
   capacity: '',
-  nozzleId: '',
+  nozzleId: null,
   urlimg: '',
   status: DroneStatus.AVAILABLE,
   lastMaintenanceDate: '',
@@ -26,6 +28,45 @@ const errors = ref({})
 const loading = ref(false)
 const saving = ref(false)
 const submitError = ref('')
+
+// ---- Nozzle selector ----
+const nozzles = ref([])
+const loadingNozzles = ref(false)
+const originalNozzleId = ref(null)
+
+const loadNozzles = async () => {
+  loadingNozzles.value = true
+  try {
+    nozzles.value = await inventoryUseCases.getAllNozzles()
+  } catch {
+    nozzles.value = []
+  } finally {
+    loadingNozzles.value = false
+  }
+}
+
+const nozzleTypeLabel = (type) =>
+    type === 'hollow-cone'
+        ? t('inventory.nozzles.types.hollowCone')
+        : t('inventory.nozzles.types.flatFan')
+
+/**
+ * Business rule: a worn nozzle or one without stock cannot be installed.
+ * The nozzle the drone already has stays selectable so editing does not lose it.
+ */
+const nozzleOptions = computed(() =>
+    nozzles.value.map((nozzle) => {
+      const id = Number(nozzle.id)
+      const worn = nozzle.isWorn()
+      const unavailable = worn || nozzle.stockUnits <= 0
+      return {
+        label: `#${id} · ${nozzleTypeLabel(nozzle.type)} · ${nozzle.diameterMm} mm · ${nozzle.stockUnits} und.` +
+            (worn ? ` (${t('inventory.nozzles.status.worn')})` : ''),
+        value: id,
+        disabled: unavailable && id !== originalNozzleId.value
+      }
+    })
+)
 
 const droneId = computed(() => route.params.id ?? null)
 const isEditing = computed(() => droneId.value !== null)
@@ -53,11 +94,12 @@ const loadDrone = async () => {
 
   try {
     const drone = await useCases.getDrone(droneId.value)
+    originalNozzleId.value = drone.nozzleId != null ? Number(drone.nozzleId) : null
     form.value = {
       serialNumber: drone.serialNumber || '',
       model: drone.modelName || '',
       capacity: drone.capacity != null ? String(drone.capacity) : '',
-      nozzleId: drone.nozzleId != null ? String(drone.nozzleId) : '',
+      nozzleId: drone.nozzleId != null ? Number(drone.nozzleId) : null,
       urlimg: drone.urlimg || '',
       status: drone.status || DroneStatus.AVAILABLE,
       lastMaintenanceDate: formatDateForInput(drone.lastMaintenanceDate),
@@ -100,7 +142,12 @@ const onSubmit = async () => {
   }
 }
 
-onMounted(loadDrone)
+onMounted(() => {
+  loadNozzles()
+  loadDrone()
+})
+
+
 </script>
 
 <template>
@@ -176,20 +223,24 @@ onMounted(loadDrone)
         </small>
       </div>
 
-      <!-- Nozzle ID (Boquilla) -->
+      <!-- Nozzle (Boquilla) selector -->
       <div class="form-field">
         <label for="drone-nozzle" class="form-label">
-          {{ t('drone.nozzleId') }}
+          {{ t('drone.nozzle') }}
         </label>
-        <pv-input-text
-          id="drone-nozzle"
-          v-model="form.nozzleId"
-          type="number"
-          :placeholder="t('drone.form.nozzle-placeholder')"
-          class="form-input"
+        <pv-select
+            input-id="drone-nozzle"
+            v-model="form.nozzleId"
+            :options="nozzleOptions"
+            option-label="label"
+            option-value="value"
+            option-disabled="disabled"
+            :placeholder="t('drone.noNozzle')"
+            :loading="loadingNozzles"
+            show-clear
+            class="form-input"
         />
       </div>
-
       <!-- Maintenance Dates -->
       <div class="form-grid">
         <div class="form-field">
