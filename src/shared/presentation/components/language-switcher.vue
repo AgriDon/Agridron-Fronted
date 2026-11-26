@@ -5,6 +5,9 @@ const { locale, availableLocales } = useI18n()
 
 const onLocaleChange = (newLocale) => {
   if (newLocale) {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = newLocale
+    }
     try {
       localStorage.setItem('agridron_locale', newLocale)
     } catch (e) {

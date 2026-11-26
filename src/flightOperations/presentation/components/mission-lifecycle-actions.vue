@@ -15,6 +15,7 @@ const { t } = useI18n()
 const router = useRouter()
 const useCases = new MissionUseCases()
 const weatherStore = useWeatherStore()
+weatherStore.loadWeatherConditions()
 
 const loading = ref(false)
 const errorMessage = ref('')
@@ -29,17 +30,15 @@ const showCancelDialog = ref(false)
 const cancelReason = ref('')
 
 const isAdverseWeather = computed(() => {
-  const current = weatherStore.currentWeather
+  const current = weatherStore.weatherConditions[0]
   if (!current) return false
-  const windKmh = current.windSpeed ?? 0
-  const isRaining = (current.precipitation ?? 0) > 0 || /lluvia|rain/i.test(current.condition || '')
-  return windKmh > 25 || isRaining
+  return current.alerts.some(alert => alert.severity === 'HIGH')
 })
 
 const checkWeatherAndProceed = (actionName, executor) => {
   if (isAdverseWeather.value) {
-    const cur = weatherStore.currentWeather
-    weatherWarningText.value = `Alerta climática activa: Viento ${cur?.windSpeed ?? 0} km/h, Condición: ${cur?.condition ?? 'Inestable'}. Supera los límites recomendados para aspersión (máx 25 km/h y sin lluvia).`
+    const cur = weatherStore.weatherConditions[0]
+    weatherWarningText.value = t('mission.weather.warningText', { wind: cur?.windSpeed ?? 0, rain: cur?.precipitation ?? 0 })
     pendingAction.value = executor
     showWeatherDialog.value = true
     return

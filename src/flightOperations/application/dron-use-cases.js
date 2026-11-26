@@ -143,4 +143,53 @@ export class DroneUseCases {
    * @returns {Promise<void>}
    */
   deleteDrone = (id) => this.#api.deleteDrone(id)
+
+
+  /**
+   * Only changes the status; the maintenance record is created later
+   * with MaintenanceRecordUseCases.registerMaintenance.
+   *
+   * @param {Drone} drone
+   * @returns {Promise<Drone>}
+   * @throws {Error} when the drone is not AVAILABLE.
+   */
+
+  sendToMaintenance = (drone) => {
+    if (drone.status !== DroneStatus.AVAILABLE) {
+      throw new Error('drone.maintenance.error.send-not-available')
+    }
+
+    return this.#api.sendDroneToMaintenance(drone.id)
+  }
+
+  /**
+   * Reports a mechanical failure (DR-006). The backend sets the drone OUT_OF_SERVICE
+   * and records the FALLA_TECNICA incident, so the front does not create it.
+   */
+  reportFailure = async (drone, description) => {
+    if (!DroneUseCases.canReportFailure(drone)) {
+      throw new Error('drone.failure.error.not-allowed')
+    }
+    if (!description?.trim()) {
+      throw new Error('drone.failure.error.description-required')
+    }
+
+    return this.#api.reportDroneFailure(drone.id, { description: description.trim() })
+  }
+
+
+  /**
+   * A failure can be reported unless the drone is flying or already out of service.
+   * @param {Drone|null} drone
+   * @returns {boolean}
+   */
+  static canReportFailure(drone) {
+    return [
+      DroneStatus.AVAILABLE,
+      DroneStatus.ASSIGNED,
+      DroneStatus.PAUSED,
+      DroneStatus.MAINTENANCE
+    ].includes(drone?.status)
+  }
+
 }

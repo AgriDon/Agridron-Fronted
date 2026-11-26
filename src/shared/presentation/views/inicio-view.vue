@@ -8,8 +8,6 @@ import { ParcelaUseCases } from '@/fieldManagement/application/parcela-use-cases
 import { MissionUseCases } from '@/flightOperations/application/mission-use-cases.js'
 import { useWeatherStore } from '@/weatherIntegration/application/weather.store.js'
 import WeatherWidget from '@/weatherIntegration/presentation/components/weather-widget.vue'
-import WeatherSimulator from '@/weatherIntegration/presentation/components/weather-simulator.vue'
-import { DEBUG_MODE } from '@/config/env.js'
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
 
 const { t } = useI18n()
@@ -27,9 +25,6 @@ const user = ref({ name: 'Juan Pérez', role: 'Agricultor' })
 const farms = ref([])
 const parcels = ref([])
 const missions = ref([])
-
-// Shows the weather simulator instead of the widget (local tests only).
-const debugMode = DEBUG_MODE
 
 // Computed KPIs
 const farmsCount = computed(() => farms.value.length || 3)
@@ -130,7 +125,7 @@ const loadData = async () => {
 
 onMounted(() => {
   loadData()
-  // Loads the weather of the user's location (or the reference location).
+  // Loads the weather of the user's location
   weatherStore.loadWeatherConditions()
 })
 </script>
@@ -251,9 +246,7 @@ onMounted(() => {
 
       <!-- Right Column: Clima & Fotografía -->
       <aside class="dashboard-sidebar">
-        <!-- Weather: simulator in debug mode, real widget otherwise -->
-        <WeatherSimulator v-if="debugMode" />
-        <WeatherWidget v-else />
+        <WeatherWidget />
 
         <!-- Landscape Satellite Imagery Box -->
         <div class="terrain-box">

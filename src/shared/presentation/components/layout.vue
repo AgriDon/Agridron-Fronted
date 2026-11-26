@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
 import LanguageSwitcher from '@/shared/presentation/components/language-switcher.vue'
+import AppFooter from '@/shared/presentation/components/app-footer.vue'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -175,11 +176,14 @@ const isRouteActive = (targetPath) => {
 
     <!-- Main Content Area with Router View -->
     <main class="main-content">
-      <!-- The slot lets wrappers project extra content alongside the outlet.
-           Both must stay siblings: any child inside <router-view> turns into
-           a fallback and the routed component is dropped. -->
-      <slot />
-      <router-view />
+      <div class="main-body">
+        <!-- The slot lets wrappers project extra content alongside the outlet.
+             Both must stay siblings: any child inside <router-view> turns into
+             a fallback and the routed component is dropped. -->
+        <slot />
+        <router-view />
+      </div>
+      <AppFooter />
     </main>
   </div>
 </template>
@@ -417,9 +421,15 @@ const isRouteActive = (targetPath) => {
   margin-left: 240px;
   margin-top: 76px;
   flex: 1;
-  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
   background-color: var(--p-content-background, #ffffff);
   min-height: calc(100vh - 76px);
+}
+
+.main-body {
+  flex: 1;
+  padding: 2.5rem 3rem;
 }
 
 /* Responsive Media Queries */
@@ -478,10 +488,13 @@ const isRouteActive = (targetPath) => {
 
   .main-content {
     margin-left: 0;
-    padding: 1.75rem 1.25rem;
     width: 100%;
     max-width: 100vw;
     overflow-x: hidden;
+  }
+
+  .main-body {
+    padding: 1.75rem 1.25rem;
   }
 }
 
@@ -542,8 +555,11 @@ const isRouteActive = (targetPath) => {
 
   .main-content {
     margin-top: 70px;
-    padding: 1.25rem 0.85rem;
     min-height: calc(100vh - 70px);
+  }
+
+  .main-body {
+    padding: 1.25rem 0.85rem;
   }
 }
 

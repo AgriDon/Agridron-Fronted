@@ -40,9 +40,7 @@ const variables = {
 
   VITE_WEATHER_API_BASE_URL: import.meta.env.VITE_WEATHER_API_BASE_URL,
   VITE_WEATHER_ENDPOINT_PATH: import.meta.env.VITE_WEATHER_ENDPOINT_PATH,
-  VITE_REVERSE_GEOCODING_URL: import.meta.env.VITE_REVERSE_GEOCODING_URL,
-
-  VITE_DEBUG_MODE: import.meta.env.VITE_DEBUG_MODE
+  VITE_REVERSE_GEOCODING_URL: import.meta.env.VITE_REVERSE_GEOCODING_URL
 }
 
 // Report every missing variable at once: failing on the first one hides the rest.
@@ -66,9 +64,6 @@ export const WEATHER_API_BASE_URL = variables.VITE_WEATHER_API_BASE_URL
 
 /** Full URL of the reverse geocoding provider (BigDataCloud). */
 export const REVERSE_GEOCODING_URL = variables.VITE_REVERSE_GEOCODING_URL
-
-/** Shows the weather simulator (debug panel) on Home instead of the weather widget. */
-export const DEBUG_MODE = variables.VITE_DEBUG_MODE === 'true'
 
 /** Relative paths, combined with API_BASE_URL via buildUrl(). */
 export const ENDPOINTS = {

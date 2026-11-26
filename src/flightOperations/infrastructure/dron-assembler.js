@@ -30,8 +30,12 @@ export class DronAssembler {
     const battery = resource.batteryLevel ?? resource.battery ?? 100
     const flightHours = Number(resource.flightHours) || 0
     const nozzleId = resource.nozzleId != null ? Number(resource.nozzleId) : null
-    const lastMaintenanceDate = resource.lastMaintenanceDate || null
-    const nextMaintenanceDate = resource.nextMaintenanceDate || null
+    // Maintenance dates are calendar days. The backend sends them with time and offset
+    // ("2026-11-15T00:00:00+00:00"); keeping only "YYYY-MM-DD" avoids showing the previous day.
+    const toDateOnly = (value) => (value ? String(value).slice(0, 10) : null)
+    const lastMaintenanceDate = toDateOnly(resource.lastMaintenanceDate)
+    const nextMaintenanceDate = toDateOnly(resource.nextMaintenanceDate)
+
     const isActive = resource.isActive ?? true
 
     return markRaw(
