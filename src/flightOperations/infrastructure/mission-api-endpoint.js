@@ -158,4 +158,22 @@ export class MissionApiEndpoint extends BaseApiEndpoint {
       return this.handleError('Failed to cancel mission')(error)
     }
   }
+
+
+
+  /**
+   * Reschedules a mission that has not taken off yet (MI-006).
+   * POST /missions/{id}/reschedule
+   * @param {number|string} id
+   * @param {Date|string} scheduledAt - new date and time
+   */
+  async reschedule(id, scheduledAt) {
+    try {
+      const iso = scheduledAt instanceof Date ? scheduledAt.toISOString() : scheduledAt
+      const response = await this.http.post(`${this.endpointUrl}/${id}/reschedule`, { scheduledAt: iso })
+      return this.assembler.toEntityFromResource(response.data)
+    } catch (error) {
+      return this.handleError('Failed to reschedule mission')(error)
+    }
+  }
 }

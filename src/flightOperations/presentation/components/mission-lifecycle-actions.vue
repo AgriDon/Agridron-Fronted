@@ -29,6 +29,15 @@ const weatherWarningText = ref('')
 const showCancelDialog = ref(false)
 const cancelReason = ref('')
 
+
+// Reschedule dialog (MI-006)
+const showRescheduleDialog = ref(false)
+const newScheduledAt = ref(null)
+const rescheduleError = ref('')
+const minRescheduleDate = computed(() => new Date())
+
+
+
 const isAdverseWeather = computed(() => {
   const current = weatherStore.weatherConditions[0]
   if (!current) return false
@@ -127,6 +136,28 @@ const confirmCancel = async () => {
   }
 }
 
+
+const onReschedulePrompt = () => {
+  const current = props.mission.date ? new Date(props.mission.date) : null
+  newScheduledAt.value = current && current > new Date() ? current : null
+  rescheduleError.value = ''
+  showRescheduleDialog.value = true
+}
+
+const confirmReschedule = async () => {
+  loading.value = true
+  rescheduleError.value = ''
+  try {
+    await useCases.rescheduleMission(props.mission.id, newScheduledAt.value)
+    showRescheduleDialog.value = false
+    emit('action-done')
+  } catch (err) {
+    rescheduleError.value = err.message
+  } finally {
+    loading.value = false
+  }
+}
+
 const onGoToMonitoring = () => {
   router.push({ name: 'mision-monitoreo', params: { id: props.mission.id } })
 }
@@ -215,6 +246,18 @@ const onGoToMonitoring = () => {
       @click="emit('open-complete', mission)"
     />
 
+
+    <!-- Reschedule Mission (PLANNED or AUTHORIZED)  -->
+    <pv-button
+        v-if="mission.status === 'PLANNED' || mission.status === 'AUTHORIZED'"
+        :label="t('mission.action.reschedule', 'Reprogramar')"
+        icon="pi pi-calendar"
+        size="small"
+        severity="secondary"
+        text
+        @click="onReschedulePrompt"
+    />
+
     <!-- Cancel Mission -->
     <pv-button
       v-if="mission.status !== 'COMPLETED' && mission.status !== 'CANCELLED'"
@@ -255,6 +298,51 @@ const onGoToMonitoring = () => {
         />
       </template>
     </pv-dialog>
+
+
+    <!-- Reschedule Mission Dialog -->
+    <pv-dialog
+        v-model:visible="showRescheduleDialog"
+        modal
+        :header="t('mission.reschedule.title', 'Reprogramar Misión')"
+        :style="{ width: '28rem' }"
+    >
+      <pv-message v-if="rescheduleError" severity="error" :closable="false" class="mb-3">
+        {{ rescheduleError }}
+      </pv-message>
+      <div class="p-fluid">
+        <label for="reschedule-date" class="font-bold text-sm mb-2 block">
+          {{ t('mission.reschedule.dateLabel', 'Nueva fecha y hora (MI-006)') }}
+        </label>
+        <pv-datepicker
+            v-model="newScheduledAt"
+            input-id="reschedule-date"
+            date-format="dd/mm/yy"
+            show-time
+            hour-format="24"
+            show-icon
+            :min-date="minRescheduleDate"
+            class="w-full"
+        />
+      </div>
+
+      <template #footer>
+        <pv-button
+            :label="t('farm.cancel', 'Volver')"
+            severity="secondary"
+            text
+            @click="showRescheduleDialog = false"
+        />
+        <pv-button
+            :label="t('mission.reschedule.confirm', 'Reprogramar')"
+            icon="pi pi-calendar"
+            :loading="loading"
+            :disabled="!newScheduledAt"
+            @click="confirmReschedule"
+        />
+      </template>
+    </pv-dialog>
+
 
     <!-- Cancel Mission Dialog -->
     <pv-dialog

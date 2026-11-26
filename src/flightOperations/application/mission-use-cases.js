@@ -80,4 +80,20 @@ export class MissionUseCases {
   completeMission = (id, payload) => this.#api.completeMission(id, payload)
 
   cancelMission = (id, reason) => this.#api.cancelMission(id, reason)
+
+
+  /**
+   * changes the date of a mission that has not taken off yet.
+   * The backend validates the rule; here we only give quick feedback.
+   */
+  async rescheduleMission(id, scheduledAt) {
+    const date = scheduledAt instanceof Date ? scheduledAt : new Date(scheduledAt)
+    if (!scheduledAt || Number.isNaN(date.getTime())) {
+      throw new Error('Selecciona la nueva fecha y hora de la misión.')
+    }
+    if (date <= new Date()) {
+      throw new Error('La nueva fecha debe ser futura.')
+    }
+    return await this.#api.rescheduleMission(id, date)
+  }
 }

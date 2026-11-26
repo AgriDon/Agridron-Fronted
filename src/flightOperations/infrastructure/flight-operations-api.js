@@ -67,6 +67,7 @@ export class FlightOperationsApi extends BaseApi {
   resumeMission = (id) => this.#missionEndpoint.resume(id)
   completeMission = (id, payload) => this.#missionEndpoint.complete(id, payload)
   cancelMission = (id, reason) => this.#missionEndpoint.cancel(id, reason)
+  rescheduleMission = (id, scheduledAt) => this.#missionEndpoint.reschedule(id, scheduledAt)
 
   // ---- Operation Status Telemetry ----
   getAllOperationStatuses = (params) => this.#operationStatusEndpoint.getAll(params)
