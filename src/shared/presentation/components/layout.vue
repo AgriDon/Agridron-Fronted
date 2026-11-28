@@ -1,18 +1,39 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
+import { useIamStore } from '@/iam/application/iam.store.js'
 import LanguageSwitcher from '@/shared/presentation/components/language-switcher.vue'
 import AppFooter from '@/shared/presentation/components/app-footer.vue'
 
 const { t } = useI18n()
 const route = useRoute()
+const router = useRouter()
+const iamStore = useIamStore()
 const userService = new UserProfileService()
-const currentUser = ref({
-  name: 'Juan Pérez',
-  role: 'Agricultor',
+const userMenu = ref(null)
+const signingOut = ref(false)
+const profileOverrides = ref({
+  name: '',
+  role: '',
   avatar: ''
+})
+
+const formatRoleLabel = (role) => {
+  const normalized = String(role || '').toLowerCase()
+  if (normalized === 'farmer' || normalized === 'agricultor') return t('iam.roles.farmer')
+  if (normalized === 'operator' || normalized === 'operador') return t('iam.roles.operator')
+  return role || ''
+}
+
+const currentUser = computed(() => {
+  const sessionUser = iamStore.user
+  return {
+    name: sessionUser?.fullName || profileOverrides.value.name || 'AgriDron',
+    role: formatRoleLabel(sessionUser?.role || profileOverrides.value.role),
+    avatar: profileOverrides.value.avatar || ''
+  }
 })
 
 const isMobileSidebarOpen = ref(false)
@@ -25,18 +46,52 @@ const closeSidebar = () => {
   isMobileSidebarOpen.value = false
 }
 
+const toggleUserMenu = (event) => {
+  userMenu.value?.toggle(event)
+}
+
+const handleSignOut = async () => {
+  if (signingOut.value) return
+  signingOut.value = true
+  try {
+    await iamStore.signOut()
+    await router.replace('/sign-in')
+  } finally {
+    signingOut.value = false
+  }
+}
+
+const userMenuItems = computed(() => [
+  {
+    label: t('option.settings'),
+    icon: 'pi pi-cog',
+    command: () => router.push('/configuracion')
+  },
+  { separator: true },
+  {
+    label: t('iam.profile.signOut'),
+    icon: 'pi pi-sign-out',
+    command: handleSignOut
+  }
+])
+
 watch(() => route.path, () => {
   isMobileSidebarOpen.value = false
 })
 
 const loadProfile = async () => {
+  if (!iamStore.user?.id) return
   try {
-    const data = await userService.getCurrentUser(1)
+    const data = await userService.getCurrentUser(iamStore.user.id)
     if (data) {
-      currentUser.value = data
+      profileOverrides.value = {
+        name: data.fullName || data.name || '',
+        role: data.role || '',
+        avatar: data.avatar || ''
+      }
     }
-  } catch (e) {
-    // fallback defaults
+  } catch {
+    // Keep authenticated session details when profile endpoint is unavailable.
   }
 }
 
@@ -44,7 +99,7 @@ onMounted(() => {
   loadProfile()
   window.addEventListener('user-profile-updated', (e) => {
     if (e.detail) {
-      currentUser.value = { ...currentUser.value, ...e.detail }
+      profileOverrides.value = { ...profileOverrides.value, ...e.detail }
     }
   })
 })
@@ -121,21 +176,42 @@ const isRouteActive = (targetPath) => {
         </template>
 
         <template #end>
-          <!-- Language Switcher -->
-          <LanguageSwitcher />
+          <div class="header-end-actions">
+            <LanguageSwitcher />
 
-          <!-- User Profile Section with PrimeVue Avatar -->
-          <div class="user-profile">
-            <pv-avatar
-              :image="currentUser.avatar || undefined"
-              :icon="!currentUser.avatar ? 'pi pi-user' : undefined"
-              shape="circle"
-              class="user-avatar"
-            />
-            <div class="user-info">
-              <span class="user-name">{{ currentUser.name }}</span>
-              <span class="user-role">{{ currentUser.role }}</span>
-            </div>
+            <button
+              type="button"
+              class="user-profile"
+              aria-haspopup="true"
+              aria-controls="user_account_menu"
+              @click="toggleUserMenu"
+            >
+              <pv-avatar
+                :image="currentUser.avatar || undefined"
+                :icon="!currentUser.avatar ? 'pi pi-user' : undefined"
+                shape="circle"
+                class="user-avatar"
+              />
+              <div class="user-info">
+                <span class="user-name">{{ currentUser.name }}</span>
+                <span class="user-role">{{ currentUser.role }}</span>
+              </div>
+              <i class="pi pi-chevron-down user-chevron" aria-hidden="true"></i>
+            </button>
+
+            <pv-menu id="user_account_menu" ref="userMenu" :model="userMenuItems" popup />
+
+            <button
+              type="button"
+              class="sign-out-btn"
+              :title="t('iam.profile.signOut')"
+              :aria-label="t('iam.profile.signOut')"
+              :disabled="signingOut"
+              @click="handleSignOut"
+            >
+              <i :class="signingOut ? 'pi pi-spin pi-spinner' : 'pi pi-sign-out'"></i>
+              <span class="sign-out-label">{{ t('iam.profile.signOut') }}</span>
+            </button>
           </div>
         </template>
       </pv-toolbar>
@@ -300,11 +376,57 @@ const isRouteActive = (targetPath) => {
 }
 
 /* User Profile Section */
+.header-end-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 10px;
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+.user-profile:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.user-chevron {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.75rem;
+}
+
+.sign-out-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.sign-out-btn:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.sign-out-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 :deep(.user-avatar) {
@@ -535,8 +657,14 @@ const isRouteActive = (targetPath) => {
     font-size: 0.85rem;
   }
 
-  .user-info {
+  .user-info,
+  .user-chevron,
+  .sign-out-label {
     display: none;
+  }
+
+  .sign-out-btn {
+    padding: 0.48rem;
   }
 
   :deep(.user-avatar) {

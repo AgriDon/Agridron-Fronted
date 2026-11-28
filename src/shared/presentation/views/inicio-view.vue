@@ -9,6 +9,7 @@ import { MissionUseCases } from '@/flightOperations/application/mission-use-case
 import { useWeatherStore } from '@/weatherIntegration/application/weather.store.js'
 import WeatherWidget from '@/weatherIntegration/presentation/components/weather-widget.vue'
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
+import { useIamStore } from '@/iam/application/iam.store.js'
 
 const { t } = useI18n()
 const router = useRouter()
@@ -18,10 +19,14 @@ const parcelaUseCases = new ParcelaUseCases()
 const missionUseCases = new MissionUseCases()
 const weatherStore = useWeatherStore()
 const userService = new UserProfileService()
+const iamStore = useIamStore()
 
 // State
 const loading = ref(true)
-const user = ref({ name: 'Juan Pérez', role: 'Agricultor' })
+const user = ref({
+  name: iamStore.user?.fullName || 'Juan Pérez',
+  role: iamStore.user?.role || 'Agricultor'
+})
 const farms = ref([])
 const parcels = ref([])
 const missions = ref([])
@@ -98,13 +103,20 @@ const loadData = async () => {
   loading.value = true
   try {
     const [userData, farmList, parcelList, missionList] = await Promise.allSettled([
-      userService.getCurrentUser(),
+      iamStore.user?.id ? userService.getCurrentUser(iamStore.user.id) : Promise.resolve(null),
       fincaUseCases.listFarms(),
       parcelaUseCases.listParcels(),
       missionUseCases.listMissions()
     ])
 
-    if (userData.status === 'fulfilled' && userData.value) {
+    if (iamStore.user) {
+      user.value = {
+        ...user.value,
+        ...(userData.status === 'fulfilled' && userData.value ? userData.value : {}),
+        name: iamStore.user.fullName || userData.value?.fullName || userData.value?.name || user.value.name,
+        role: iamStore.user.role || user.value.role
+      }
+    } else if (userData.status === 'fulfilled' && userData.value) {
       user.value = userData.value
     }
     if (farmList.status === 'fulfilled' && Array.isArray(farmList.value)) {
