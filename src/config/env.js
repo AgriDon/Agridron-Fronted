@@ -17,6 +17,8 @@ const variables = {
 
   VITE_SIGNIN_ENDPOINT_PATH: import.meta.env.VITE_SIGNIN_ENDPOINT_PATH,
   VITE_SIGNUP_ENDPOINT_PATH: import.meta.env.VITE_SIGNUP_ENDPOINT_PATH,
+  VITE_VERIFY_EMAIL_ENDPOINT_PATH: import.meta.env.VITE_VERIFY_EMAIL_ENDPOINT_PATH,
+  VITE_SIGNOUT_ENDPOINT_PATH: import.meta.env.VITE_SIGNOUT_ENDPOINT_PATH,
   VITE_USERS_ENDPOINT_PATH: import.meta.env.VITE_USERS_ENDPOINT_PATH,
 
   VITE_FARMS_ENDPOINT_PATH: import.meta.env.VITE_FARMS_ENDPOINT_PATH,
@@ -70,6 +72,8 @@ export const ENDPOINTS = {
   // Authentication
   signIn: variables.VITE_SIGNIN_ENDPOINT_PATH,
   signUp: variables.VITE_SIGNUP_ENDPOINT_PATH,
+  verifyEmail: variables.VITE_VERIFY_EMAIL_ENDPOINT_PATH,
+  signOut: variables.VITE_SIGNOUT_ENDPOINT_PATH,
   users: variables.VITE_USERS_ENDPOINT_PATH,
 
   // Farm management

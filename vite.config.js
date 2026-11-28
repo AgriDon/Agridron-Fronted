@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
       // and keep Sprint 4 Bounded Contexts (inventory, reports) routed to json-server.
       //Sprint 4 BC (inventory) routed already implement
       proxy: {
-        '^/api/v1/(farms|parcels|crops|fumigation-areas|drones|missions|operations|incidents|chemicals|nozzles)': {
+        '^/api/v1/(authentication|users|farms|parcels|crops|fumigation-areas|drones|missions|operations|incidents|chemicals|nozzles)': {
           target: env.VITE_DEV_PROXY_TARGET || 'http://localhost:5000',
           changeOrigin: true
         },
