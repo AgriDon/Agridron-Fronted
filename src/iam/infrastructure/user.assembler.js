@@ -60,32 +60,9 @@ const localizeApiMessage = (rawMessage) => {
   return normalized
 }
 
-/**
- * @typedef {object} AuthenticatedSession
- * @property {User|null} user Domain user entity.
- * @property {string} token Signed JWT bearer token.
- */
-
-/**
- * @typedef {object} ProblemDetailsResult
- * @property {number|null} status HTTP status code returned by the API, if available.
- * @property {string} title RFC 7807 `title` field.
- * @property {string} detail RFC 7807 `detail` or flattened validation error message.
- * @property {string} message Final user-facing error message.
- */
-
-/**
- * Translates backend IAM resources (`UserResource`, `AuthenticatedUserResource`) into domain
- * models and normalizes RFC 7807 `ProblemDetails` error responses.
- */
+/** Maps IAM API resources to domain models and localizes RFC 7807 problem responses. */
 export class UserAssembler {
-  /**
-   * Maps a `UserResource` or `AuthenticatedUserResource` JSON payload to a `User` entity.
-   * Supports both flat and nested `{ user, token }` response shapes.
-   *
-   * @param {Record<string, any>|null|undefined} resource Raw API response payload.
-   * @returns {User|null}
-   */
+  /** Maps a flat or nested user resource payload into a `User` entity. */
   static toEntityFromResource(resource) {
     if (!resource || typeof resource !== 'object') {
       return null
@@ -104,12 +81,7 @@ export class UserAssembler {
     })
   }
 
-  /**
-   * Extracts the domain `User` and JWT bearer token from an `AuthenticatedUserResource`.
-   *
-   * @param {Record<string, any>|null|undefined} resource Raw sign-in API response.
-   * @returns {AuthenticatedSession}
-   */
+  /** Extracts `{ user, token }` from a sign-in response payload. */
   static toAuthenticatedSession(resource) {
     return {
       user: UserAssembler.toEntityFromResource(resource),
@@ -117,14 +89,7 @@ export class UserAssembler {
     }
   }
 
-  /**
-   * Parses an Axios error into a structured `ProblemDetailsResult` following RFC 7807
-   * (`detail`, `errors`, `title`) with a guaranteed fallback message.
-   *
-   * @param {any} error Axios error or thrown exception.
-   * @param {string} [fallbackMessage='Unexpected error'] Fallback message when the server provides no detail.
-   * @returns {ProblemDetailsResult}
-   */
+  /** Parses an Axios error into `{ status, title, detail, message }` with locale-aware messages. */
   static extractProblemDetails(error, fallbackMessage = 'Unexpected error') {
     const status = error?.response?.status ?? error?.status ?? null
     const data = error?.response?.data
@@ -159,6 +124,7 @@ export class UserAssembler {
     }
   }
 
+  /** Returns the localized user-facing message extracted from an API error. */
   static extractProblemMessage(error, fallbackMessage = 'Unexpected error') {
     return UserAssembler.extractProblemDetails(error, fallbackMessage).message
   }
