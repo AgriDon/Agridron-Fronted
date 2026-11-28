@@ -570,7 +570,7 @@
       "signInLink": "Inicia sesión",
       "signUpError": "No se pudo completar el registro. Verifica tus datos e inténtalo nuevamente.",
       "successTitle": "¡Registro Exitoso!",
-      "successMessage": "Hemos enviado un correo de verificación vía Brevo a {email}. Revisa tu bandeja de entrada (o spam) y haz clic en el enlace para activar tu cuenta.",
+      "successMessage": "Hemos enviado un correo de verificación a {email}. Revisa tu bandeja de entrada (o spam) y haz clic en el enlace para activar tu cuenta.",
       "goToSignIn": "Ir a Iniciar sesión"
     },
     "verifyEmail": {

@@ -1,4 +1,64 @@
+import i18n from '@/i18n.js'
 import { User, USER_ROLES } from '../domain/model/user.entity.js'
+
+const SPANISH_ERROR_MAPPINGS = [
+  {
+    pattern: /invalid\s+(email\s+or\s+password|credentials)/i,
+    message: 'Correo electrónico o contraseña incorrectos.'
+  },
+  {
+    pattern: /(already\s+exists|already\s+registered|already\s+in\s+use)/i,
+    message: 'Ya existe una cuenta registrada con este correo electrónico.'
+  },
+  {
+    pattern: /(inactive|not\s+verified|unverified|verify\s+your\s+email|not\s+active)/i,
+    message: 'Tu cuenta aún no está activa o verificada. Revisa tu bandeja de entrada para confirmarla.'
+  },
+  {
+    pattern: /(invalid(\s+or\s+expired)?\s+verification\s+token|verification\s+token.*(invalid|expired)|token.*expired)/i,
+    message: 'El enlace de verificación es inválido o ha expirado.'
+  },
+  {
+    pattern: /registration\s+failed/i,
+    message: 'No se pudo completar el registro. Verifica tus datos e inténtalo nuevamente.'
+  },
+  {
+    pattern: /sign\s*out\s+failed/i,
+    message: 'No se pudo cerrar la sesión.'
+  },
+  {
+    pattern: /failed\s+to\s+fetch\s+user/i,
+    message: 'No se pudo obtener la información del usuario.'
+  },
+  {
+    pattern: /network\s+error/i,
+    message: 'Error de conexión con el servidor. Inténtalo nuevamente.'
+  },
+  {
+    pattern: /unexpected\s+error/i,
+    message: 'Ocurrió un error inesperado.'
+  }
+]
+
+const isSpanishLocale = () => {
+  const current = i18n?.global?.locale?.value ?? i18n?.global?.locale ?? ''
+  return String(current).toLowerCase().startsWith('es')
+}
+
+const localizeApiMessage = (rawMessage) => {
+  const normalized = typeof rawMessage === 'string' ? rawMessage.trim() : ''
+  if (!normalized || !isSpanishLocale()) {
+    return normalized
+  }
+
+  for (const entry of SPANISH_ERROR_MAPPINGS) {
+    if (entry.pattern.test(normalized)) {
+      return entry.message
+    }
+  }
+
+  return normalized
+}
 
 /**
  * @typedef {object} AuthenticatedSession
@@ -70,30 +130,37 @@ export class UserAssembler {
     const data = error?.response?.data
 
     if (data && typeof data === 'object') {
-      const title = data.title || ''
-      let detail = data.detail || ''
+      const title = localizeApiMessage(data.title || '')
+      let rawDetail = data.detail || ''
 
-      if (!detail && data.errors && typeof data.errors === 'object') {
+      if (!rawDetail && data.errors && typeof data.errors === 'object') {
         const flattened = Object.values(data.errors).flat().filter(Boolean)
         if (flattened.length > 0) {
-          detail = flattened.join(' ')
+          rawDetail = flattened.join(' ')
         }
       }
 
-      const message = detail || title || data.message || fallbackMessage
+      const detail = localizeApiMessage(rawDetail)
+      const message = detail || title || localizeApiMessage(data.message || '') || localizeApiMessage(fallbackMessage)
       return { status, title, detail, message }
     }
 
     if (typeof data === 'string' && data.trim()) {
-      return { status, title: '', detail: data.trim(), message: data.trim() }
+      const detail = localizeApiMessage(data.trim())
+      return { status, title: '', detail, message: detail }
     }
 
+    const message = localizeApiMessage(error?.message || fallbackMessage)
     return {
       status,
       title: '',
       detail: '',
-      message: error?.message || fallbackMessage
+      message
     }
+  }
+
+  static extractProblemMessage(error, fallbackMessage = 'Unexpected error') {
+    return UserAssembler.extractProblemDetails(error, fallbackMessage).message
   }
 }
 
