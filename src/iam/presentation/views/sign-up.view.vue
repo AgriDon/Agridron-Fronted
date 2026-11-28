@@ -383,6 +383,38 @@ const handleSignUp = async () => {
   margin-bottom: 1.25rem;
 }
 
+:deep(.p-message-warn) {
+  background-color: #fef3c7 !important;
+  border: 1px solid #f59e0b !important;
+  color: #78350f !important;
+}
+
+:deep(.p-message-warn .p-message-content),
+:deep(.p-message-warn .p-message-text) {
+  color: #78350f !important;
+  font-weight: 500;
+}
+
+:deep(.p-message-warn .p-message-icon) {
+  color: #b45309 !important;
+}
+
+:deep(.p-message-error) {
+  background-color: #fee2e2 !important;
+  border: 1px solid #ef4444 !important;
+  color: #991b1b !important;
+}
+
+:deep(.p-message-error .p-message-content),
+:deep(.p-message-error .p-message-text) {
+  color: #991b1b !important;
+  font-weight: 500;
+}
+
+:deep(.p-message-error .p-message-icon) {
+  color: #dc2626 !important;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
