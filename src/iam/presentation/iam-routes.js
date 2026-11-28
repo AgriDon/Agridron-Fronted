@@ -44,6 +44,7 @@ export const iamRoutes = [
     meta: {
       title: 'Verificar correo',
       public: true,
+      guestOnly: false,
       hideNavigation: true
     }
   }

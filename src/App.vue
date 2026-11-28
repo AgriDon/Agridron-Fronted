@@ -1,14 +1,25 @@
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Layout from './shared/presentation/components/layout.vue'
 
 const route = useRoute()
-const hideNavigation = computed(() => Boolean(route.meta?.hideNavigation))
+const router = useRouter()
+const isRouterReady = ref(false)
+
+router.isReady().then(() => {
+  isRouterReady.value = true
+})
+
+const hideNavigation = computed(() =>
+  route.matched.some((record) => Boolean(record.meta?.hideNavigation))
+)
 </script>
 
 <template>
   <pv-toast />
-  <router-view v-if="hideNavigation" />
-  <Layout v-else />
+  <template v-if="isRouterReady">
+    <router-view v-if="hideNavigation" />
+    <Layout v-else />
+  </template>
 </template>

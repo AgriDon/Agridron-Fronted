@@ -63,22 +63,21 @@ const router = createRouter({
 })
 
 setUnauthorizedHandler(() => {
-  if (router.currentRoute.value.path !== '/sign-in') {
+  const currentRoute = router.currentRoute.value
+  const isCurrentPublic = currentRoute.matched.some((record) => Boolean(record.meta?.public))
+  if (!isCurrentPublic && currentRoute.path !== '/sign-in') {
     router.replace('/sign-in')
   }
 })
 
-/**
- * Global navigation guard enforcing document titles, session authentication on private
- * routes, and guest-only redirection for already authenticated users.
- */
+/** Global navigation guard enforcing document titles and IAM access rules. */
 router.beforeEach((to) => {
   const baseTitle = 'AgriDron Solutions'
-  document.title = to.meta.title ? `${baseTitle} - ${to.meta.title}` : baseTitle
+  document.title = to.meta?.title ? `${baseTitle} - ${to.meta.title}` : baseTitle
 
   const iamStore = useIamStore(pinia)
-  const isPublicRoute = Boolean(to.meta.public)
-  const isGuestOnlyRoute = Boolean(to.meta.guestOnly)
+  const isPublicRoute = to.matched.some((record) => Boolean(record.meta?.public))
+  const isGuestOnlyRoute = to.matched.some((record) => Boolean(record.meta?.guestOnly))
 
   if (!isPublicRoute && !iamStore.isAuthenticated) {
     return {
