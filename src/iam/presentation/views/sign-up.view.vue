@@ -1,9 +1,10 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import LanguageSwitcher from '@/shared/presentation/components/language-switcher.vue'
 import { USER_ROLES } from '../../domain/model/user.entity.js'
+import { validatePasswordStrength } from '../../domain/model/sign-up.request.js'
 import { useIamStore } from '../../application/iam.store.js'
 import RoleSelectorCards from '../components/role-selector-cards.component.vue'
 
@@ -36,6 +37,16 @@ const signUpError = ref('')
 const registrationSuccess = ref(false)
 const registeredEmail = ref('')
 
+const passwordCheck = computed(() => validatePasswordStrength(form.password))
+
+const passwordRules = computed(() => [
+  { key: 'minLength', label: t('iam.signUp.passwordRules.minLength'), met: passwordCheck.value.rules.minLength },
+  { key: 'hasUppercase', label: t('iam.signUp.passwordRules.hasUppercase'), met: passwordCheck.value.rules.hasUppercase },
+  { key: 'hasLowercase', label: t('iam.signUp.passwordRules.hasLowercase'), met: passwordCheck.value.rules.hasLowercase },
+  { key: 'hasNumber', label: t('iam.signUp.passwordRules.hasNumber'), met: passwordCheck.value.rules.hasNumber },
+  { key: 'hasSpecial', label: t('iam.signUp.passwordRules.hasSpecial'), met: passwordCheck.value.rules.hasSpecial }
+])
+
 const validateForm = () => {
   fieldErrors.fullName = ''
   fieldErrors.email = ''
@@ -63,8 +74,8 @@ const validateForm = () => {
 
   if (!form.password) {
     fieldErrors.password = t('iam.signUp.passwordRequired')
-  } else if (form.password.length < 6) {
-    fieldErrors.password = t('iam.signUp.passwordMinLength')
+  } else if (!passwordCheck.value.isValid) {
+    fieldErrors.password = t('iam.signUp.passwordWeak')
   }
 
   if (!form.role) {
@@ -82,7 +93,12 @@ const validateForm = () => {
 
 const handleSignUp = async () => {
   signUpError.value = ''
-  if (!validateForm()) return
+  if (!validateForm()) {
+    if (form.password && !passwordCheck.value.isValid) {
+      signUpError.value = t('iam.signUp.passwordWeak')
+    }
+    return
+  }
 
   submitting.value = true
   try {
@@ -231,6 +247,17 @@ const handleSignUp = async () => {
                 <i :class="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
               </button>
             </div>
+            <ul class="password-checklist" aria-live="polite">
+              <li
+                v-for="rule in passwordRules"
+                :key="rule.key"
+                class="password-rule"
+                :class="{ 'password-rule--met': rule.met }"
+              >
+                <span class="password-rule-icon" aria-hidden="true">{{ rule.met ? '✓' : '•' }}</span>
+                <span>{{ rule.label }}</span>
+              </li>
+            </ul>
             <small v-if="fieldErrors.password" class="field-error">{{ fieldErrors.password }}</small>
           </div>
 
@@ -479,6 +506,44 @@ const handleSignUp = async () => {
   font-weight: 500;
 }
 
+.password-checklist {
+  list-style: none;
+  margin: 0.35rem 0 0 0;
+  padding: 0.65rem 0.8rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.75rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.password-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  line-height: 1.3;
+  color: #64748b;
+  transition: color 0.15s ease;
+}
+
+.password-rule-icon {
+  width: 14px;
+  text-align: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.password-rule--met {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.password-rule--met .password-rule-icon {
+  color: #15803d;
+}
+
 :deep(.primary-submit-btn) {
   width: 100%;
   margin-top: 0.45rem;
@@ -555,6 +620,10 @@ const handleSignUp = async () => {
 
   .auth-card {
     padding: 1.5rem 1.25rem 1.75rem;
+  }
+
+  .password-checklist {
+    grid-template-columns: 1fr;
   }
 }
 </style>
