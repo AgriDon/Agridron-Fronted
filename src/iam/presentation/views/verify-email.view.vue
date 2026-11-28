@@ -1,9 +1,4 @@
 <script setup>
-/**
- * Email verification view (`/verify-email`) invoked from the Brevo activation link.
- * Extracts `route.query.token` on mount, validates it against the IAM API, and displays
- * loading, verified, or expired-token states.
- */
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -107,7 +102,8 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   padding: 2rem 1.25rem;
-  background: linear-gradient(145deg, #f0fdf4 0%, #f8fafc 55%, #ecfdf5 100%);
+  background: linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #e6f4ea 100%);
+  color-scheme: light;
   position: relative;
 }
 

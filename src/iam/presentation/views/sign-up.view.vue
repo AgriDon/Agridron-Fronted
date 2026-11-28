@@ -1,8 +1,4 @@
 <script setup>
-/**
- * Sign-up view (`/sign-up`) for registering new Farmer or Operator accounts and displaying
- * the post-registration Brevo email verification confirmation state.
- */
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -40,11 +36,6 @@ const signUpError = ref('')
 const registrationSuccess = ref(false)
 const registeredEmail = ref('')
 
-/**
- * Validates all registration fields before invoking `iamStore.signUp`.
- *
- * @returns {boolean} True when all inputs pass client-side checks.
- */
 const validateForm = () => {
   fieldErrors.fullName = ''
   fieldErrors.email = ''
@@ -280,7 +271,8 @@ const handleSignUp = async () => {
   align-items: center;
   justify-content: center;
   padding: 2.5rem 1.25rem;
-  background: linear-gradient(145deg, #f0fdf4 0%, #f8fafc 55%, #ecfdf5 100%);
+  background: linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #e6f4ea 100%);
+  color-scheme: light;
   position: relative;
 }
 
@@ -402,12 +394,30 @@ const handleSignUp = async () => {
   z-index: 1;
 }
 
-:deep(.auth-input) {
+:deep(.auth-input),
+:deep(.p-inputtext.auth-input) {
   width: 100%;
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  caret-color: #1e293b !important;
   border-radius: 10px !important;
   padding-top: 0.7rem !important;
   padding-bottom: 0.7rem !important;
   font-size: 0.95rem !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:deep(.auth-input::placeholder),
+:deep(.p-inputtext.auth-input::placeholder) {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+:deep(.auth-input:enabled:hover),
+:deep(.p-inputtext.auth-input:enabled:hover) {
+  border-color: #94a3b8 !important;
+  background-color: #f1f5f9 !important;
 }
 
 :deep(.auth-input--leading) {
@@ -418,9 +428,28 @@ const handleSignUp = async () => {
   padding-right: 2.75rem !important;
 }
 
-:deep(.auth-input:focus) {
-  border-color: #16a34a !important;
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16) !important;
+:deep(.auth-input:focus),
+:deep(.p-inputtext.auth-input:focus) {
+  background-color: #ffffff !important;
+  border-color: #15803d !important;
+  color: #1e293b !important;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.16) !important;
+}
+
+:deep(.auth-input.p-invalid),
+:deep(.p-inputtext.auth-input.p-invalid) {
+  border-color: #dc2626 !important;
+}
+
+:deep(.auth-input:-webkit-autofill),
+:deep(.auth-input:-webkit-autofill:hover),
+:deep(.auth-input:-webkit-autofill:focus),
+:deep(.auth-input:-webkit-autofill:active) {
+  -webkit-box-shadow: 0 0 0 1000px #f1f5f9 inset !important;
+  box-shadow: 0 0 0 1000px #f1f5f9 inset !important;
+  -webkit-text-fill-color: #1e293b !important;
+  caret-color: #1e293b !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .password-toggle-btn {

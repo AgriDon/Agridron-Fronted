@@ -1,8 +1,4 @@
 <script setup>
-/**
- * Sign-in view (`/sign-in`) handling email/password validation, JWT authentication,
- * HTTP 401/403 error feedback, and post-login redirect.
- */
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -30,11 +26,6 @@ const showPassword = ref(false)
 const submitting = ref(false)
 const authError = ref('')
 
-/**
- * Validates sign-in form fields and populates field-level error messages.
- *
- * @returns {boolean} True when all fields are valid.
- */
 const validateForm = () => {
   fieldErrors.email = ''
   fieldErrors.password = ''
@@ -52,11 +43,6 @@ const validateForm = () => {
   return !fieldErrors.email && !fieldErrors.password
 }
 
-/**
- * Resolves a safe internal post-login destination from `route.query.redirect`.
- *
- * @returns {string} Internal path to navigate to after authentication.
- */
 const resolveRedirectTarget = () => {
   const redirect = route.query.redirect
   if (typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')) {
@@ -65,11 +51,6 @@ const resolveRedirectTarget = () => {
   return '/inicio'
 }
 
-/**
- * Submits user credentials to `iamStore.signIn` and handles HTTP 401/403 feedback.
- *
- * @returns {Promise<void>}
- */
 const handleSignIn = async () => {
   authError.value = ''
   if (!validateForm()) return
@@ -191,7 +172,8 @@ const handleSignIn = async () => {
   align-items: center;
   justify-content: center;
   padding: 2rem 1.25rem;
-  background: linear-gradient(145deg, #f0fdf4 0%, #f8fafc 55%, #ecfdf5 100%);
+  background: linear-gradient(160deg, #ecfdf5 0%, #f0fdf4 50%, #e6f4ea 100%);
+  color-scheme: light;
   position: relative;
 }
 
@@ -277,12 +259,30 @@ const handleSignIn = async () => {
   z-index: 1;
 }
 
-:deep(.auth-input) {
+:deep(.auth-input),
+:deep(.p-inputtext.auth-input) {
   width: 100%;
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  caret-color: #1e293b !important;
   border-radius: 10px !important;
   padding-top: 0.72rem !important;
   padding-bottom: 0.72rem !important;
   font-size: 0.95rem !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+:deep(.auth-input::placeholder),
+:deep(.p-inputtext.auth-input::placeholder) {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+:deep(.auth-input:enabled:hover),
+:deep(.p-inputtext.auth-input:enabled:hover) {
+  border-color: #94a3b8 !important;
+  background-color: #f1f5f9 !important;
 }
 
 :deep(.auth-input--leading) {
@@ -293,9 +293,28 @@ const handleSignIn = async () => {
   padding-right: 2.75rem !important;
 }
 
-:deep(.auth-input:focus) {
-  border-color: #16a34a !important;
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16) !important;
+:deep(.auth-input:focus),
+:deep(.p-inputtext.auth-input:focus) {
+  background-color: #ffffff !important;
+  border-color: #15803d !important;
+  color: #1e293b !important;
+  box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.16) !important;
+}
+
+:deep(.auth-input.p-invalid),
+:deep(.p-inputtext.auth-input.p-invalid) {
+  border-color: #dc2626 !important;
+}
+
+:deep(.auth-input:-webkit-autofill),
+:deep(.auth-input:-webkit-autofill:hover),
+:deep(.auth-input:-webkit-autofill:focus),
+:deep(.auth-input:-webkit-autofill:active) {
+  -webkit-box-shadow: 0 0 0 1000px #f1f5f9 inset !important;
+  box-shadow: 0 0 0 1000px #f1f5f9 inset !important;
+  -webkit-text-fill-color: #1e293b !important;
+  caret-color: #1e293b !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 
 .password-toggle-btn {
