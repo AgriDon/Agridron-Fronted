@@ -11,7 +11,7 @@ import WeatherWidget from '@/weatherIntegration/presentation/components/weather-
 import { UserProfileService } from '@/shared/application/user-profile-service.js'
 import { useIamStore } from '@/iam/application/iam.store.js'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const router = useRouter()
 
 const fincaUseCases = new FincaUseCases()
@@ -21,38 +21,38 @@ const weatherStore = useWeatherStore()
 const userService = new UserProfileService()
 const iamStore = useIamStore()
 
-// State
 const loading = ref(true)
 const user = ref({
-  name: iamStore.user?.fullName || 'Juan Pérez',
-  role: iamStore.user?.role || 'Agricultor'
+  name: iamStore.user?.fullName || '',
+  role: iamStore.user?.role || ''
 })
 const farms = ref([])
 const parcels = ref([])
 const missions = ref([])
 
-// Computed KPIs
-const farmsCount = computed(() => farms.value.length || 3)
-const parcelsCount = computed(() => parcels.value.length || 18)
-const missionsCount = computed(() => missions.value.length || 6)
-const totalArea = computed(() => {
-  if (parcels.value.length > 0) {
-    const sum = parcels.value.reduce((acc, p) => acc + (Number(p.area) || 0), 0)
-    return Math.round(sum * 10) / 10
-  }
-  return 18.5
+const displayName = computed(() => {
+  const fullName = (user.value.name || iamStore.user?.fullName || '').trim()
+  return fullName ? fullName.split(/\s+/)[0] : 'AgriDron'
 })
 
-// Recent 5 missions
+const emptyMissionsMessage = computed(() =>
+  String(locale.value || '').toLowerCase().startsWith('es')
+    ? 'Aún no tienes misiones programadas'
+    : 'You have no scheduled missions yet'
+)
+
+const farmsCount = computed(() => farms.value.length)
+const parcelsCount = computed(() => parcels.value.length)
+const missionsCount = computed(() => missions.value.length)
+const totalArea = computed(() => {
+  if (parcels.value.length === 0) return 0
+  const sum = parcels.value.reduce((acc, p) => acc + (Number(p.area) || 0), 0)
+  return Math.round(sum * 10) / 10
+})
+
 const recentMissions = computed(() => {
   if (missions.value.length === 0) {
-    return [
-      { id: 'M1-001', parcel: 'Lote3 - Uva', date: '12/05/26', status: 'En curso', progress: 60 },
-      { id: 'M1-002', parcel: 'Lote2 - Fresa', date: '11/07/26', status: 'Completado', progress: 100 },
-      { id: 'M1-003', parcel: 'Lote5 - Sandia', date: '09/01/26', status: 'Completado', progress: 100 },
-      { id: 'M1-004', parcel: 'Lote2 - Fresa', date: '27/01/26', status: 'Programado', progress: 0 },
-      { id: 'M1-005', parcel: 'Lote1 - Melon', date: '30/03/26', status: 'Completado', progress: 100 }
-    ]
+    return []
   }
 
   return missions.value.slice(0, 5).map((m, idx) => ({
@@ -67,7 +67,7 @@ const recentMissions = computed(() => {
 })
 
 const formatDate = (dateStr) => {
-  if (!dateStr) return '12/05/26'
+  if (!dateStr) return '—'
   const d = new Date(dateStr)
   if (isNaN(d.getTime())) return dateStr
   const pad = (n) => String(n).padStart(2, '0')
@@ -144,9 +144,8 @@ onMounted(() => {
 
 <template>
   <div class="dashboard-container">
-    <!-- Welcome Header -->
     <header class="welcome-header">
-      <h1 class="welcome-title">{{ t('home.welcome', { name: user.name ? user.name.split(' ')[0] : 'Juan' }) }}</h1>
+      <h1 class="welcome-title">{{ t('home.welcome', { name: displayName }) }}</h1>
       <p class="welcome-subtitle">{{ t('home.subtitle') }}</p>
     </header>
 
@@ -221,7 +220,24 @@ onMounted(() => {
           </button>
         </div>
 
-        <div class="table-container">
+        <div v-if="recentMissions.length === 0" class="empty-missions-state">
+          <div class="empty-missions-icon" aria-hidden="true">
+            <i class="pi pi-calendar"></i>
+          </div>
+          <p class="empty-missions-text">{{ emptyMissionsMessage }}</p>
+          <div class="empty-missions-actions">
+            <button type="button" class="empty-action-btn empty-action-btn--primary" @click="router.push('/fincas/edit')">
+              <i class="pi pi-plus"></i>
+              <span>{{ t('farm.newFarm') }}</span>
+            </button>
+            <button type="button" class="empty-action-btn empty-action-btn--secondary" @click="router.push('/misiones')">
+              <i class="pi pi-bullseye"></i>
+              <span>{{ t('missions.newMission') }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div v-else class="table-container">
           <table class="missions-table">
             <thead>
               <tr>
@@ -282,7 +298,6 @@ onMounted(() => {
   gap: 1.75rem;
 }
 
-/* Header */
 .welcome-header {
   margin-bottom: 0.5rem;
 }
@@ -290,15 +305,25 @@ onMounted(() => {
 .welcome-title {
   font-size: 2rem;
   font-weight: 800;
-  color: #111827;
+  color: var(--p-text-color, #111827);
   margin: 0 0 0.4rem 0;
 }
 
 .welcome-subtitle {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--p-text-muted-color, #4b5563);
   margin: 0;
+}
+
+@media (prefers-color-scheme: dark) {
+  .welcome-title {
+    color: #f8fafc;
+  }
+
+  .welcome-subtitle {
+    color: #cbd5e1;
+  }
 }
 
 /* Top KPI Grid */
@@ -547,5 +572,80 @@ onMounted(() => {
 
 .clickable-mission-row:hover {
   background-color: rgba(16, 185, 129, 0.08);
+}
+
+.empty-missions-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.75rem 1.5rem;
+  gap: 0.9rem;
+}
+
+.empty-missions-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.16);
+  color: #6ee7b7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.empty-missions-text {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.empty-missions-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.empty-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.15rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.empty-action-btn:hover {
+  transform: translateY(-1px);
+}
+
+.empty-action-btn--primary {
+  background-color: #10b981;
+  border: 1px solid #10b981;
+  color: #052e16;
+}
+
+.empty-action-btn--primary:hover {
+  background-color: #34d399;
+  border-color: #34d399;
+}
+
+.empty-action-btn--secondary {
+  background-color: transparent;
+  border: 1px solid rgba(209, 250, 229, 0.45);
+  color: #ecfdf5;
+}
+
+.empty-action-btn--secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #a7f3d0;
 }
 </style>
