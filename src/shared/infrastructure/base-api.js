@@ -1,38 +1,77 @@
-import axios from "axios";
+import axios from 'axios'
 
-/**
- * Shared infrastructure base class that configures the HTTP client.
- *
- * NOTE: no baseURL on purpose. Every request goes through a concrete endpoint
- * built with buildUrl(ENDPOINTS.x), which already carries the base. Setting
- * baseURL as well would double the prefix ("/api/v1/api/v1/farms") in dev,
- * where the base is relative.
- *
- * @class BaseApi
- */
+export const AUTH_TOKEN_STORAGE_KEY = 'agridron_token'
+export const AUTH_USER_STORAGE_KEY = 'agridron_user'
+export const AUTH_UNAUTHORIZED_EVENT = 'agridron:unauthorized'
+
+const PUBLIC_AUTH_PATHS = [
+  '/authentication/sign-in',
+  '/authentication/sign-up',
+  '/authentication/verify-email'
+]
+
+let unauthorizedHandler = null
+
+/** Registers a callback invoked when any protected API request returns HTTP 401. */
+export const setUnauthorizedHandler = (handler) => {
+  unauthorizedHandler = typeof handler === 'function' ? handler : null
+}
+
+const isPublicAuthRequest = (url = '') =>
+  PUBLIC_AUTH_PATHS.some((path) => String(url).includes(path))
+
+const clearStoredSession = () => {
+  if (typeof localStorage === 'undefined') return
+  localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY)
+  localStorage.removeItem(AUTH_USER_STORAGE_KEY)
+}
+
 export class BaseApi {
-    /**
-     * @private
-     * Axios HTTP client instance
-     * @type {import('axios').AxiosInstance}
-     */
-    #http;
+  #http
 
-    /**
-     * Initializes the Axios HTTP client.
-     */
-    constructor() {
-        this.#http = axios.create();
+  constructor() {
+    this.#http = axios.create()
 
-        // Interceptor placeholder for the authentication stage. When the
-        // session is implemented, register the token here instead.
-    }
+    this.#http.interceptors.request.use((config) => {
+      const token =
+        typeof localStorage !== 'undefined'
+          ? localStorage.getItem(AUTH_TOKEN_STORAGE_KEY)
+          : null
 
-    /**
-     * Returns the configured Axios HTTP client.
-     * @returns {import('axios').AxiosInstance}
-     */
-    get http() {
-        return this.#http;
-    }
+      if (token && !config.headers?.Authorization) {
+        config.headers = config.headers || {}
+        config.headers.Authorization = `Bearer ${token}`
+      }
+
+      return config
+    })
+
+    this.#http.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const status = error?.response?.status
+        const requestUrl = error?.config?.url || ''
+
+        if (status === 401 && !isPublicAuthRequest(requestUrl)) {
+          clearStoredSession()
+
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent(AUTH_UNAUTHORIZED_EVENT))
+          }
+
+          if (unauthorizedHandler) {
+            unauthorizedHandler()
+          } else if (typeof window !== 'undefined' && window.location.pathname !== '/sign-in') {
+            window.location.assign('/sign-in')
+          }
+        }
+
+        return Promise.reject(error)
+      }
+    )
+  }
+
+  get http() {
+    return this.#http
+  }
 }
