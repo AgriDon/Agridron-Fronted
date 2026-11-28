@@ -538,7 +538,7 @@
       "createAccount": "Create account",
       "noAccount": "Don't have an account yet?",
       "invalidCredentials": "Invalid email or password.",
-      "accountUnverified": "Your account is not verified yet or access is restricted. Check your inbox to confirm your email."
+      "accountUnverified": "You must verify your email address before signing in. Check your inbox."
     },
     "signUp": {
       "back": "Back",
@@ -557,9 +557,17 @@
       "phoneNumberRequired": "Phone number is required",
       "phoneNumberInvalid": "Enter a valid phone number",
       "password": "Password",
-      "passwordPlaceholder": "Minimum 6 characters",
+      "passwordPlaceholder": "Minimum 8 characters",
       "passwordRequired": "Password is required",
-      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordWeak": "Password must meet all security requirements.",
+      "passwordRules": {
+        "minLength": "At least 8 characters",
+        "hasUppercase": "At least 1 uppercase letter",
+        "hasLowercase": "At least 1 lowercase letter",
+        "hasNumber": "At least 1 number",
+        "hasSpecial": "At least 1 special character"
+      },
       "showPassword": "Show password",
       "hidePassword": "Hide password",
       "roleQuestion": "Which role defines you best?",

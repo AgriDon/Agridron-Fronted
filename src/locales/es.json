@@ -538,7 +538,7 @@
       "createAccount": "Crear cuenta",
       "noAccount": "¿Aún no tienes una cuenta?",
       "invalidCredentials": "Correo electrónico o contraseña incorrectos.",
-      "accountUnverified": "Tu cuenta aún no está verificada o no tiene acceso. Revisa tu bandeja de entrada para confirmar tu correo."
+      "accountUnverified": "Debes verificar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada."
     },
     "signUp": {
       "back": "Volver",
@@ -557,9 +557,17 @@
       "phoneNumberRequired": "El teléfono es obligatorio",
       "phoneNumberInvalid": "Ingresa un número de teléfono válido",
       "password": "Contraseña",
-      "passwordPlaceholder": "Mínimo 6 caracteres",
+      "passwordPlaceholder": "Mínimo 8 caracteres",
       "passwordRequired": "La contraseña es obligatoria",
-      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordWeak": "La contraseña no cumple con todos los requisitos de seguridad.",
+      "passwordRules": {
+        "minLength": "Mínimo 8 caracteres",
+        "hasUppercase": "Al menos 1 letra mayúscula",
+        "hasLowercase": "Al menos 1 letra minúscula",
+        "hasNumber": "Al menos 1 número",
+        "hasSpecial": "Al menos 1 carácter especial"
+      },
       "showPassword": "Mostrar contraseña",
       "hidePassword": "Ocultar contraseña",
       "roleQuestion": "¿Qué rol te define mejor?",
