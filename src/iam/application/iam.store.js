@@ -8,21 +8,11 @@ import {
 import { User } from '../domain/model/user.entity.js'
 import { IamApiService } from '../infrastructure/iam-api.service.js'
 
-/**
- * Reads the persisted JWT token from `localStorage`.
- *
- * @returns {string}
- */
 const readStoredToken = () => {
   if (typeof localStorage === 'undefined') return ''
   return localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) || ''
 }
 
-/**
- * Rehydrates the persisted `User` entity from `localStorage`, discarding corrupted entries.
- *
- * @returns {User|null}
- */
 const readStoredUser = () => {
   if (typeof localStorage === 'undefined') return null
   try {
@@ -35,9 +25,7 @@ const readStoredUser = () => {
   }
 }
 
-/**
- * Pinia store managing IAM authentication state, role flags, and `localStorage` session persistence.
- */
+/** Pinia store managing IAM session state, role flags, and localStorage persistence. */
 export const useIamStore = defineStore('iam', () => {
   const iamApi = new IamApiService()
 
@@ -50,12 +38,6 @@ export const useIamStore = defineStore('iam', () => {
   const isFarmer = computed(() => Boolean(user.value?.isFarmer))
   const isOperator = computed(() => Boolean(user.value?.isOperator))
 
-  /**
-   * Updates reactive session state and writes token/user snapshots to `localStorage`.
-   *
-   * @param {User|Record<string, any>} nextUser Authenticated user payload.
-   * @param {string} nextToken JWT access token.
-   */
   const persistSession = (nextUser, nextToken) => {
     const normalizedUser = nextUser instanceof User ? nextUser : new User(nextUser || {})
     user.value = normalizedUser
@@ -69,9 +51,7 @@ export const useIamStore = defineStore('iam', () => {
     }
   }
 
-  /**
-   * Clears in-memory session state and removes persisted credentials from `localStorage`.
-   */
+  /** Clears reactive session state and removes persisted credentials from localStorage. */
   const clearSession = () => {
     user.value = null
     token.value = ''
@@ -87,12 +67,7 @@ export const useIamStore = defineStore('iam', () => {
     window.addEventListener(AUTH_UNAUTHORIZED_EVENT, clearSession)
   }
 
-  /**
-   * Signs in a user and persists the resulting session.
-   *
-   * @param {{ email: string, password: string }} credentials User credentials.
-   * @returns {Promise<import('../infrastructure/user.assembler.js').AuthenticatedSession>}
-   */
+  /** Authenticates the user and persists the active session token and profile. */
   const signIn = async ({ email, password }) => {
     loading.value = true
     error.value = null
@@ -108,12 +83,7 @@ export const useIamStore = defineStore('iam', () => {
     }
   }
 
-  /**
-   * Registers a new user account without starting a session until email verification completes.
-   *
-   * @param {{ fullName: string, email: string, password: string, phoneNumber: string, role: string }} payload Registration fields.
-   * @returns {Promise<{ user: User|null, raw: any }>}
-   */
+  /** Registers a new account pending email verification without creating a session. */
   const signUp = async ({ fullName, email, password, phoneNumber, role }) => {
     loading.value = true
     error.value = null
@@ -127,12 +97,7 @@ export const useIamStore = defineStore('iam', () => {
     }
   }
 
-  /**
-   * Confirms a user's email address using the verification token from the Brevo link.
-   *
-   * @param {string} verificationToken Email verification token.
-   * @returns {Promise<any>}
-   */
+  /** Validates an email activation token against the IAM backend. */
   const verifyEmail = async (verificationToken) => {
     loading.value = true
     error.value = null
@@ -146,11 +111,7 @@ export const useIamStore = defineStore('iam', () => {
     }
   }
 
-  /**
-   * Signs out the current user on the backend and always clears local session storage.
-   *
-   * @returns {Promise<void>}
-   */
+  /** Revokes the backend session when present and always clears local credentials. */
   const signOut = async () => {
     loading.value = true
     error.value = null
@@ -159,18 +120,14 @@ export const useIamStore = defineStore('iam', () => {
         await iamApi.signOut()
       }
     } catch {
-      // Session is still cleared locally if the backend token already expired.
+      // Backend token may already be expired; local session is cleared in finally.
     } finally {
       clearSession()
       loading.value = false
     }
   }
 
-  /**
-   * Reloads the authenticated user's profile from the backend and updates persisted state.
-   *
-   * @returns {Promise<User|null>}
-   */
+  /** Reloads the current authenticated user's profile and updates stored session data. */
   const refreshCurrentUser = async () => {
     if (!user.value?.id) return null
     const freshUser = await iamApi.getUserById(user.value.id)
