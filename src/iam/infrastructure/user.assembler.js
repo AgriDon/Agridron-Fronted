@@ -1,6 +1,11 @@
 import i18n from '@/i18n.js'
 import { User, USER_ROLES } from '../domain/model/user.entity.js'
 
+const UNVERIFIED_EMAIL_MESSAGE = {
+  es: 'Debes verificar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.',
+  en: 'You must verify your email address before signing in. Check your inbox.'
+}
+
 const SPANISH_ERROR_MAPPINGS = [
   {
     pattern: /invalid\s+(email\s+or\s+password|credentials)/i,
@@ -11,8 +16,8 @@ const SPANISH_ERROR_MAPPINGS = [
     message: 'Ya existe una cuenta registrada con este correo electrónico.'
   },
   {
-    pattern: /(inactive|not\s+verified|unverified|verify\s+your\s+email|not\s+active)/i,
-    message: 'Tu cuenta aún no está activa o verificada. Revisa tu bandeja de entrada para confirmarla.'
+    pattern: /(inactive|not\s+verified|unverified|verify\s+your\s+email|must\s+verify|pending\s+verification|email.*not.*confirm|not\s+active)/i,
+    message: UNVERIFIED_EMAIL_MESSAGE.es
   },
   {
     pattern: /(invalid(\s+or\s+expired)?\s+verification\s+token|verification\s+token.*(invalid|expired)|token.*expired)/i,
@@ -93,6 +98,18 @@ export class UserAssembler {
   static extractProblemDetails(error, fallbackMessage = 'Unexpected error') {
     const status = error?.response?.status ?? error?.status ?? null
     const data = error?.response?.data
+
+    if (status === 403) {
+      const unverifiedMessage = isSpanishLocale()
+        ? UNVERIFIED_EMAIL_MESSAGE.es
+        : UNVERIFIED_EMAIL_MESSAGE.en
+      return {
+        status,
+        title: localizeApiMessage(data?.title || ''),
+        detail: unverifiedMessage,
+        message: unverifiedMessage
+      }
+    }
 
     if (data && typeof data === 'object') {
       const title = localizeApiMessage(data.title || '')

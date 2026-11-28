@@ -25,6 +25,7 @@ const fieldErrors = reactive({
 const showPassword = ref(false)
 const submitting = ref(false)
 const authError = ref('')
+const authSeverity = ref('error')
 
 const validateForm = () => {
   fieldErrors.email = ''
@@ -53,21 +54,27 @@ const resolveRedirectTarget = () => {
 
 const handleSignIn = async () => {
   authError.value = ''
+  authSeverity.value = 'error'
   if (!validateForm()) return
 
   submitting.value = true
   try {
-    await iamStore.signIn({
+    const session = await iamStore.signIn({
       email: form.email,
       password: form.password
     })
-    await router.replace(resolveRedirectTarget())
+    if (session?.token && iamStore.isAuthenticated) {
+      await router.replace(resolveRedirectTarget())
+    }
   } catch (err) {
     if (err?.status === 403) {
-      authError.value = err.detail || t('iam.signIn.accountUnverified')
+      authSeverity.value = 'warn'
+      authError.value = t('iam.signIn.accountUnverified')
     } else if (err?.status === 401) {
+      authSeverity.value = 'error'
       authError.value = err.detail || t('iam.signIn.invalidCredentials')
     } else {
+      authSeverity.value = 'error'
       authError.value = err?.message || t('iam.signIn.invalidCredentials')
     }
   } finally {
@@ -89,7 +96,7 @@ const handleSignIn = async () => {
         <p class="auth-subtitle">{{ t('iam.signIn.subtitle') }}</p>
       </div>
 
-      <pv-message v-if="authError" severity="error" :closable="false" class="auth-alert">
+      <pv-message v-if="authError" :severity="authSeverity" :closable="false" class="auth-alert">
         {{ authError }}
       </pv-message>
 
