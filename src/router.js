@@ -68,6 +68,10 @@ setUnauthorizedHandler(() => {
   }
 })
 
+/**
+ * Global navigation guard enforcing document titles, session authentication on private
+ * routes, and guest-only redirection for already authenticated users.
+ */
 router.beforeEach((to) => {
   const baseTitle = 'AgriDron Solutions'
   document.title = to.meta.title ? `${baseTitle} - ${to.meta.title}` : baseTitle

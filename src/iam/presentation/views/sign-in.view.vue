@@ -1,4 +1,8 @@
 <script setup>
+/**
+ * Sign-in view (`/sign-in`) handling email/password validation, JWT authentication,
+ * HTTP 401/403 error feedback, and post-login redirect.
+ */
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -26,6 +30,11 @@ const showPassword = ref(false)
 const submitting = ref(false)
 const authError = ref('')
 
+/**
+ * Validates sign-in form fields and populates field-level error messages.
+ *
+ * @returns {boolean} True when all fields are valid.
+ */
 const validateForm = () => {
   fieldErrors.email = ''
   fieldErrors.password = ''
@@ -43,6 +52,11 @@ const validateForm = () => {
   return !fieldErrors.email && !fieldErrors.password
 }
 
+/**
+ * Resolves a safe internal post-login destination from `route.query.redirect`.
+ *
+ * @returns {string} Internal path to navigate to after authentication.
+ */
 const resolveRedirectTarget = () => {
   const redirect = route.query.redirect
   if (typeof redirect === 'string' && redirect.startsWith('/') && !redirect.startsWith('//')) {
@@ -51,6 +65,11 @@ const resolveRedirectTarget = () => {
   return '/inicio'
 }
 
+/**
+ * Submits user credentials to `iamStore.signIn` and handles HTTP 401/403 feedback.
+ *
+ * @returns {Promise<void>}
+ */
 const handleSignIn = async () => {
   authError.value = ''
   if (!validateForm()) return

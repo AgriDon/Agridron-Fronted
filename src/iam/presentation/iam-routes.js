@@ -2,6 +2,16 @@ const SignInView = () => import('./views/sign-in.view.vue')
 const SignUpView = () => import('./views/sign-up.view.vue')
 const VerifyEmailView = () => import('./views/verify-email.view.vue')
 
+/**
+ * Public IAM route definitions rendered outside the authenticated shell layout.
+ *
+ * Route meta flags:
+ * - `public`: bypasses authentication guard.
+ * - `guestOnly`: redirects authenticated users back to `/inicio`.
+ * - `hideNavigation`: hides sidebar and top header bar in `App.vue`.
+ *
+ * @type {import('vue-router').RouteRecordRaw[]}
+ */
 export const iamRoutes = [
   {
     path: '/sign-in',

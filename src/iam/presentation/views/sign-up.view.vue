@@ -1,4 +1,8 @@
 <script setup>
+/**
+ * Sign-up view (`/sign-up`) for registering new Farmer or Operator accounts and displaying
+ * the post-registration Brevo email verification confirmation state.
+ */
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -36,6 +40,11 @@ const signUpError = ref('')
 const registrationSuccess = ref(false)
 const registeredEmail = ref('')
 
+/**
+ * Validates all registration fields before invoking `iamStore.signUp`.
+ *
+ * @returns {boolean} True when all inputs pass client-side checks.
+ */
 const validateForm = () => {
   fieldErrors.fullName = ''
   fieldErrors.email = ''

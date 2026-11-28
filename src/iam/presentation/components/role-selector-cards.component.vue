@@ -1,4 +1,8 @@
 <script setup>
+/**
+ * Interactive radio-card selector for choosing the account role during registration.
+ * Emits `Farmer` or `Operator` via `update:modelValue`.
+ */
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { USER_ROLES } from '../../domain/model/user.entity.js'
@@ -37,6 +41,11 @@ const roleOptions = computed(() => [
   }
 ])
 
+/**
+ * Emits the selected role value when the selector is enabled.
+ *
+ * @param {string} roleValue Selected role (`Farmer` | `Operator`).
+ */
 const selectRole = (roleValue) => {
   if (props.disabled) return
   emit('update:modelValue', roleValue)
